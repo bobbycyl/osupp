@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "osupp"
+version = "0.1"
+dependencies = [
+    "pythonnet",
+]
+requires-python = ">=3.12"
+authors = [
+    { name = "bobbycyl", email = "bobbycyl@126.com" },
+]
+description = "A simple wrapper for osu-tools"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C#",
+]
+
+[project.urls]
+Repository = "https://github.com/bobbycyl/osupp.git"
+"Bug Tracker" = "https://github.com/bobbycyl/osupp/issues"
