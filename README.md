@@ -29,4 +29,4 @@
    init_osu_tools(r"path/to/osu-tools/PerformanceCalculator/bin/Release/net8.0")
    ```
 
-已经封装了常用函数，但与 rosu-pp 的使用习惯不同，与 osu-tools CLI 的使用习惯相近。
+已经封装了常用函数，并一定程度上模仿了 rosu-pp 的使用习惯。

@@ -1,4 +1,5 @@
-from typing import Optional
+from collections.abc import Generator
+from typing import NamedTuple, Optional
 
 from .core import Array, BeatmapExtensions, Dictionary, HitResult, IBeatmap, Mod, OsuModClassic, OsuRuleset, ProcessorCommand, ProcessorWorkingBeatmap, ScoreInfo, Slider, SliderRepeat, SliderTick
 from .util import re_deserialize
@@ -96,21 +97,33 @@ def get_accuracy(beatmap: IBeatmap, statistics: dict[HitResult | str, int], mods
     return total / max_score
 
 
+class Performance(NamedTuple):
+    accuracy_percent: float = 100.0
+    combo: Optional[int] = None
+    misses: int = 0
+    mehs: Optional[int] = None
+    oks: Optional[int] = None
+    large_tick_misses: int = 0
+    slider_tail_misses: int = 0
+    large_tick_hits: Optional[int] = None
+    slider_tail_hits: Optional[int] = None
+
+
 def calculate_osu_performance(
     beatmap_path: str,
     mods: Optional[list[str]] = None,
     mod_options: Optional[list[str]] = None,
-    accuracy_percent: float = 100.0,
-    combo: Optional[int] = None,
-    misses: int = 0,
-    mehs: Optional[int] = None,
-    oks: Optional[int] = None,
-    large_tick_misses: int = 0,
-    slider_tail_misses: int = 0,
-    *,
-    large_tick_hits: Optional[int] = None,
-    slider_tail_hits: Optional[int] = None,
-) -> dict:
+) -> Generator[dict, Optional[Performance], dict]:
+    """生成器模式的计算器，在计算同一谱面时只需要创建一次计算器，提高效率
+
+    第一次返回 difficulty_attributes
+
+    后续每次计算返回 performance_attributes
+
+    传入 None 则结束计算
+
+    生成器结束返回 beatmap_info
+    """
     working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
     ruleset = OsuRuleset()
     if mods is None:
@@ -120,33 +133,44 @@ def calculate_osu_performance(
     mod_array = ProcessorCommand.ParseMods(ruleset, Array[str](mods), Array[str](mod_options))
     beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
 
-    if any(isinstance(m, OsuModClassic) and m.NoSliderHeadAccuracy.Value for m in mod_array):
-        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, None, None)
-    else:
-        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, large_tick_misses, slider_tail_misses, count_large_tick_hits=large_tick_hits, count_slider_tail_hits=slider_tail_hits)
-
-    score_info = ScoreInfo()
-    score_info.BeatmapInfo = working_beatmap.BeatmapInfo
-    score_info.Ruleset = ruleset.RulesetInfo
-    score_info.Accuracy = get_accuracy(beatmap, hit_results, mod_array)
-    score_info.MaxCombo = BeatmapExtensions.GetMaxCombo(beatmap) if combo is None else combo
-
-    # 这里要把 Python 字典转换为 C# 字典，同时排除个人新增的一些键
-    dotnet_statistics = Dictionary[HitResult, int]()
-    for k, v in hit_results.items():
-        if k not in ["large_tick_hits"]:
-            dotnet_statistics[k] = v
-    score_info.Statistics = dotnet_statistics
-    score_info.Mods = mod_array
-
     difficulty_calculator = ruleset.CreateDifficultyCalculator(working_beatmap)
     difficulty_attributes = difficulty_calculator.Calculate(mod_array)
-
     performance_calculator = ruleset.CreatePerformanceCalculator()
-    performance_attributes = performance_calculator.Calculate(score_info, difficulty_attributes)
 
-    return {
-        "beatmap_info": re_deserialize(working_beatmap.BeatmapInfo),
-        "performance_attributes": re_deserialize(performance_attributes),
-        "difficulty_attributes": re_deserialize(difficulty_attributes),
-    }
+    sent = yield re_deserialize(difficulty_attributes)
+
+    while sent:
+        accuracy_percent: float = sent.accuracy_percent
+        combo: Optional[int] = sent.combo
+        misses: int = sent.misses
+        mehs: Optional[int] = sent.mehs
+        oks: Optional[int] = sent.oks
+        large_tick_misses: int = sent.large_tick_misses
+        slider_tail_misses: int = sent.slider_tail_misses
+        large_tick_hits: Optional[int] = sent.large_tick_hits
+        slider_tail_hits: Optional[int] = sent.slider_tail_hits
+
+        if any(isinstance(m, OsuModClassic) and m.NoSliderHeadAccuracy.Value for m in mod_array):
+            hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, None, None)
+        else:
+            hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, large_tick_misses, slider_tail_misses, count_large_tick_hits=large_tick_hits, count_slider_tail_hits=slider_tail_hits)
+
+        score_info = ScoreInfo()
+        score_info.BeatmapInfo = working_beatmap.BeatmapInfo
+        score_info.Ruleset = ruleset.RulesetInfo
+        score_info.Accuracy = get_accuracy(beatmap, hit_results, mod_array)
+        score_info.MaxCombo = BeatmapExtensions.GetMaxCombo(beatmap) if combo is None else combo
+
+        # 这里要把 Python 字典转换为 C# 字典，同时排除个人新增的一些键
+        dotnet_statistics = Dictionary[HitResult, int]()
+        for k, v in hit_results.items():
+            if k not in ["large_tick_hits"]:
+                dotnet_statistics[k] = v
+        score_info.Statistics = dotnet_statistics
+        score_info.Mods = mod_array
+
+        performance_attributes = performance_calculator.Calculate(score_info, difficulty_attributes)
+
+        sent = yield re_deserialize(performance_attributes)
+
+    return re_deserialize(working_beatmap.BeatmapInfo)
