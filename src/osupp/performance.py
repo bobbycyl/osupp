@@ -13,7 +13,10 @@ def generate_hit_results(
     count_ok: Optional[int] = None,
     count_large_tick_misses: Optional[int] = None,
     count_slider_tail_misses: Optional[int] = None,
-) -> Dictionary[HitResult, int]:
+    *,
+    count_large_tick_hits: Optional[int] = None,
+    count_slider_tail_hits: Optional[int] = None,
+) -> dict[HitResult | str, int]:
     count_great: int
     total_result_count: int = beatmap.HitObjects.Count
 
@@ -42,15 +45,11 @@ def generate_hit_results(
             count_50_estimate = 6 * relevant_result_count * relevant_accuracy
             count_ok = 0
             count_meh = round(count_50_estimate)
-            count_miss = total_result_count - count_meh
+            # 似乎这里并不需要重新计算 miss 数量？
+            # count_miss = total_result_count - count_meh
         count_great = int(total_result_count - (count_ok or 0) - (count_meh or 0) - count_miss)
 
-    # 构建结果字典
-    result = Dictionary[HitResult, int]()
-    result[HitResult.Great] = count_great
-    result[HitResult.Ok] = count_ok or 0
-    result[HitResult.Meh] = count_meh or 0
-    result[HitResult.Miss] = count_miss
+    result = {HitResult.Great: count_great, HitResult.Ok: count_ok or 0, HitResult.Meh: count_meh or 0, HitResult.Miss: count_miss}
 
     if count_large_tick_misses is not None:
         result[HitResult.LargeTickMiss] = count_large_tick_misses
@@ -59,11 +58,18 @@ def generate_hit_results(
         slider_count = sum(1 for obj in beatmap.HitObjects if isinstance(obj, Slider))
         result[HitResult.SliderTailHit] = slider_count - count_slider_tail_misses
 
+    # 以下是个人新增内容，新增的键值对在内部处理时直接用 Python 字符串作为键名，在后续传递回 C# 时会删除
+    if count_large_tick_hits is not None:
+        result["large_tick_hits"] = count_large_tick_hits
+    if count_slider_tail_hits is not None:
+        # 这里确保直接传递 slider_tail_hits 数量的优先级更高
+        result[HitResult.SliderTailHit] = count_slider_tail_hits
+
     return result
 
 
 # 对应 OsuSimulateCommand.cs 的 GetAccuracy
-def get_accuracy(beatmap: IBeatmap, statistics: dict[HitResult, int], mods: Array[Mod]):
+def get_accuracy(beatmap: IBeatmap, statistics: dict[HitResult | str, int], mods: Array[Mod]):
     count_great: int = statistics[HitResult.Great]
     count_ok: int = statistics[HitResult.Ok]
     count_meh: int = statistics[HitResult.Meh]
@@ -77,10 +83,10 @@ def get_accuracy(beatmap: IBeatmap, statistics: dict[HitResult, int], mods: Arra
         total += 3 * count_slider_tail_hit
         max_score += 3 * count_sliders
 
-    if HitResult.LargeTickMiss in statistics:
-        count_large_tick_miss = statistics[HitResult.LargeTickMiss]
+    if HitResult.LargeTickMiss in statistics or "large_tick_hits" in statistics:
+        count_large_tick_miss = statistics.get(HitResult.LargeTickMiss, 0)
         count_large_ticks = sum(1 for obj in beatmap.HitObjects for nested in obj.NestedHitObjects if isinstance(nested, (SliderTick, SliderRepeat)))
-        count_large_tick_hit = count_large_ticks - count_large_tick_miss
+        count_large_tick_hit = statistics.get("large_tick_hits", count_large_ticks - count_large_tick_miss)
         total += 0.6 * count_large_tick_hit
         max_score += 0.6 * count_large_ticks
 
@@ -101,6 +107,9 @@ def calculate_osu_performance(
     oks: Optional[int] = None,
     large_tick_misses: int = 0,
     slider_tail_misses: int = 0,
+    *,
+    large_tick_hits: Optional[int] = None,
+    slider_tail_hits: Optional[int] = None,
 ) -> dict:
     working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
     ruleset = OsuRuleset()
@@ -114,14 +123,20 @@ def calculate_osu_performance(
     if any(isinstance(m, OsuModClassic) and m.NoSliderHeadAccuracy.Value for m in mod_array):
         hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, None, None)
     else:
-        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, large_tick_misses, slider_tail_misses)
+        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, large_tick_misses, slider_tail_misses, count_large_tick_hits=large_tick_hits, count_slider_tail_hits=slider_tail_hits)
 
     score_info = ScoreInfo()
     score_info.BeatmapInfo = working_beatmap.BeatmapInfo
     score_info.Ruleset = ruleset.RulesetInfo
     score_info.Accuracy = get_accuracy(beatmap, hit_results, mod_array)
     score_info.MaxCombo = BeatmapExtensions.GetMaxCombo(beatmap) if combo is None else combo
-    score_info.Statistics = hit_results
+
+    # 这里要把 Python 字典转换为 C# 字典，同时排除个人新增的一些键
+    dotnet_statistics = Dictionary[HitResult, int]()
+    for k, v in hit_results.items():
+        if k not in ["large_tick_hits"]:
+            dotnet_statistics[k] = v
+    score_info.Statistics = dotnet_statistics
     score_info.Mods = mod_array
 
     difficulty_calculator = ruleset.CreateDifficultyCalculator(working_beatmap)
