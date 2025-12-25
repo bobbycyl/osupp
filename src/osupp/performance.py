@@ -10,15 +10,15 @@ def generate_hit_results(
     accuracy: float,
     count_miss: int,
     count_meh: Optional[int] = None,
-    count_good: Optional[int] = None,
+    count_ok: Optional[int] = None,
     count_large_tick_misses: Optional[int] = None,
     count_slider_tail_misses: Optional[int] = None,
 ) -> Dictionary[HitResult, int]:
     count_great: int
     total_result_count: int = beatmap.HitObjects.Count
 
-    if count_meh is not None or count_good is not None:
-        count_great = total_result_count - (count_good or 0) - (count_meh or 0) - count_miss
+    if count_meh is not None or count_ok is not None:
+        count_great = total_result_count - (count_ok or 0) - (count_meh or 0) - count_miss
     else:
         relevant_result_count = total_result_count - count_miss
         if relevant_result_count <= 0:
@@ -31,24 +31,24 @@ def generate_hit_results(
             ratio_50_to_100 = (1 - (relevant_accuracy - 0.25) / 0.75) ** 2
             count_100_estimate = 6 * relevant_result_count * (1 - relevant_accuracy) / (5 * ratio_50_to_100 + 4)
             count_50_estimate = count_100_estimate * ratio_50_to_100
-            count_good = round(count_100_estimate)
-            count_meh = round(count_100_estimate + count_50_estimate) - count_good
+            count_ok = round(count_100_estimate)
+            count_meh = round(count_100_estimate + count_50_estimate) - count_ok
         elif relevant_accuracy >= 1.0 / 6:
             count_100_estimate = 6 * relevant_result_count * relevant_accuracy - relevant_result_count
             count_50_estimate = relevant_result_count - count_100_estimate
-            count_good = round(count_100_estimate)
-            count_meh = round(count_100_estimate + count_50_estimate) - count_good
+            count_ok = round(count_100_estimate)
+            count_meh = round(count_100_estimate + count_50_estimate) - count_ok
         else:
             count_50_estimate = 6 * relevant_result_count * relevant_accuracy
-            count_good = 0
+            count_ok = 0
             count_meh = round(count_50_estimate)
             count_miss = total_result_count - count_meh
-        count_great = int(total_result_count - (count_good or 0) - (count_meh or 0) - count_miss)
+        count_great = int(total_result_count - (count_ok or 0) - (count_meh or 0) - count_miss)
 
     # 构建结果字典
     result = Dictionary[HitResult, int]()
     result[HitResult.Great] = count_great
-    result[HitResult.Ok] = count_good or 0
+    result[HitResult.Ok] = count_ok or 0
     result[HitResult.Meh] = count_meh or 0
     result[HitResult.Miss] = count_miss
 
@@ -65,11 +65,11 @@ def generate_hit_results(
 # 对应 OsuSimulateCommand.cs 的 GetAccuracy
 def get_accuracy(beatmap: IBeatmap, statistics: dict[HitResult, int], mods: Array[Mod]):
     count_great: int = statistics[HitResult.Great]
-    count_good: int = statistics[HitResult.Ok]
+    count_ok: int = statistics[HitResult.Ok]
     count_meh: int = statistics[HitResult.Meh]
     count_miss: int = statistics[HitResult.Miss]
-    total = 6 * count_great + 2 * count_good + count_meh
-    max_score = 6 * (count_great + count_good + count_meh + count_miss)
+    total = 6 * count_great + 2 * count_ok + count_meh
+    max_score = 6 * (count_great + count_ok + count_meh + count_miss)
 
     if HitResult.SliderTailHit in statistics:
         count_slider_tail_hit = statistics[HitResult.SliderTailHit]
@@ -98,7 +98,7 @@ def calculate_osu_performance(
     combo: Optional[int] = None,
     misses: int = 0,
     mehs: Optional[int] = None,
-    goods: Optional[int] = None,
+    oks: Optional[int] = None,
     large_tick_misses: int = 0,
     slider_tail_misses: int = 0,
 ) -> dict:
@@ -112,9 +112,9 @@ def calculate_osu_performance(
     beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
 
     if any(isinstance(m, OsuModClassic) and m.NoSliderHeadAccuracy.Value for m in mod_array):
-        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, goods, None, None)
+        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, None, None)
     else:
-        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, goods, large_tick_misses, slider_tail_misses)
+        hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, large_tick_misses, slider_tail_misses)
 
     score_info = ScoreInfo()
     score_info.BeatmapInfo = working_beatmap.BeatmapInfo
