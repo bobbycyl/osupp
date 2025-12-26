@@ -4,28 +4,6 @@ import sys
 from clr_loader import get_coreclr
 from pythonnet import set_runtime
 
-__all__ = (
-    "init_osu_tools",
-    "ProcessorWorkingBeatmap",
-    "ProcessorCommand",
-    "IBeatmap",
-    "BeatmapExtensions",
-    "Ruleset",
-    "Mod",
-    "HitResult",
-    "OsuRuleset",
-    "OsuDifficultyAttributes",
-    "OsuPerformanceAttributes",
-    "OsuModClassic",
-    "Slider",
-    "SliderTick",
-    "SliderRepeat",
-    "ScoreInfo",
-    "Array",
-    "Dictionary",
-    "JsonConvert",
-)
-
 # 内部状态变量，记录是否已加载
 _runtime_initialized = False
 _dotnet_libs_imported = False
@@ -60,7 +38,7 @@ def init_osu_tools(build_dir):
         from osu.Game.Rulesets.Osu.Mods import OsuModClassic
         from osu.Game.Rulesets.Osu.Objects import Slider, SliderTick, SliderRepeat
         from osu.Game.Scoring import ScoreInfo
-        from System import Array
+        from System import Array, OperationCanceledException
         from System.Collections.Generic import Dictionary
         from Newtonsoft.Json import JsonConvert
 
@@ -83,6 +61,7 @@ def init_osu_tools(build_dir):
                 "SliderRepeat": SliderRepeat,
                 "ScoreInfo": ScoreInfo,
                 "Array": Array,
+                "OperationCanceledException": OperationCanceledException,
                 "Dictionary": Dictionary,
                 "JsonConvert": JsonConvert,
             },
