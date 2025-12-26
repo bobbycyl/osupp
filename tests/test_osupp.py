@@ -34,16 +34,31 @@ def test():
         perf1_attr = calculator.send(OsuPerformance(combo=706, misses=2, mehs=4, oks=34, large_tick_misses=0, slider_tail_misses=7))
         perf2_attr = calculator.send(OsuPerformance(combo=706, misses=2, mehs=4, oks=34, large_tick_hits=57, slider_tail_hits=485))
         perf_max_attr = calculator.send(OsuPerformance())
+        perf_max_attr2 = calculator.send(OsuPerformance(*([None] * 9)))
         # 分别校验绩效结果
         assert diff_attr == perf_result_diff
         assert perf1_attr == perf_result_attr
         assert perf2_attr == perf_result_attr
         assert perf_max_attr["pp"] == max_pp
+        assert perf_max_attr2["pp"] == max_pp
         assert diff_attr["key_not_exists"] == 0.0
         # 结束时拿到谱面信息
         calculator.send(None)
     except StopIteration as e:
         assert e.value == perf_result_info
+
+
+def test_classic():
+    max_pp_cl = 428.8027574955315
+    max_legacy_score = 52235232.0
+    beatmap_path = r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0\cache\3477131.osu"
+    mods = ["CL"]
+    calculator = calculate_osu_performance(beatmap_path, mods)
+    diff_attr = next(calculator)
+    perf_attr = calculator.send(OsuPerformance())
+    calculator.close()
+    assert diff_attr["maximum_legacy_combo_score"] == max_legacy_score
+    assert perf_attr["pp"] == max_pp_cl
 
 
 def test_strange():

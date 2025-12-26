@@ -15,6 +15,7 @@ def generate_hit_results(
     count_large_tick_misses: Optional[int] = None,
     count_slider_tail_misses: Optional[int] = None,
     *,
+    # 为了便于使用，Slider Tick 和 Slider Tail 可以直接传递 Hit 数，如果使用，这将覆盖二者的 Miss 数设置
     count_large_tick_hits: Optional[int] = None,
     count_slider_tail_hits: Optional[int] = None,
 ) -> dict[HitResult | str, int]:
@@ -60,10 +61,10 @@ def generate_hit_results(
         result[HitResult.SliderTailHit] = slider_count - count_slider_tail_misses
 
     # 以下是个人新增内容，新增的键值对在内部处理时直接用 Python 字符串作为键名，在后续传递回 C# 时会删除
+    # 逻辑在最后确保传递 Hit 数的优先级最高
     if count_large_tick_hits is not None:
         result["large_tick_hits"] = count_large_tick_hits
     if count_slider_tail_hits is not None:
-        # 这里确保直接传递 slider_tail_hits 数量的优先级更高
         result[HitResult.SliderTailHit] = count_slider_tail_hits
 
     return result
@@ -109,6 +110,18 @@ class OsuPerformance(NamedTuple):
     slider_tail_hits: Optional[int] = None
 
 
+class TaikoPerformance(NamedTuple):
+    pass
+
+
+class CatchPerformance(NamedTuple):
+    pass
+
+
+class ManiaPerformance(NamedTuple):
+    pass
+
+
 def calculate_osu_performance(
     beatmap_path: str,
     mods: Optional[list[str]] = None,
@@ -146,16 +159,18 @@ def calculate_osu_performance(
         beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
         performance_calculator = ruleset.CreatePerformanceCalculator()
         while sent:
-            accuracy_percent: float = sent.accuracy_percent
+            # 由于 Ossapi 会自动将未呈现参数赋值为 None，因此这里需要二次处理，确保在直接传递 score.statistics 时的计算正确性
+            accuracy_percent: float = sent.accuracy_percent or 100.0
             combo: Optional[int] = sent.combo
-            misses: int = sent.misses
+            misses: int = sent.misses or 0
             mehs: Optional[int] = sent.mehs
             oks: Optional[int] = sent.oks
-            large_tick_misses: int = sent.large_tick_misses
-            slider_tail_misses: int = sent.slider_tail_misses
+            large_tick_misses: int = sent.large_tick_misses or 0  # 这里必须赋值，否则为 None 的话就会判断为 Classic
+            slider_tail_misses: int = sent.slider_tail_misses or 0  # 同理
             large_tick_hits: Optional[int] = sent.large_tick_hits
             slider_tail_hits: Optional[int] = sent.slider_tail_hits
 
+            # 这里完全依赖 mods 判断是否是 Classic，Slider Tick 和 Slider Tail 的值不作为判断方式
             if any(isinstance(m, OsuModClassic) and m.NoSliderHeadAccuracy.Value for m in mod_array):
                 hit_results = generate_hit_results(beatmap, accuracy_percent / 100.0, misses, mehs, oks, None, None)
             else:
