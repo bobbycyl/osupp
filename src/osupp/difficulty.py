@@ -4,12 +4,12 @@ from .core import Array, OperationCanceledException, OsuRuleset, ProcessorComman
 from .util import Result, re_deserialize, to_snake_case
 
 
-def get_all_mods(ruleset: Ruleset) -> list[dict[str, str | list[dict[str, str | type[str, float, bool]]]]]:
-    all_mods_data: list[dict[str, str | list[dict[str, str | type[str, float, bool]]]]] = []
+def get_all_mods(ruleset: Ruleset) -> list[dict[str, str | list[dict[str, str | type[str | float | bool]]]]]:
+    all_mods_data: list[dict[str, str | list[dict[str, str | type[str | float | bool]]]]] = []
     all_mods = ruleset.CreateAllMods()
     all_mods_list = list(all_mods)
     for mod in all_mods_list:
-        settings_data: list[dict[str, str | type[str, float, bool]]] = []
+        settings_data: list[dict[str, str | type[str | float | bool]]] = []
         source_properties = SettingSourceExtensions.GetSettingsSourceProperties(mod)
         for setting in source_properties:
             settings_source, property_info = setting.Item1, setting.Item2
@@ -43,7 +43,7 @@ def get_all_mods(ruleset: Ruleset) -> list[dict[str, str | list[dict[str, str | 
     return all_mods_data
 
 
-def transform_net_type(net_type) -> type[str, float, bool]:
+def transform_net_type(net_type) -> type[str | float | bool]:
     if net_type is None:
         return str
 

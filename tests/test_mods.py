@@ -7,7 +7,7 @@ from osupp.difficulty import get_all_mods
 from osupp.core import OsuRuleset, CatchRuleset, ManiaRuleset, TaikoRuleset
 
 
-def mod_setting_type_mapping(mods_info: list[dict[str, str | list[dict[str, str | type[str, float, bool]]]]]) -> dict[str, dict[str, type[str, float, bool]]]:
+def mod_setting_type_mapping(mods_info: list[dict[str, str | list[dict[str, str | type[str | float | bool]]]]]) -> dict[str, dict[str, type[str | float | bool]]]:
     d = {}
     for mod_info in mods_info:
         mod_acronym = mod_info["Acronym"]
