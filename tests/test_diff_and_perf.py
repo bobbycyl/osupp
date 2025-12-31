@@ -11,7 +11,13 @@ def test():
     # 设置测试参数
     beatmap_path = r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0\cache\3477131.osu"
     mods = ["HD", "DT"]
-    mod_options = ["DT_speed_change=1.3"]
+    mod_options1 = ["DT_speed_change=1.3", "DT_adjust_pitch=true"]
+    mod_options2 = ["DT_speed_change=1.3", "DT_adjust_pitch=True"]
+    mod_options3 = ["DT_speed_change=1.3", "DT_adjust_pitch=1"]
+    mod_options4 = ["DT_speed_change=1.3", "DT_adjust_pitch=1.0"]
+    mod_options5 = ["DT_speed_change=1.3", "DT_adjust_pitch=false"]
+    mod_options6 = ["DT_speed_change=1.3", "DT_adjust_pitch=False"]
+    mod_options7 = ["DT_speed_change=1.3", "DT_adjust_pitch=0"]
 
     # 准备测试结果
     diff_result = '{"star_rating":8.340159453660592,"max_combo":1782,"aim_difficulty":4.464371148872465,"aim_difficult_slider_count":229.3534837920631,"speed_difficulty":3.5505915358962152,"speed_note_count":322.6236688454787,"slider_factor":0.9672502717561137,"aim_top_weighted_slider_factor":0.455429594945989,"speed_top_weighted_slider_factor":0.4901857094088748,"aim_difficult_strain_count":155.50956192853607,"speed_difficult_strain_count":91.93918738759285,"nested_score_per_object":27.145174371451745,"legacy_score_base_multiplier":4.0,"maximum_legacy_combo_score":52235232.0}'.encode()
@@ -23,7 +29,13 @@ def test():
     perf_result_info = perf_result_obj["beatmap_info"]
 
     # === 第一部分：测试 difficulty 计算 ===
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options1)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options2)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options3)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options4)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options5)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options6)) == diff_result
+    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options7)) == diff_result
 
     # === 第二部分：测试 performance 计算 ===
     calculator = calculate_osu_performance(beatmap_path)
