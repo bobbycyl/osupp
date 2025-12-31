@@ -1,7 +1,67 @@
 from typing import Optional
 
-from .core import Array, OperationCanceledException, OsuRuleset, ProcessorCommand, ProcessorWorkingBeatmap
-from .util import Result, re_deserialize
+from .core import Array, OperationCanceledException, OsuRuleset, ProcessorCommand, ProcessorWorkingBeatmap, Ruleset, SettingSourceExtensions, System
+from .util import Result, re_deserialize, to_snake_case
+
+
+def get_all_mods(ruleset: Ruleset) -> list[dict[str, str | list[dict[str, str | type[str, float, bool]]]]]:
+    all_mods_data: list[dict[str, str | list[dict[str, str | type[str, float, bool]]]]] = []
+    all_mods = ruleset.CreateAllMods()
+    all_mods_list = list(all_mods)
+    for mod in all_mods_list:
+        settings_data: list[dict[str, str | type[str, float, bool]]] = []
+        source_properties = SettingSourceExtensions.GetSettingsSourceProperties(mod)
+        for setting in source_properties:
+            settings_source, property_info = setting.Item1, setting.Item2
+            bindable = property_info.GetValue(mod)
+            assert bindable is not None
+            i_bindable = bindable.GetType().GetInterface("IBindable`1")
+            if i_bindable:
+                net_type = i_bindable.GetGenericArguments()[0]
+            else:
+                net_type = bindable.GetType()
+            py_type = transform_net_type(net_type)
+
+            name = to_snake_case(property_info.Name)
+            settings_data.append(
+                {
+                    "Name": name,
+                    "Type": py_type,
+                    "Label": str(settings_source.Label),
+                    "Description": str(settings_source.Description),
+                },
+            )
+
+        # 组装 acronym 和 settings
+        mod_entry = {
+            "Acronym": mod.Acronym,
+            "Settings": settings_data,
+        }
+
+        all_mods_data.append(mod_entry)
+
+    return all_mods_data
+
+
+def transform_net_type(net_type) -> type[str, float, bool]:
+    if net_type is None:
+        return str
+
+    # 剥离泛型参数，即把 int?, float? double? bool? 的 ? 拿掉
+    if net_type.IsGenericType and net_type.GetGenericTypeDefinition().Name == "Nullable`1":
+        net_type = net_type.GetGenericArguments()[0]
+    full_name = net_type.FullName
+
+    if full_name in ["System.Int32", "System.Double", "System.Single", "System.Decimal"]:
+        return float
+    if full_name == "System.Boolean":
+        return bool
+    if full_name == "System.String":
+        return str
+    if net_type.IsEnum:
+        return str
+
+    raise TypeError(f"Unknown type: {net_type}")
 
 
 def calculate_osu_difficulty(beatmap_path: str, mods: Optional[list[str]] = None, mod_options: Optional[list[str]] = None) -> Result:

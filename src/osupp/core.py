@@ -26,10 +26,14 @@ def init_osu_tools(build_dir):
         clr.AddReference("PerformanceCalculator")
         clr.AddReference("osu.Game")
         clr.AddReference("osu.Game.Rulesets.Osu")
+        clr.AddReference("osu.Game.Rulesets.Catch")
+        clr.AddReference("osu.Game.Rulesets.Taiko")
+        clr.AddReference("osu.Game.Rulesets.Mania")
         clr.AddReference("Newtonsoft.Json")
 
         from PerformanceCalculator import ProcessorWorkingBeatmap, ProcessorCommand
         from osu.Game.Beatmaps import IBeatmap, BeatmapExtensions
+        from osu.Game.Configuration import SettingSourceExtensions, SettingSourceAttribute
         from osu.Game.Rulesets import Ruleset
         from osu.Game.Rulesets.Mods import Mod
         from osu.Game.Rulesets.Scoring import HitResult
@@ -37,7 +41,11 @@ def init_osu_tools(build_dir):
         from osu.Game.Rulesets.Osu.Difficulty import OsuDifficultyAttributes, OsuPerformanceAttributes
         from osu.Game.Rulesets.Osu.Mods import OsuModClassic
         from osu.Game.Rulesets.Osu.Objects import Slider, SliderTick, SliderRepeat
+        from osu.Game.Rulesets.Catch import CatchRuleset
+        from osu.Game.Rulesets.Taiko import TaikoRuleset
+        from osu.Game.Rulesets.Mania import ManiaRuleset
         from osu.Game.Scoring import ScoreInfo
+        import System
         from System import Array, OperationCanceledException
         from System.Collections.Generic import Dictionary
         from Newtonsoft.Json import JsonConvert
@@ -49,6 +57,8 @@ def init_osu_tools(build_dir):
                 "ProcessorCommand": ProcessorCommand,
                 "IBeatmap": IBeatmap,
                 "BeatmapExtensions": BeatmapExtensions,
+                "SettingSourceExtensions": SettingSourceExtensions,
+                "SettingSourceAttribute": SettingSourceAttribute,
                 "Ruleset": Ruleset,
                 "Mod": Mod,
                 "HitResult": HitResult,
@@ -59,7 +69,11 @@ def init_osu_tools(build_dir):
                 "Slider": Slider,
                 "SliderTick": SliderTick,
                 "SliderRepeat": SliderRepeat,
+                "CatchRuleset": CatchRuleset,
+                "TaikoRuleset": TaikoRuleset,
+                "ManiaRuleset": ManiaRuleset,
                 "ScoreInfo": ScoreInfo,
+                "System": System,
                 "Array": Array,
                 "OperationCanceledException": OperationCanceledException,
                 "Dictionary": Dictionary,
