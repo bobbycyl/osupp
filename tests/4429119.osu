@@ -1,0 +1,80 @@
+osu file format v14
+
+[General]
+AudioFilename: audio.mp3
+AudioLeadIn: 0
+PreviewTime: -1
+Countdown: 0
+SampleSet: None
+StackLeniency: 0.7
+Mode: 0
+LetterboxInBreaks: 0
+WidescreenStoryboard: 0
+
+[Editor]
+DistanceSpacing: 0.8
+BeatDivisor: 8
+GridSize: 4
+TimelineZoom: 1
+
+[Metadata]
+Title:Plasma Gun
+TitleUnicode:Plasma Gun
+Artist:Memme
+ArtistUnicode:Memme
+Creator:8875
+Version:Beyond Obliteration
+Source:O2Jam U
+Tags:electronic instrumental ParkMemme shooting trance
+BeatmapID:4429101
+BeatmapSetID:2110073
+
+[Difficulty]
+HPDrainRate:0
+CircleSize:12.142857
+OverallDifficulty:2147483647
+ApproachRate:0
+SliderMultiplier:2147483647
+SliderTickRate:0
+
+[Events]
+//Background and Video events
+//Break Periods
+//Storyboard Layer 0 (Background)
+//Storyboard Layer 1 (Fail)
+//Storyboard Layer 2 (Pass)
+//Storyboard Layer 3 (Foreground)
+//Storyboard Layer 4 (Overlay)
+//Storyboard Sound Samples
+
+[TimingPoints]
+0,1E-10,4,1,1,5,1,0
+0,-10,4,1,1,5,0,0
+
+
+[HitObjects]
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
+131071,131071,0,6,0,L|131072:131072,9000,131072
+-131071,-131071,0,6,0,L|-131072:-131072,9000,131072
