@@ -1,7 +1,6 @@
 import orjson
 
 from osupp.core import init_osu_tools
-
 init_osu_tools(r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0")
 from osupp.difficulty import get_all_mods
 from osupp.core import OsuRuleset, CatchRuleset, ManiaRuleset, TaikoRuleset

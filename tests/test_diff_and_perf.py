@@ -1,10 +1,11 @@
+import orjson
+
 from osupp.core import init_osu_tools
 
 init_osu_tools(r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0")
-from osupp.util import Result
 from osupp.difficulty import calculate_osu_difficulty
-from osupp.performance import calculate_osu_performance, OsuPerformance
-import orjson
+from osupp.performance import OsuPerformance, calculate_osu_performance
+from osupp.util import Result
 
 
 def test():
