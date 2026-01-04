@@ -3,14 +3,14 @@ import orjson
 from osupp.core import init_osu_tools
 
 init_osu_tools(r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0")
-from osupp.difficulty import calculate_osu_difficulty
+from osupp.difficulty import calculate_difficulty
 from osupp.performance import OsuPerformance, calculate_osu_performance
 from osupp.util import Result
 
 
 def test():
     # 设置测试参数
-    beatmap_path = r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0\cache\3477131.osu"
+    beatmap_path = r"./3477131.osu"
     mods = ["HD", "DT"]
     mod_options1 = ["DT_speed_change=1.3", "DT_adjust_pitch=true"]
     mod_options2 = ["DT_speed_change=1.3", "DT_adjust_pitch=True"]
@@ -30,13 +30,13 @@ def test():
     perf_result_info = perf_result_obj["beatmap_info"]
 
     # === 第一部分：测试 difficulty 计算 ===
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options1)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options2)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options3)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options4)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options5)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options6)) == diff_result
-    assert orjson.dumps(calculate_osu_difficulty(beatmap_path, mods, mod_options7)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options1)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options2)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options3)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options4)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options5)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options6)) == diff_result
+    assert orjson.dumps(calculate_difficulty(beatmap_path, mods, mod_options7)) == diff_result
 
     # === 第二部分：测试 performance 计算 ===
     calculator = calculate_osu_performance(beatmap_path)
@@ -78,7 +78,7 @@ def test_strange():
     # 4429119 很奇怪，osu-tools 会无法处理，只能在 Python 层面做一个错误拦截，这里测试拦截效果
     beatmap_path = r"./4429119.osu"
     mods = ["EZ"]
-    diff_attr = calculate_osu_difficulty(beatmap_path, mods)
+    diff_attr = calculate_difficulty(beatmap_path, mods)
     assert diff_attr["star_rating"] == 0.0
     calculator = calculate_osu_performance(beatmap_path)
     try:
@@ -91,3 +91,12 @@ def test_strange():
         _ = calculator.send(OsuPerformance())
     except StopIteration as e:
         assert e.value["DifficultyName"] == "Beyond Obliteration"
+
+
+def test_other_rulesets():
+    mania_path = "./4103079.osu"
+    mania_attr_result = '{"star_rating":2.7225192199819594,"max_combo":1763}'.encode()
+    assert orjson.dumps(calculate_difficulty(mania_path)) == mania_attr_result
+    converted_taiko_path = "./3477131.osu"
+    converted_taiko_result = '{"star_rating":4.109442845494353,"max_combo":1701,"rhythm_difficulty":0.6425571223517397,"mono_stamina_factor":0.05261358376107376,"consistency_factor":0.7278190105371712}'.encode()
+    assert orjson.dumps(calculate_difficulty(converted_taiko_path, ruleset_id=1)) == converted_taiko_result

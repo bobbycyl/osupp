@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Literal, Optional
 
-from .core import Array, OperationCanceledException, OsuRuleset, ProcessorCommand, ProcessorWorkingBeatmap, Ruleset, SettingSourceExtensions, System
+from .core import Array, LegacyHelper, OperationCanceledException, ProcessorCommand, ProcessorWorkingBeatmap, Ruleset, SettingSourceExtensions, System
 from .util import Result, re_deserialize, to_snake_case
 
 
@@ -64,9 +64,11 @@ def transform_net_type(net_type) -> type[str | float | bool]:
     raise TypeError(f"Unknown type: {net_type}")
 
 
-def calculate_osu_difficulty(beatmap_path: str, mods: Optional[list[str]] = None, mod_options: Optional[list[str]] = None) -> Result:
+def calculate_difficulty(beatmap_path: str, mods: Optional[list[str]] = None, mod_options: Optional[list[str]] = None, ruleset_id: Optional[Literal[0, 1, 2, 3]] = None) -> Result:
     working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
-    ruleset = OsuRuleset()
+    if ruleset_id is None:
+        ruleset_id = working_beatmap.BeatmapInfo.Ruleset.OnlineID
+    ruleset = LegacyHelper.GetRulesetFromLegacyID(ruleset_id)
     calculator = ruleset.CreateDifficultyCalculator(working_beatmap)
 
     if mods is None:

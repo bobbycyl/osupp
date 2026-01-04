@@ -31,7 +31,7 @@ def init_osu_tools(build_dir):
         clr.AddReference("osu.Game.Rulesets.Mania")
         clr.AddReference("Newtonsoft.Json")
 
-        from PerformanceCalculator import ProcessorWorkingBeatmap, ProcessorCommand
+        from PerformanceCalculator import LegacyHelper, ProcessorWorkingBeatmap, ProcessorCommand
         from osu.Game.Beatmaps import IBeatmap, BeatmapExtensions
         from osu.Game.Configuration import SettingSourceExtensions, SettingSourceAttribute
         from osu.Game.Rulesets import Ruleset
@@ -53,6 +53,7 @@ def init_osu_tools(build_dir):
         # 将类型绑定到全局变量，使其对外可见
         globals().update(
             {
+                "LegacyHelper": LegacyHelper,
                 "ProcessorWorkingBeatmap": ProcessorWorkingBeatmap,
                 "ProcessorCommand": ProcessorCommand,
                 "IBeatmap": IBeatmap,
