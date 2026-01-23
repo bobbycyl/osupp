@@ -12,9 +12,12 @@ class Result(dict):
         else:
             return 0.0
 
+    def _get_pure(self):
+        return {k: v for k, v in self.items() if not k.startswith("__ek_")}
 
-def re_deserialize(obj):
-    return Result(loads(JsonConvert.SerializeObject(obj)))
+
+def re_deserialize(obj, **kwargs):
+    return Result(loads(JsonConvert.SerializeObject(obj)), **{"__ek_%s" % k: v for k, v in kwargs.items()})
 
 
 def to_snake_case(name):
