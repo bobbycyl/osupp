@@ -2,6 +2,7 @@ from collections.abc import Generator
 from functools import singledispatch
 from typing import NamedTuple, Optional, Union
 
+from .config import _CONFIG
 from .core import (
     Aim,
     Array,
@@ -179,31 +180,9 @@ def generate_catch_hit_results(
     count_large_tick_hit: Optional[int] = None,
 ) -> dict[HitResult, int]:
     max_combo = BeatmapExtensions.GetMaxCombo(beatmap)
-
-    max_small_tick_hit = sum(
-        1
-        for obj in beatmap.HitObjects
-        if isinstance(obj, JuiceStream)
-        for nested in obj.NestedHitObjects
-        if isinstance(nested, TinyDroplet),
-    )
-
-    max_large_tick_hit = sum(
-        1
-        for obj in beatmap.HitObjects
-        if isinstance(obj, JuiceStream)
-        for nested in obj.NestedHitObjects
-        if isinstance(nested, Droplet),
-    ) - max_small_tick_hit
-
-    max_great = sum(
-        1
-        if isinstance(obj, Fruit)
-        else sum(1 for nested in obj.NestedHitObjects if isinstance(nested, Fruit))
-        if isinstance(obj, JuiceStream)
-        else 0
-        for obj in beatmap.HitObjects,
-    )
+    max_small_tick_hit = sum(1 for obj in beatmap.HitObjects if isinstance(obj, JuiceStream) for nested in obj.NestedHitObjects if isinstance(nested, TinyDroplet))
+    max_large_tick_hit = sum(1 for obj in beatmap.HitObjects if isinstance(obj, JuiceStream) for nested in obj.NestedHitObjects if isinstance(nested, Droplet)) - max_small_tick_hit
+    max_great = sum(1 if isinstance(obj, Fruit) else sum(1 for nested in obj.NestedHitObjects if isinstance(nested, Fruit)) if isinstance(obj, JuiceStream) else 0 for obj in beatmap.HitObjects)
 
     if count_large_tick_hit is None:
         count_large_tick_hit = max(0, max_large_tick_hit - count_miss)
@@ -434,7 +413,7 @@ def calculate_performance(
         beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
 
         # 额外处理：主模式 strainTimeline patch
-        if kwargs.get("strain_timeline"):
+        if kwargs.get("strain_timeline") and _CONFIG["strain_timeline"]:
             clock_rate = ModUtils.CalculateRateWithMods(mod_array)
 
             # 对应 osu 项目 OsuDifficultyCalculator.cs 的 CreateDifficultyHitObjects

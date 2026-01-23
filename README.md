@@ -42,3 +42,4 @@
 
 1. 当前测试 osu! 版本号：`2025.1007.0.0`
 2. [osu_mods](./tests/osu_mods.json) 文件为 osu-tools 导出的所有模组信息
+3. 可以使用 `set_config` 来控制是否启用依赖 patch 的功能，全部关闭之后即便使用原版 osu-tools 程序也能正常运行
