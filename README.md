@@ -2,27 +2,34 @@
 
 ## 简介
 
-简单复刻了 [PerformanceCalculator](https://github.com/ppy/osu-tools/blob/master/PerformanceCalculator) 的常用功能。
+简单地包装了 [PerformanceCalculator](https://github.com/ppy/osu-tools/blob/master/PerformanceCalculator) 的常用功能。
 
-目前仅完成了 Standard 模式。
+目前已完成所有 4 个模式。
 
 ## 使用方法
 
-1. 安装 Python 3.12、.Net 8.0、pythonnet 和本仓库的 osupp 包
-2. 本地克隆 [osu-tools](https://github.com/ppy/osu-tools) 仓库
+1. 安装 Python 3.12、.NET 8.0、pythonnet 和本仓库的 osupp 包
+2. 本地克隆 [osu](https://github.com/ppy/osu) 和 [osu-tools](https://github.com/ppy/osu-tools) 仓库，
+   并对 osu 仓库应用 [patch](https://github.com/bobbycyl/osu-patch)
 
    ```shell
+   git clone https://github.com/ppy/osu.git
    git clone https://github.com/ppy/osu-tools.git
+   git clone https://github.com/bobbycyl/osu-patch.git
+   cd osu
+   git checkout 2025.1007.0
+   git apply ../osu-patch/strain_timeline.patch
    ```
 
-3. 编译 PerformanceCalculator
+3. 使用本地 osu! 源码编译 PerformanceCalculator
+
+   在 Windows 上执行 `UseLocalOsu.ps1`，在其它系统上执行 `UseLocalOsu.sh`
 
    ```shell
-   cd osu-tools/PerformanceCalculator
    dotnet build -c Release
    ```
 
-4. 在 Python 中初始化 .Net 运行时
+4. 在 Python 中初始化 .NET 运行时
 
    ```python
    from osupp.core import init_osu_tools
