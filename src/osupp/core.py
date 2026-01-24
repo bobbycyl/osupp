@@ -23,34 +23,48 @@ def init_osu_tools(build_dir):
     if not _dotnet_libs_imported:
         import clr
 
+        # 以下导入顺序非 alphabetic
         clr.AddReference("PerformanceCalculator")
         clr.AddReference("osu.Game")
         clr.AddReference("osu.Game.Rulesets.Osu")
-        clr.AddReference("osu.Game.Rulesets.Catch")
         clr.AddReference("osu.Game.Rulesets.Taiko")
+        clr.AddReference("osu.Game.Rulesets.Catch")
         clr.AddReference("osu.Game.Rulesets.Mania")
         clr.AddReference("Newtonsoft.Json")
 
+        # PerformanceCalculator 命名空间
         from PerformanceCalculator import LegacyHelper, ProcessorWorkingBeatmap, ProcessorCommand
+
+        # osu.Game 命名空间
         from osu.Game.Beatmaps import IBeatmap, BeatmapExtensions
         from osu.Game.Configuration import SettingSourceExtensions, SettingSourceAttribute
         from osu.Game.Rulesets import Ruleset
         from osu.Game.Rulesets.Mods import Mod, ModClassic
         from osu.Game.Rulesets.Scoring import HitResult
         from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
+
+        # osu.Game.Rulesets.Osu 命名空间
         from osu.Game.Rulesets.Osu import OsuRuleset
         from osu.Game.Rulesets.Osu.Difficulty import OsuDifficultyAttributes, OsuPerformanceAttributes
         from osu.Game.Rulesets.Osu.Difficulty.Skills import Aim, Speed
         from osu.Game.Rulesets.Osu.Mods import OsuModClassic
         from osu.Game.Rulesets.Osu.Objects import Slider, SliderTick, SliderRepeat
         from osu.Game.Rulesets.Osu.Difficulty.Preprocessing import OsuDifficultyHitObject
+
+        # osu.Game.Rulesets.Taiko 命名空间
+        from osu.Game.Rulesets.Taiko import TaikoRuleset
+
+        # osu.Game.Rulesets.Catch 命名空间
         from osu.Game.Rulesets.Catch import CatchRuleset
         from osu.Game.Rulesets.Catch.Objects import Droplet, TinyDroplet, Fruit, JuiceStream
-        from osu.Game.Rulesets.Taiko import TaikoRuleset
+
+        # osu.Game.Rulesets.Mania 命名空间
         from osu.Game.Rulesets.Mania import ManiaRuleset
         from osu.Game.Rulesets.Mania.Objects import HoldNote
         from osu.Game.Scoring import ScoreInfo
         from osu.Game.Utils import ModUtils
+
+        # 其他
         import System
         from System import Array, OperationCanceledException
         from System.Collections.Generic import Dictionary, List
@@ -82,12 +96,12 @@ def init_osu_tools(build_dir):
                 "SliderTick": SliderTick,
                 "SliderRepeat": SliderRepeat,
                 "OsuDifficultyHitObject": OsuDifficultyHitObject,
+                "TaikoRuleset": TaikoRuleset,
                 "CatchRuleset": CatchRuleset,
                 "Droplet": Droplet,
                 "TinyDroplet": TinyDroplet,
                 "Fruit": Fruit,
                 "JuiceStream": JuiceStream,
-                "TaikoRuleset": TaikoRuleset,
                 "ManiaRuleset": ManiaRuleset,
                 "HoldNote": HoldNote,
                 "ScoreInfo": ScoreInfo,

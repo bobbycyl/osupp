@@ -61,7 +61,7 @@ def transform_net_type(net_type) -> type[str | float | bool]:
     if net_type.IsEnum:
         return str
 
-    raise TypeError(f"Unknown type: {net_type}")
+    raise TypeError(f"unknown type: {net_type}")
 
 
 def calculate_difficulty(beatmap_path: str, mods: Optional[list[str]] = None, mod_options: Optional[list[str]] = None, ruleset_id: Optional[Literal[0, 1, 2, 3]] = None) -> Result:

@@ -383,16 +383,6 @@ def calculate_performance(
     mod_options: Optional[list[str]] = None,
     **kwargs,
 ) -> Generator[Result, Union[OsuPerformance, TaikoPerformance, CatchPerformance, ManiaPerformance, None], Result]:
-    """生成器模式的计算器，在计算同一谱面时只需要创建一次计算器，提高效率
-
-    第一次返回 difficulty_attributes
-
-    后续每次计算返回 performance_attributes
-
-    传入 None 则结束计算
-
-    生成器结束返回 beatmap_info
-    """
     working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
     if mods is None:
         mods = []
@@ -473,6 +463,16 @@ def calculate_osu_performance(
     mods: Optional[list[str]] = None,
     mod_options: Optional[list[str]] = None,
 ) -> Generator[Result, Optional[OsuPerformance], Result]:
+    """生成器模式的 osu! performance 计算器，在多次计算同一谱面时只需要创建一次计算器，提高效率
+
+    第一次返回 ``difficulty_attributes``
+
+    后续每次传入 ``OsuPerformance`` 返回 ``performance_attributes``
+
+    传入 ``None`` 则结束计算
+
+    生成器结束返回 ``beatmap_info``
+    """
     return calculate_performance(beatmap_path, OsuRuleset(), mods, mod_options, strain_timeline=True)
 
 
@@ -481,6 +481,16 @@ def calculate_taiko_performance(
     mods: Optional[list[str]] = None,
     mod_options: Optional[list[str]] = None,
 ) -> Generator[Result, Optional[TaikoPerformance], Result]:
+    """生成器模式的 osu!taiko performance 计算器，在多次计算同一谱面时只需要创建一次计算器，提高效率
+
+    第一次返回 ``difficulty_attributes``
+
+    后续每次传入 ``TaikoPerformance`` 返回 ``performance_attributes``
+
+    传入 ``None`` 则结束计算
+
+    生成器结束返回 ``beatmap_info``
+    """
     return calculate_performance(beatmap_path, TaikoRuleset(), mods, mod_options)
 
 
@@ -489,6 +499,16 @@ def calculate_catch_performance(
     mods: Optional[list[str]] = None,
     mod_options: Optional[list[str]] = None,
 ) -> Generator[Result, Optional[CatchPerformance], Result]:
+    """生成器模式的 osu!catch performance 计算器，在多次计算同一谱面时只需要创建一次计算器，提高效率
+
+    第一次返回 ``difficulty_attributes``
+
+    后续每次传入 ``CatchPerformance`` 返回 ``performance_attributes``
+
+    传入 ``None`` 则结束计算
+
+    生成器结束返回 ``beatmap_info``
+    """
     return calculate_performance(beatmap_path, CatchRuleset(), mods, mod_options)
 
 
@@ -497,4 +517,14 @@ def calculate_mania_performance(
     mods: Optional[list[str]] = None,
     mod_options: Optional[list[str]] = None,
 ) -> Generator[Result, Optional[ManiaPerformance], Result]:
+    """生成器模式的 osu!mania performance 计算器，在多次计算同一谱面时只需要创建一次计算器，提高效率
+
+    第一次返回 ``difficulty_attributes``
+
+    后续每次传入 ``ManiaPerformance`` 返回 ``performance_attributes``
+
+    传入 ``None`` 则结束计算
+
+    生成器结束返回 ``beatmap_info``
+    """
     return calculate_performance(beatmap_path, ManiaRuleset(), mods, mod_options)
