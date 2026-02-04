@@ -1,0 +1,31 @@
+{
+  "score": {
+    "ruleset_id": 1,
+    "beatmap_id": 4434797,
+    "beatmap": "YOASOBI - Shukufuku (TV Size) (Roxy-) [Linkff's Blessings]",
+    "mods": [],
+    "total_score": 0,
+    "legacy_total_score": 0,
+    "accuracy": 97.57785467128028,
+    "combo": 272,
+    "statistics": {
+      "great": 552,
+      "ok": 24,
+      "meh": 0,
+      "miss": 2
+    }
+  },
+  "performance_attributes": {
+    "difficulty": 137.27124726685588,
+    "accuracy": 72.13943966159503,
+    "estimated_unstable_rate": 173.65148639719936,
+    "pp": 209.4106869284509
+  },
+  "difficulty_attributes": {
+    "star_rating": 4.69127575774839,
+    "max_combo": 578,
+    "rhythm_difficulty": 1.207647054231082,
+    "mono_stamina_factor": 3.5053680191451437E-09,
+    "consistency_factor": 0.743943628941786
+  }
+}

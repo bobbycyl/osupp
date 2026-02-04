@@ -1,0 +1,28 @@
+{
+  "score": {
+    "ruleset_id": 3,
+    "beatmap_id": 4364723,
+    "beatmap": "Sayuri - Hana no Tou (TV Size) (Revv-) [Flower]",
+    "mods": [],
+    "total_score": 0,
+    "legacy_total_score": 0,
+    "accuracy": 98.01488529494709,
+    "combo": 0,
+    "statistics": {
+      "perfect": 878,
+      "great": 403,
+      "good": 55,
+      "ok": 0,
+      "meh": 0,
+      "miss": 1
+    }
+  },
+  "performance_attributes": {
+    "difficulty": 136.4007143845721,
+    "pp": 136.4007143845721
+  },
+  "difficulty_attributes": {
+    "star_rating": 3.9607623796643003,
+    "max_combo": 1491
+  }
+}

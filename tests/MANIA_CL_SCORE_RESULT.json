@@ -1,0 +1,32 @@
+{
+  "score": {
+    "ruleset_id": 3,
+    "beatmap_id": 767046,
+    "beatmap": "typeMARS - Triumph & Regret ([ A v a l o n ]) [Regret]",
+    "mods": [
+      {
+        "acronym": "CL"
+      }
+    ],
+    "total_score": 0,
+    "legacy_total_score": 0,
+    "accuracy": 97.64252963059089,
+    "combo": 0,
+    "statistics": {
+      "perfect": 2429,
+      "great": 1199,
+      "good": 190,
+      "ok": 20,
+      "meh": 5,
+      "miss": 10
+    }
+  },
+  "performance_attributes": {
+    "difficulty": 270.6198265466546,
+    "pp": 270.6198265466546
+  },
+  "difficulty_attributes": {
+    "star_rating": 5.481878020967975,
+    "max_combo": 3994
+  }
+}

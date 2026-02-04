@@ -1,0 +1,51 @@
+{
+  "score": {
+    "ruleset_id": 0,
+    "beatmap_id": 3477131,
+    "beatmap": "TRUE - Storyteller (IOException) [Expert]",
+    "mods": [
+      {
+        "acronym": "CL"
+      }
+    ],
+    "total_score": 0,
+    "legacy_total_score": 0,
+    "accuracy": 100.0,
+    "combo": 1782,
+    "statistics": {
+      "great": 1233,
+      "ok": 0,
+      "meh": 0,
+      "miss": 0
+    }
+  },
+  "performance_attributes": {
+    "aim": 208.84652585858925,
+    "speed": 91.00748440069256,
+    "accuracy": 113.0674272570398,
+    "flashlight": 0.0,
+    "effective_miss_count": 0.0,
+    "speed_deviation": 10.352678446857832,
+    "combo_based_estimated_miss_count": 0.0,
+    "score_based_estimated_miss_count": null,
+    "aim_estimated_slider_breaks": 0.0,
+    "speed_estimated_slider_breaks": 0.0,
+    "pp": 428.8027574955315
+  },
+  "difficulty_attributes": {
+    "star_rating": 6.5573244947961955,
+    "max_combo": 1782,
+    "aim_difficulty": 3.5558149089835958,
+    "aim_difficult_slider_count": 212.31669845952544,
+    "speed_difficulty": 2.7088692600431186,
+    "speed_note_count": 293.2978143642428,
+    "slider_factor": 0.9665365858109283,
+    "aim_top_weighted_slider_factor": 0.4435754833342557,
+    "speed_top_weighted_slider_factor": 0.43512697356246866,
+    "aim_difficult_strain_count": 134.77529861943125,
+    "speed_difficult_strain_count": 84.41053188379207,
+    "nested_score_per_object": 27.145174371451745,
+    "legacy_score_base_multiplier": 4.0,
+    "maximum_legacy_combo_score": 52235232.0
+  }
+}

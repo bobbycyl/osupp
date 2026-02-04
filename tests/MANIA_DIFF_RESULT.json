@@ -1,0 +1,15 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "ruleset_id": 3,
+      "beatmap_id": 4103079,
+      "beatmap": "Benshi Cantabileo - Ongaku (Carpihat) [Hard]",
+      "mods": [],
+      "attributes": {
+        "star_rating": 2.7225192199819594,
+        "max_combo": 1763
+      }
+    }
+  ]
+}

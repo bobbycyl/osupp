@@ -1,0 +1,33 @@
+{
+  "score": {
+    "ruleset_id": 2,
+    "beatmap_id": 2158794,
+    "beatmap": "FictionJunction feat. LiSA - from the edge (TV Size) (rew0825) [Rain]",
+    "mods": [
+      {
+        "acronym": "NF"
+      },
+      {
+        "acronym": "CL"
+      }
+    ],
+    "total_score": 0,
+    "legacy_total_score": 0,
+    "accuracy": 97.58364312267658,
+    "combo": 226,
+    "statistics": {
+      "great": 335,
+      "large_tick_hit": 28,
+      "small_tick_hit": 162,
+      "small_tick_miss": 6,
+      "miss": 7
+    }
+  },
+  "performance_attributes": {
+    "pp": 65.07833234682607
+  },
+  "difficulty_attributes": {
+    "star_rating": 3.4317628194478838,
+    "max_combo": 370
+  }
+}
