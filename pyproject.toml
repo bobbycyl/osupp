@@ -28,3 +28,6 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/bobbycyl/osupp.git"
 "Bug Tracker" = "https://github.com/bobbycyl/osupp/issues"
+
+[tool.hatch.metadata]
+allow-direct-references = true
