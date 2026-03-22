@@ -17,7 +17,10 @@ class Result(dict):
 
 
 def re_deserialize(obj, **kwargs):
-    return Result(loads(JsonConvert.SerializeObject(obj)), **{"__ek_%s" % k: v for k, v in kwargs.items()})
+    return Result(
+        loads(JsonConvert.SerializeObject(obj)),
+        **{"__ek_%s" % k: v for k, v in kwargs.items()},
+    )
 
 
 def to_snake_case(name):

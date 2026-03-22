@@ -6,8 +6,10 @@ build-backend = "hatchling.build"
 name = "osupp"
 version = "0.1"
 dependencies = [
-    "pythonnet",
+    "orjson",
     "pytest",
+    "pythonnet",
+    "stubgen",
 ]
 requires-python = ">=3.12"
 authors = [
@@ -26,3 +28,6 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/bobbycyl/osupp.git"
 "Bug Tracker" = "https://github.com/bobbycyl/osupp/issues"
+
+[tool.uv.sources]
+stubgen = { url = "https://github.com/Mimer29or40/pythonnet-stubs/releases/download/v2.1.0/stubgen-2.1.0-py3-none-any.whl" }

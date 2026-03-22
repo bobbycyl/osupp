@@ -4,4 +4,15 @@
     <option name="sdkName" value="C:\Users\bobbycyl\miniforge3" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="C:\Users\bobbycyl\miniforge3" project-jdk-type="Python SDK" />
+  <component name="RuffConfiguration">
+    <option name="enabled" value="true" />
+    <option name="formatting" value="false" />
+    <option name="sortImports" value="false" />
+  </component>
+  <component name="TyConfiguration">
+    <option name="completions" value="false" />
+    <option name="documentation" value="false" />
+    <option name="enabled" value="true" />
+    <option name="inlayHints" value="false" />
+  </component>
 </project>

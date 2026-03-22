@@ -2,11 +2,22 @@ import orjson
 
 from osupp.core import init_osu_tools
 
-init_osu_tools(r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0")
-from osupp import set_config
-from osupp.difficulty import calculate_difficulty
-from osupp.performance import CatchPerformance, ManiaPerformance, OsuPerformance, TaikoPerformance, calculate_catch_performance, calculate_mania_performance, calculate_osu_performance, calculate_taiko_performance
-from osupp.util import Result
+init_osu_tools(
+    r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
+)
+from osupp import set_config  # noqa: E402
+from osupp.difficulty import calculate_difficulty  # noqa: E402
+from osupp.performance import (
+    CatchPerformance,
+    ManiaPerformance,
+    OsuPerformance,
+    TaikoPerformance,
+    calculate_catch_performance,
+    calculate_mania_performance,
+    calculate_osu_performance,
+    calculate_taiko_performance,
+)  # noqa: E402
+from osupp.util import Result  # noqa: E402
 
 
 # 准备测试结果
@@ -48,7 +59,7 @@ def test():
     perf_result_obj = Result(PERF_RESULT)
     perf_result_diff = perf_result_obj["difficulty_attributes"]
     perf_result_attr = perf_result_obj["performance_attributes"]
-    perf_result_info = perf_result_obj["beatmap_info"]
+    # perf_result_info = perf_result_obj["beatmap_info"]
 
     # === 第一部分：测试 difficulty 计算 ===
     assert calculate_difficulty(beatmap_path, mods, mod_options1) == DIFF_RESULT
@@ -65,8 +76,26 @@ def test():
         # 第一次拿到的是 difficulty
         diff_attr = next(calculator)
         # 进行 3 次计算
-        perf1_attr = calculator.send(OsuPerformance(combo=706, misses=2, mehs=4, oks=34, large_tick_misses=0, slider_tail_misses=7))
-        perf2_attr = calculator.send(OsuPerformance(combo=706, misses=2, mehs=4, oks=34, large_tick_hits=57, slider_tail_hits=485))
+        perf1_attr = calculator.send(
+            OsuPerformance(
+                combo=706,
+                misses=2,
+                mehs=4,
+                oks=34,
+                large_tick_misses=0,
+                slider_tail_misses=7,
+            ),
+        )
+        perf2_attr = calculator.send(
+            OsuPerformance(
+                combo=706,
+                misses=2,
+                mehs=4,
+                oks=34,
+                large_tick_hits=57,
+                slider_tail_hits=485,
+            ),
+        )
         perf_max_attr = calculator.send(OsuPerformance())
         # 分别校验 performance 结果
         assert diff_attr._get_pure() == perf_result_diff
@@ -76,7 +105,7 @@ def test():
         assert diff_attr["key_not_exists"] == 0.0
         # 结束时拿到谱面信息
         calculator.send(None)
-    except StopIteration as e:
+    except StopIteration:
         # 这里的谱面信息没有在线信息，所以没必要校对了
         pass
 
@@ -131,7 +160,17 @@ def test_catch_perf():
     beatmap_path = "./cache/2158794.osu"
     calculator = calculate_catch_performance(beatmap_path, mods=["NF", "CL"])
     next(calculator)
-    assert calculator.send(CatchPerformance(combo=226, misses=7, large_tick_hits=28, small_tick_hits=162)) == CATCH_SCORE_RESULT["performance_attributes"]
+    assert (
+        calculator.send(
+            CatchPerformance(
+                combo=226,
+                misses=7,
+                large_tick_hits=28,
+                small_tick_hits=162,
+            ),
+        )
+        == CATCH_SCORE_RESULT["performance_attributes"]
+    )
 
 
 def test_mania_perf():
@@ -145,4 +184,9 @@ def test_mania_cl_perf():
     beatmap_path = "./cache/767046.osu"
     calculator = calculate_mania_performance(beatmap_path, mods=["CL"])
     next(calculator)
-    assert calculator.send(ManiaPerformance(oks=20, mehs=5, goods=190, misses=10, greats=1199)) == MANIA_CL_SCORE_RESULT["performance_attributes"]
+    assert (
+        calculator.send(
+            ManiaPerformance(oks=20, mehs=5, goods=190, misses=10, greats=1199),
+        )
+        == MANIA_CL_SCORE_RESULT["performance_attributes"]
+    )

@@ -2,12 +2,21 @@ import orjson
 
 from osupp.core import init_osu_tools
 
-init_osu_tools(r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0")
-from osupp.difficulty import get_all_mods
-from osupp.core import OsuRuleset, CatchRuleset, ManiaRuleset, TaikoRuleset
+init_osu_tools(
+    r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
+)
+from osupp.difficulty import ModEntry, get_all_mods  # noqa: E402
+from osupp.core import (
+    OsuRuleset,
+    CatchRuleset,
+    ManiaRuleset,
+    TaikoRuleset,
+)  # noqa: E402
 
 
-def mod_setting_type_mapping(mods_info: list[dict[str, str | list[dict[str, str | type[str | float | bool]]]]]) -> dict[str, dict[str, type[str | float | bool]]]:
+def mod_setting_type_mapping(
+    mods_info: list[ModEntry],
+) -> dict[str, dict[str, type[str | float | bool]]]:
     d = {}
     for mod_info in mods_info:
         mod_acronym = mod_info["Acronym"]
@@ -46,4 +55,4 @@ def test():
             for osu_mod_setting in osu_mod_settings:
                 osu_mod_setting_name = osu_mod_setting["Name"]
                 osu_mod_setting_type = osu_mod_setting["Type"]
-                assert type_mapping[mod_setting_type_d[osu_mod_acronym][osu_mod_setting_name]] == osu_mod_setting_type
+                assert type_mapping[mod_setting_type_d[osu_mod_acronym][osu_mod_setting_name]] == osu_mod_setting_type  # ty:ignore[invalid-argument-type]
