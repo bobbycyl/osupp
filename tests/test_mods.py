@@ -6,12 +6,12 @@ init_osu_tools(
     r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
 )
 from osupp.difficulty import ModEntry, get_all_mods  # noqa: E402
-from osupp.core import (
+from osupp.core import (  # noqa: E402
     OsuRuleset,
     CatchRuleset,
     ManiaRuleset,
     TaikoRuleset,
-)  # noqa: E402
+)
 
 
 def mod_setting_type_mapping(

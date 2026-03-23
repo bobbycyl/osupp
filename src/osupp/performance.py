@@ -12,6 +12,7 @@ from .core import (
     DifficultyHitObject,
     Droplet,
     Fruit,
+    HitObject,
     HitResult,
     HoldNote,
     IBeatmap,
@@ -132,7 +133,7 @@ def get_osu_accuracy(
 
     if HitResult.LargeTickMiss in statistics or "large_tick_hits" in statistics:
         count_large_tick_miss = statistics.get(HitResult.LargeTickMiss, 0)
-        count_large_ticks = sum(1 for obj in beatmap.HitObjects for nested in obj.NestedHitObjects if isinstance(nested, (SliderTick, SliderRepeat)))
+        count_large_ticks = sum(1 for obj in cast(list[HitObject], beatmap.HitObjects) for nested in obj.NestedHitObjects if isinstance(nested, (SliderTick, SliderRepeat)))
         count_large_tick_hit = statistics.get("large_tick_hits", count_large_ticks - count_large_tick_miss)
         total += 0.6 * count_large_tick_hit
         max_score += 0.6 * count_large_ticks

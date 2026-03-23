@@ -31,3 +31,16 @@ Repository = "https://github.com/bobbycyl/osupp.git"
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/osupp",
+    "src/osu-stubs",
+    "src/PerformanceCalculator-stubs",
+]
+
+[tool.ruff]
+extend-exclude = ["src/*-stubs"]
+
+[tool.ty.src]
+include = ["src/osupp", "tests"]

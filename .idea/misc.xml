@@ -6,6 +6,7 @@
   <component name="ProjectRootManager" version="2" project-jdk-name="C:\Users\bobbycyl\miniforge3" project-jdk-type="Python SDK" />
   <component name="RuffConfiguration">
     <option name="enabled" value="true" />
+    <option name="executableDiscoveryMode" value="PATH" />
     <option name="formatting" value="false" />
     <option name="sortImports" value="false" />
   </component>
@@ -13,6 +14,7 @@
     <option name="completions" value="false" />
     <option name="documentation" value="false" />
     <option name="enabled" value="true" />
+    <option name="executableDiscoveryMode" value="PATH" />
     <option name="inlayHints" value="false" />
   </component>
 </project>

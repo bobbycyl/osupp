@@ -4,7 +4,7 @@ init_osu_tools(
     r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
 )
 
-from System.Reflection import Assembly
+from System.Reflection import Assembly  # noqa: E402
 
 assembly = Assembly.Load("osu.Game")
 name = assembly.GetName()

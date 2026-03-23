@@ -7,7 +7,7 @@ init_osu_tools(
 )
 from osupp import set_config  # noqa: E402
 from osupp.difficulty import calculate_difficulty  # noqa: E402
-from osupp.performance import (
+from osupp.performance import (  # noqa: E402
     CatchPerformance,
     ManiaPerformance,
     OsuPerformance,
@@ -16,7 +16,7 @@ from osupp.performance import (
     calculate_mania_performance,
     calculate_osu_performance,
     calculate_taiko_performance,
-)  # noqa: E402
+)
 from osupp.util import Result  # noqa: E402
 
 

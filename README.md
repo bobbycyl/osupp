@@ -4,7 +4,8 @@
 
 简单地包装了 [PerformanceCalculator](https://github.com/ppy/osu-tools/blob/master/PerformanceCalculator) 的常用功能。
 
-目前已完成所有 4 个模式，借助 [stubgen](https://github.com/Mimer29or40/pythonnet-stubs) 对 PerformanceCalculator 和 osu 生成常用存根文件以实现代码提示。
+目前已完成所有 4 个模式，借助 [stubgen](https://github.com/Mimer29or40/pythonnet-stubs) 对 PerformanceCalculator 和 osu
+生成常用存根文件以实现代码提示。
 
 如果 osu! 或 osu-tools 发生了重大更新，欢迎开 issue 或 pull request 交流。
 
@@ -70,7 +71,7 @@ python -m stubgen -o output extract PerformanceCalculator osu.Game osu.Game.Rule
 python -m stubgen -o stubs build output/*_skeleton.json output/*_doc.json
 ```
 
-随后需复制存根文件。
+最后执行 `sync_stubs.py` 复制常用存根文件。
 
 ### 生成测试结果
 
