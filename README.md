@@ -11,33 +11,33 @@
 
 ## 使用方法
 
-1. 安装 Python 3.12、.NET 8.0、pythonnet 和本仓库的 osupp 包
-2. 本地克隆 [osu](https://github.com/ppy/osu) 和 [osu-tools](https://github.com/ppy/osu-tools) 仓库，
-   并对 osu 仓库应用 [patch](https://github.com/bobbycyl/osu-patch)
+### 1. 安装 Python 3.12、.NET 8.0 和本仓库的 osupp 包
 
-   ```shell
-   git clone https://github.com/ppy/osu.git
-   git clone https://github.com/ppy/osu-tools.git
-   git clone https://github.com/bobbycyl/osu-patch.git
-   cd osu
-   git checkout 2025.1007.0
-   git apply ../osu-patch/strain_timeline.patch
-   ```
+### 2. 本地克隆 [osu](https://github.com/ppy/osu) 和 [osu-tools](https://github.com/ppy/osu-tools) 仓库，并对 osu 仓库应用 [patch](https://github.com/bobbycyl/osu-patch)
 
-3. 使用本地 osu! 源码编译 PerformanceCalculator
+```shell
+git clone https://github.com/ppy/osu.git
+git clone https://github.com/ppy/osu-tools.git
+git clone https://github.com/bobbycyl/osu-patch.git
+cd osu
+git checkout 2025.1007.0
+git apply ../osu-patch/strain_timeline.patch
+```
 
-   在 Windows 上执行 `UseLocalOsu.ps1`，在其它系统上执行 `UseLocalOsu.sh`
+### 3. 使用本地 osu! 源码编译 PerformanceCalculator
 
-   ```shell
-   dotnet build -c Release
-   ```
+在 Windows 上执行 `UseLocalOsu.ps1`，在其它系统上执行 `UseLocalOsu.sh`
 
-4. 在 Python 中初始化 .NET 运行时
+```shell
+dotnet build -c Release
+```
 
-   ```python
-   from osupp.core import init_osu_tools
-   init_osu_tools(r"path/to/osu-tools/PerformanceCalculator/bin/Release/net8.0")
-   ```
+### 4. 在 Python 中初始化 .NET 运行时
+
+```python
+from osupp.core import init_osu_tools
+init_osu_tools(r"path/to/osu-tools/PerformanceCalculator/bin/Release/net8.0")
+```
 
 已经封装了常用函数，并一定程度上模仿了 rosu-pp 的使用习惯。
 
@@ -45,9 +45,9 @@
 
 ### 生成存根文件
 
-由于 PerformanceCalculator 是一个独立的 .NET 项目，因此需要魔改 `stubgen` 来生成 stub 文件。
+由于 PerformanceCalculator 是一个独立的 .NET 项目，因此需要魔改 `stubgen`。
 
-具体而言，在 `stubgen/extract_stubs.py` 中，`import clr` 之前添加一下代码：
+具体而言，在 `stubgen/extract_stubs.py` 中，`import clr` 之前添加以下代码：
 
 ```python
 import os
