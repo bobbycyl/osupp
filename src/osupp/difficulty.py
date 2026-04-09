@@ -14,7 +14,7 @@ from .util import Result, re_deserialize, to_snake_case
 
 class ModSetting(TypedDict):
     Name: str
-    Type: type[str] | type[bool] | tuple[type[int], type[float]]
+    Type: Literal["boolean", "number", "string"]
     Label: str
     Description: str
 
@@ -43,7 +43,7 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
                 net_type = i_bindable.GetGenericArguments()[0]
             else:
                 net_type = bindable.GetType()
-            py_type = transform_net_type(net_type)
+            py_type = get_json_type(net_type)
 
             name = to_snake_case(property_info.Name)
             settings_data.append(
@@ -64,28 +64,29 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
     return all_mods_data
 
 
-def transform_net_type(net_type) -> type[str] | type[bool] | tuple[type[int], type[float]]:
+# 对应 ModsCommand.cs 的 getJsonType 私有方法
+def get_json_type(net_type) -> Literal["boolean", "number", "string"]:
     if net_type is None:
-        return str
+        return "string"
 
     # 剥离泛型参数，即把 int?, float? double? bool? 的 ? 拿掉
     if net_type.IsGenericType and net_type.GetGenericTypeDefinition().Name == "Nullable`1":
         net_type = net_type.GetGenericArguments()[0]
     full_name = net_type.FullName
 
-    if full_name in [
+    if full_name in (
         "System.Int32",
         "System.Double",
         "System.Single",
         "System.Decimal",
-    ]:
-        return int, float
+    ):
+        return "number"
     if full_name == "System.Boolean":
-        return bool
+        return "boolean"
     if full_name == "System.String":
-        return str
+        return "string"
     if net_type.IsEnum:
-        return str
+        return "string"
 
     raise TypeError(f"unknown type: {net_type}")
 
