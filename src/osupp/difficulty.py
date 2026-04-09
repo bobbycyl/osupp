@@ -14,7 +14,7 @@ from .util import Result, re_deserialize, to_snake_case
 
 class ModSetting(TypedDict):
     Name: str
-    Type: type[str | float | bool]
+    Type: type[str] | type[bool] | tuple[type[int], type[float]]
     Label: str
     Description: str
 
@@ -64,7 +64,7 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
     return all_mods_data
 
 
-def transform_net_type(net_type) -> type[str | float | bool]:
+def transform_net_type(net_type) -> type[str] | type[bool] | tuple[type[int], type[float]]:
     if net_type is None:
         return str
 
@@ -79,7 +79,7 @@ def transform_net_type(net_type) -> type[str | float | bool]:
         "System.Single",
         "System.Decimal",
     ]:
-        return float
+        return int, float
     if full_name == "System.Boolean":
         return bool
     if full_name == "System.String":
