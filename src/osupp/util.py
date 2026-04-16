@@ -6,6 +6,8 @@ from orjson import loads
 
 from .core import JsonConvert
 
+MOD_SETTING_TYPES = Literal["boolean", "number", "string", "enum"]
+
 
 class Result(dict):
     def __getitem__(self, key):
@@ -30,14 +32,14 @@ def to_snake_case(name):
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
 
 
-def validate_mod_setting_value(value, setting_type: Literal["boolean", "number", "string"]):
+def validate_mod_setting_value(value, setting_type: MOD_SETTING_TYPES):
     match setting_type:
         case "boolean":
             return value is True or value is False
         case "number":
             # 由于 bool 是 int 的子类，这里需要判断是否不为 True or False
             return isinstance(value, Number) and value is not True and value is not False
-        case "string":
+        case "string" | "enum":
             return isinstance(value, str)
         case _:
             raise ValueError(f"unknown mod setting type: {setting_type}")

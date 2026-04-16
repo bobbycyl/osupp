@@ -1,4 +1,4 @@
-from typing import Iterable, Literal, Optional, TypedDict, cast
+from typing import Any, Iterable, Literal, Optional, TypedDict, cast
 
 from .core import (
     Array,
@@ -8,15 +8,19 @@ from .core import (
     ProcessorWorkingBeatmap,
     Ruleset,
     SettingSourceExtensions,
+    System,
 )
-from .util import Result, re_deserialize, to_snake_case
+from .util import MOD_SETTING_TYPES, Result, re_deserialize, to_snake_case
 
 
 class ModSetting(TypedDict):
     Name: str
-    Type: Literal["boolean", "number", "string"]
+    Type: MOD_SETTING_TYPES
     Label: str
     Description: str
+    UnderlyingValue: Optional[Any]
+    Default: Optional[Any]
+    EnumValues: Optional[list[str]]
 
 
 class ModEntry(TypedDict):
@@ -43,15 +47,20 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
                 net_type = i_bindable.GetGenericArguments()[0]
             else:
                 net_type = bindable.GetType()
-            py_type = get_json_type(net_type)
+            json_type_extended = get_json_type(net_type)
+
+            _enum_values = [str(x) for x in System.Enum.GetValues(net_type)] if json_type_extended == "enum" else None
 
             name = to_snake_case(property_info.Name)
             settings_data.append(
                 ModSetting(
                     Name=name,
-                    Type=py_type,
+                    Type=json_type_extended,
                     Label=str(settings_source.Label),
                     Description=str(settings_source.Description),
+                    UnderlyingValue=SettingSourceExtensions.GetUnderlyingSettingValue(bindable),
+                    Default=getattr(bindable, "Default", None),
+                    EnumValues=_enum_values,
                 ),
             )
         # 组装 acronym 和 settings
@@ -64,8 +73,8 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
     return all_mods_data
 
 
-# 对应 ModsCommand.cs 的 getJsonType 私有方法
-def get_json_type(net_type) -> Literal["boolean", "number", "string"]:
+# 扩展了 ModsCommand.cs 的 getJsonType 私有方法
+def get_json_type(net_type) -> MOD_SETTING_TYPES:
     if net_type is None:
         return "string"
 
@@ -86,7 +95,7 @@ def get_json_type(net_type) -> Literal["boolean", "number", "string"]:
     if full_name == "System.String":
         return "string"
     if net_type.IsEnum:
-        return "string"
+        return "enum"
 
     raise TypeError(f"unknown type: {net_type}")
 

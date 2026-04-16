@@ -25,7 +25,7 @@ def mod_setting_type_mapping(mods_info: list[ModEntry]) -> dict[str, dict[str, L
         for mod_setting in mod_settings:
             mod_setting_name = mod_setting["Name"]
             mod_setting_type = mod_setting["Type"]
-            md[mod_setting_name] = mod_setting_type
+            md[mod_setting_name] = mod_setting_type if mod_setting_type != "enum" else "string"
         d[mod_acronym] = md
     return d
 

@@ -109,6 +109,13 @@ def test():
         # 这里的谱面信息没有在线信息，所以没必要校对了
         pass
 
+    calculator1 = calculate_osu_performance(beatmap_path, mods=["AD"], mod_options=["AD_style=Linear"])
+    calculator2 = calculate_osu_performance(beatmap_path, mods=["AD"], mod_options=["AD_style=0"])
+    for c in (calculator1, calculator2):
+        _ = next(c)
+        perf_attr = c.send(OsuPerformance())
+        assert perf_attr["pp"] == MAX_PP
+
 
 def test_classic():
     set_config(strain_timeline=False)
