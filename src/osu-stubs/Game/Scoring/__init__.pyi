@@ -66,6 +66,7 @@ from osu.Game.Online.API import APIMod
 from osu.Game.Online.API import ArchiveDownloadRequest
 from osu.Game.Online.API import IAPIProvider
 from osu.Game.Online.API.Requests.Responses import APIUser
+from osu.Game.Online.Leaderboards import LeaderboardSortMode
 from osu.Game.Overlays.Notifications import Notification
 from osu.Game.Overlays.Notifications import ProgressNotification
 from osu.Game.Replays import Replay
@@ -75,7 +76,6 @@ from osu.Game.Rulesets import RulesetInfo
 from osu.Game.Rulesets import RulesetStore
 from osu.Game.Rulesets.Scoring import HitEvent
 from osu.Game.Rulesets.Scoring import HitResult
-from osu.Game.Screens.Select.Leaderboards import LeaderboardSortMode
 from osu.Game.Users import IUser
 from osu.Game.Utils import IDeepCloneable
 from typing import Final

@@ -393,7 +393,11 @@ class Banana(PalpableCatchHitObject, IHasCombo, IHasComboInformation, IHasPositi
         
         :return: 
         """
-        def __init__(self, volume: int = ...):
+        @overload
+        def __init__(self):
+            """"""
+        @overload
+        def __init__(self, info: HitSampleInfo):
             """"""
         @property
         def EditorAutoBank(self) -> bool:
@@ -403,6 +407,12 @@ class Banana(PalpableCatchHitObject, IHasCombo, IHasComboInformation, IHasPositi
             """
         @property
         def LookupNames(self) -> IEnumerable[str]:
+            """
+            
+            :return: 
+            """
+        @property
+        def UseBeatmapSamples(self) -> bool:
             """
             
             :return: 
@@ -428,7 +438,7 @@ class Banana(PalpableCatchHitObject, IHasCombo, IHasComboInformation, IHasPositi
             """"""
         def ToString(self) -> str:
             """"""
-        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newSuffix: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ...) -> HitSampleInfo:
+        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newSuffix: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newUseBeatmapSamples: Optional[bool] = ...) -> HitSampleInfo:
             """
             
             :param newName: 
@@ -436,6 +446,7 @@ class Banana(PalpableCatchHitObject, IHasCombo, IHasComboInformation, IHasPositi
             :param newSuffix: 
             :param newVolume: 
             :param newEditorAutoBank: 
+            :param newUseBeatmapSamples: 
             :return: 
             """
 class BananaShower(CatchHitObject, IHasCombo, IHasComboInformation, IHasDuration, IHasPosition, IHasTimePreempt, IHasXPosition, IHasYPosition):

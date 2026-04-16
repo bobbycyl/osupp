@@ -1076,6 +1076,8 @@ class BeatmapDifficultyCache(MemoryCachingComponent[BeatmapDifficultyCache.Diffi
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
         """"""
+    def Clear(self) -> None:
+        """"""
     def ClearTransforms(self, propagateChildren: bool = ..., targetMember: str = ...) -> None:
         """"""
     def ClearTransformsAfter(self, time: float, propagateChildren: bool = ..., targetMember: str = ...) -> None:
@@ -1128,14 +1130,15 @@ class BeatmapDifficultyCache(MemoryCachingComponent[BeatmapDifficultyCache.Diffi
     def Hide(self) -> None:
         """"""
     @overload
-    def Invalidate(self, beatmap: IBeatmapInfo) -> None:
-        """
-        
-        :param beatmap: 
-        """
-    @overload
     def Invalidate(self, invalidation: Invalidation = ..., source: InvalidationSource = ...) -> bool:
         """"""
+    @overload
+    def Invalidate(self, oldBeatmap: IBeatmapInfo, newBeatmap: IBeatmapInfo) -> None:
+        """
+        
+        :param oldBeatmap: 
+        :param newBeatmap: 
+        """
     def ReceivePositionalInputAt(self, screenSpacePos: Vector2) -> bool:
         """"""
     def RegisterForDependencyActivation(self, registry: IDependencyActivatorRegistry) -> None:
@@ -1942,16 +1945,24 @@ class BeatmapManager(ModelManager[BeatmapSetInfo], IWorkingBeatmapCache, ICanAcc
         """
     def Equals(self, obj: object) -> bool:
         """"""
-    def Export(self, beatmap: BeatmapSetInfo) -> Task:
+    def Export(self, beatmapSet: BeatmapSetInfo) -> Task:
+        """
+        
+        :param beatmapSet: 
+        :return: 
+        """
+    @overload
+    def ExportLegacy(self, beatmap: BeatmapInfo) -> Task:
         """
         
         :param beatmap: 
         :return: 
         """
-    def ExportLegacy(self, beatmap: BeatmapSetInfo) -> Task:
+    @overload
+    def ExportLegacy(self, beatmapSet: BeatmapSetInfo) -> Task:
         """
         
-        :param beatmap: 
+        :param beatmapSet: 
         :return: 
         """
     def GetAllUsableBeatmapSets(self) -> List[BeatmapSetInfo]:
@@ -2046,11 +2057,24 @@ class BeatmapManager(ModelManager[BeatmapSetInfo], IWorkingBeatmapCache, ICanAcc
         
         :param beatmapSetInfo: 
         """
+    @overload
     def IsAvailableLocally(self, model: BeatmapSetInfo) -> bool:
         """
         
         :param model: 
         :return: 
+        """
+    @overload
+    def IsAvailableLocally(self, model: IBeatmapInfo) -> bool:
+        """
+        
+        :param model: 
+        :return: 
+        """
+    def MarkNotPlayed(self, beatmapSetInfo: BeatmapInfo) -> None:
+        """
+        
+        :param beatmapSetInfo: 
         """
     def MarkPlayed(self, beatmapSetInfo: BeatmapInfo) -> None:
         """
@@ -2070,6 +2094,12 @@ class BeatmapManager(ModelManager[BeatmapSetInfo], IWorkingBeatmapCache, ICanAcc
         """
     def QueryBeatmapSet(self, query: Expression[Func, bool]) -> Live[BeatmapSetInfo]:
         """"""
+    def QueryOnlineBeatmapId(self, id: int) -> BeatmapInfo:
+        """
+        
+        :param id: 
+        :return: 
+        """
     @overload
     def ReplaceFile(self, item: BeatmapSetInfo, file: RealmNamedFileUsage, contents: Stream) -> None:
         """
@@ -5389,6 +5419,14 @@ class IBeatmapDifficultyInfo:
         :return: 
         """
     @classmethod
+    def DifficultyRangeInt(cls, difficulty: float, range: DifficultyRange) -> int:
+        """
+        
+        :param difficulty: 
+        :param range: 
+        :return: 
+        """
+    @classmethod
     @overload
     def InverseDifficultyRange(cls, difficultyValue: float, range: DifficultyRange) -> float:
         """
@@ -6402,7 +6440,7 @@ class WorkingBeatmapCache(Object, IBeatmapResourceProvider, IWorkingBeatmapCache
     
     :return: 
     """
-    def __init__(self, trackStore: ITrackStore, audioManager: AudioManager, resources: IResourceStore[Array[int]], files: IResourceStore[Array[int]], defaultBeatmap: WorkingBeatmap = ..., host: GameHost = ...):
+    def __init__(self, trackStore: ITrackStore, audioManager: AudioManager, resources: IResourceStore[Array[int]], files: IResourceStore[Array[int]], defaultBeatmap: WorkingBeatmap = ..., host: GameHost = ..., realm: RealmAccess = ...):
         """
         
         :param trackStore: 
@@ -6411,6 +6449,7 @@ class WorkingBeatmapCache(Object, IBeatmapResourceProvider, IWorkingBeatmapCache
         :param files: 
         :param defaultBeatmap: 
         :param host: 
+        :param realm: 
         """
     @property
     def AudioManager(self) -> AudioManager:

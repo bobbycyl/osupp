@@ -33,6 +33,11 @@ class OsuAutoGenerator(OsuAutoGeneratorBase):
     
     :return: 
     """
+    MIN_FRAME_SEPARATION_FOR_ALTERNATING: Final[ClassVar[float]] = ...
+    """
+    
+    :return: 
+    """
     def __init__(self, beatmap: IBeatmap, mods: IReadOnlyList[Mod]):
         """
         

@@ -23,7 +23,7 @@ from osu.Game.Online.API.Requests import Cursor
 from osu.Game.Online.API.Requests.Responses import APIUser
 from osu.Game.Rulesets import IRulesetInfo
 from osu.Game.Scoring import IScoreInfo
-from osu.Game.Screens.Select.Leaderboards import BeatmapLeaderboardScope
+from osu.Game.Screens.Play.Leaderboards import BeatmapLeaderboardScope
 from osuTK import Vector2
 from typing import Optional
 from typing import Tuple

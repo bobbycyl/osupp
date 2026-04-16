@@ -4,7 +4,7 @@ from typing import Literal
 
 from orjson import loads
 
-from .core import JsonConvert
+from Newtonsoft.Json import JsonConvert
 
 MOD_SETTING_TYPES = Literal["boolean", "number", "string", "enum"]
 

@@ -994,7 +994,7 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetHitResults(self) -> IEnumerable[ValueTuple, LocalisableString]:
+    def GetHitResultsForDisplay(self) -> IEnumerable[ValueTuple, LocalisableString]:
         """
         
         :return: 
@@ -1019,6 +1019,11 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         """
     def GetType(self) -> Type:
         """"""
+    def GetValidHitResults(self) -> IEnumerable[HitResult]:
+        """
+        
+        :return: 
+        """
     def GetVariantName(self, variant: int) -> LocalisableString:
         """
         

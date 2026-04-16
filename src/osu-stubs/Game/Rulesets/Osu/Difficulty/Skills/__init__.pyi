@@ -1,8 +1,6 @@
 from System import Array
 from System.Collections.Generic import IEnumerable
-from System.Collections.Generic import IReadOnlyList
 from System import Type
-from System import ValueTuple
 from __future__ import annotations
 from abc import ABC
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
@@ -21,12 +19,6 @@ class Aim(OsuStrainSkill):
         
         :param mods: 
         :param includeSliders: 
-        """
-    @property
-    def StrainTimeline(self) -> IReadOnlyList[ValueTuple, float]:
-        """
-        
-        :return: 
         """
     def CountTopWeightedSliders(self) -> float:
         """
@@ -166,12 +158,6 @@ class Speed(OsuStrainSkill):
         """
         
         :param mods: 
-        """
-    @property
-    def StrainTimeline(self) -> IReadOnlyList[ValueTuple, float]:
-        """
-        
-        :return: 
         """
     def CountTopWeightedSliders(self) -> float:
         """

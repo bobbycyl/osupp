@@ -49,6 +49,7 @@ from osu.Framework.Graphics import BlendingParameters
 from osu.Framework.Graphics.Colour import ColourInfo
 from osu.Framework.Graphics import Component
 from osu.Framework.Graphics.Containers import CompositeDrawable
+from osu.Framework.Graphics.Containers import Container
 from osu.Framework.Graphics.Containers.Container import Enumerator
 from osu.Framework.Graphics.Containers import IContainer
 from osu.Framework.Graphics.Containers import IContainerCollection
@@ -79,6 +80,7 @@ from osu.Framework.Statistics import GlobalStatistic
 from osu.Framework.Threading import GameThread
 from osu.Framework.Timing import FrameTimeInfo
 from osu.Framework.Timing import IFrameBasedClock
+from osu.Game.Beatmaps import BeatmapInfo
 from osu.Game.Beatmaps import BeatmapSetInfo
 from osu.Game.Beatmaps import WorkingBeatmap
 from osu.Game.IO.Archives import ArchiveReader
@@ -794,6 +796,8 @@ class BeatmapLookupCache(OnlineLookupCache[Int32, APIBeatmap, GetBeatmapsRequest
     def BeginAbsoluteSequence(self, newTransformStartTime: float, recursive: bool = ...) -> IDisposable:
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
+        """"""
+    def Clear(self) -> None:
         """"""
     def ClearTransforms(self, propagateChildren: bool = ..., targetMember: str = ...) -> None:
         """"""
@@ -1639,6 +1643,11 @@ class ImportProgressNotification(ProgressNotification, ICollection[Drawable], IE
     
     :return: 
     """
+    MainContent: Final[Container] = ...
+    """
+    
+    :return: 
+    """
     Name: Final[str] = ...
     """"""
     ProcessCustomClock: Final[bool] = ...
@@ -1890,6 +1899,14 @@ class ImportProgressNotification(ProgressNotification, ICollection[Drawable], IE
     @property
     def IsAlive(self) -> bool:
         """"""
+    @property
+    def IsCritical(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @IsCritical.setter
+    def IsCritical(self, value: bool) -> None: ...
     @property
     def IsDragged(self) -> bool:
         """"""
@@ -2383,6 +2400,14 @@ class LegacyBeatmapExporter(LegacyArchiveExporter[BeatmapSetInfo]):
     def PostNotification(self, value: Action[Notification]) -> None: ...
     def Equals(self, obj: object) -> bool:
         """"""
+    @overload
+    def ExportAsync(self, beatmap: Live[BeatmapInfo]) -> Task:
+        """
+        
+        :param beatmap: 
+        :return: 
+        """
+    @overload
     def ExportAsync(self, model: Live[BeatmapSetInfo], cancellationToken: CancellationToken = ...) -> Task:
         """
         
@@ -3408,6 +3433,8 @@ class MemoryCachingComponent(ABC, Generic[TLookup, TValue], Component, IDisposab
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
         """"""
+    def Clear(self) -> None:
+        """"""
     def ClearTransforms(self, propagateChildren: bool = ..., targetMember: str = ...) -> None:
         """"""
     def ClearTransformsAfter(self, time: float, propagateChildren: bool = ..., targetMember: str = ...) -> None:
@@ -3489,6 +3516,11 @@ class MemoryCachingComponent(ABC, Generic[TLookup, TValue], Component, IDisposab
 class MissingBeatmapNotification(SimpleNotification, ICollection[Drawable], IEnumerable[Drawable], IReadOnlyCollection[Drawable], IReadOnlyList[Drawable], IEnumerable, IDisposable, IDependencyInjectionCandidate, ISourceGeneratedDependencyActivator, ISourceGeneratedLongRunningLoadCache, IContainer, IContainerCollection[Drawable], IContainerEnumerable[Drawable], ITransformable, IDrawable, ISourceGeneratedHandleInputCache):
     """"""
     Activated: Final[Func[bool]] = ...
+    """
+    
+    :return: 
+    """
+    MainContent: Final[Container] = ...
     """
     
     :return: 
@@ -3727,6 +3759,14 @@ class MissingBeatmapNotification(SimpleNotification, ICollection[Drawable], IEnu
     @property
     def IsAlive(self) -> bool:
         """"""
+    @property
+    def IsCritical(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @IsCritical.setter
+    def IsCritical(self, value: bool) -> None: ...
     @property
     def IsDragged(self) -> bool:
         """"""
@@ -4526,6 +4566,8 @@ class OnlineLookupCache(ABC, Generic[TLookup, TValue, TRequest], MemoryCachingCo
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
         """"""
+    def Clear(self) -> None:
+        """"""
     def ClearTransforms(self, propagateChildren: bool = ..., targetMember: str = ...) -> None:
         """"""
     def ClearTransformsAfter(self, time: float, propagateChildren: bool = ..., targetMember: str = ...) -> None:
@@ -4672,6 +4714,13 @@ class RealmAccess(Object, IDisposable):
         """
         
         :param action: 
+        :return: 
+        """
+    def RunAsync(self, action: Func[Realm, T], token: CancellationToken = ...) -> Task[T]:
+        """
+        
+        :param action: 
+        :param token: 
         :return: 
         """
     def SubscribeToPropertyChanged(self, modelAccessor: Func[Realm, TModel], propertyLookup: Expression[Func, TProperty], onChanged: Action[TProperty]) -> IDisposable:
@@ -5180,6 +5229,14 @@ class RealmExtensions(ABC, Object):
         :param id: 
         :return: 
         """
+    @classmethod
+    def ForOnlineId(cls, beatmaps: IQueryable[BeatmapInfo], id: int) -> IQueryable[BeatmapInfo]:
+        """
+        
+        :param beatmaps: 
+        :param id: 
+        :return: 
+        """
     def GetHashCode(self) -> int:
         """"""
     def GetType(self) -> Type:
@@ -5189,6 +5246,13 @@ class RealmExtensions(ABC, Object):
         """
         
         :param changes: 
+        :return: 
+        """
+    @classmethod
+    def NotDeleted(cls, beatmaps: IQueryable[BeatmapInfo]) -> IQueryable[BeatmapInfo]:
+        """
+        
+        :param beatmaps: 
         :return: 
         """
     def ToString(self) -> str:
@@ -5644,6 +5708,11 @@ class TooManyDownloadsNotification(SimpleNotification, ICollection[Drawable], IE
     
     :return: 
     """
+    MainContent: Final[Container] = ...
+    """
+    
+    :return: 
+    """
     Name: Final[str] = ...
     """"""
     ProcessCustomClock: Final[bool] = ...
@@ -5873,6 +5942,14 @@ class TooManyDownloadsNotification(SimpleNotification, ICollection[Drawable], IE
     @property
     def IsAlive(self) -> bool:
         """"""
+    @property
+    def IsCritical(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @IsCritical.setter
+    def IsCritical(self, value: bool) -> None: ...
     @property
     def IsDragged(self) -> bool:
         """"""
@@ -6513,6 +6590,8 @@ class UserLookupCache(OnlineLookupCache[Int32, APIUser, LookupUsersRequest], IDi
     def BeginAbsoluteSequence(self, newTransformStartTime: float, recursive: bool = ...) -> IDisposable:
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
+        """"""
+    def Clear(self) -> None:
         """"""
     def ClearTransforms(self, propagateChildren: bool = ..., targetMember: str = ...) -> None:
         """"""

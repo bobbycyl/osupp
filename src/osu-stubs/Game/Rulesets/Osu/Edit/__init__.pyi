@@ -1110,6 +1110,14 @@ class FreehandSliderToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnu
     @Size.setter
     def Size(self, value: Vector2) -> None: ...
     @property
+    def Spacing(self) -> Vector2:
+        """
+        
+        :return: 
+        """
+    @Spacing.setter
+    def Spacing(self, value: Vector2) -> None: ...
+    @property
     def Time(self) -> FrameTimeInfo:
         """"""
     @property
@@ -1627,6 +1635,14 @@ class GenerateToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnumerabl
         """"""
     @Size.setter
     def Size(self, value: Vector2) -> None: ...
+    @property
+    def Spacing(self) -> Vector2:
+        """
+        
+        :return: 
+        """
+    @Spacing.setter
+    def Spacing(self, value: Vector2) -> None: ...
     @property
     def Time(self) -> FrameTimeInfo:
         """"""
@@ -3375,6 +3391,12 @@ class OsuGridToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnumerable
     @ForceLocalVertexBatch.setter
     def ForceLocalVertexBatch(self, value: bool) -> None: ...
     @property
+    def GridLineSpacing(self) -> BindableFloat:
+        """
+        
+        :return: 
+        """
+    @property
     def GridLinesRotation(self) -> BindableFloat:
         """
         
@@ -3560,11 +3582,13 @@ class OsuGridToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnumerable
     @Size.setter
     def Size(self, value: Vector2) -> None: ...
     @property
-    def Spacing(self) -> BindableFloat:
+    def Spacing(self) -> Vector2:
         """
         
         :return: 
         """
+    @Spacing.setter
+    def Spacing(self, value: Vector2) -> None: ...
     @property
     def SpacingVector(self) -> Bindable[Vector2]:
         """
@@ -3980,6 +4004,11 @@ class OsuGridToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnumerable
             """"""
         @FrameBufferScale.setter
         def FrameBufferScale(self, value: Vector2) -> None: ...
+        @property
+        def GrayscaleStrength(self) -> float:
+            """"""
+        @GrayscaleStrength.setter
+        def GrayscaleStrength(self, value: float) -> None: ...
         @property
         def HandleNonPositionalInput(self) -> bool:
             """"""
@@ -5242,11 +5271,6 @@ class OsuSelectionHandler(EditorSelectionHandler, IDisposable, IDependencyInject
     :return: 
     """
     SelectionAdditionBankStates: Final[Dictionary[str, Bindable[TernaryState]]] = ...
-    """
-    
-    :return: 
-    """
-    SelectionAdditionBanksEnabled: Final[Bindable[bool]] = ...
     """
     
     :return: 
@@ -9302,6 +9326,14 @@ class TransformToolboxGroup(EditorToolboxGroup, ICollection[Drawable], IEnumerab
         """"""
     @Size.setter
     def Size(self, value: Vector2) -> None: ...
+    @property
+    def Spacing(self) -> Vector2:
+        """
+        
+        :return: 
+        """
+    @Spacing.setter
+    def Spacing(self, value: Vector2) -> None: ...
     @property
     def Time(self) -> FrameTimeInfo:
         """"""

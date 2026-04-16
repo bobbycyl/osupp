@@ -28,223 +28,302 @@ from osu.Game.Utils import IDeepCloneable
 from typing import Generic
 from typing import TypeVar
 from typing import overload
+
 T = TypeVar("T")
+
+
 class EventType(Generic[T]):
     def __iadd__(self, other: T): ...
+
     def __isub__(self, other: T): ...
+
+
 class RealmFile(RealmObject, IRealmObject, IRealmObjectBase, ISettableManagedAccessor, INotifyPropertyChanged, IReflectableType, IFileInfo):
     """"""
+
     def __init__(self):
         """"""
+
     @property
     def Accessor(self) -> IRealmAccessor:
         """"""
+
     @property
     def BacklinksCount(self) -> int:
         """"""
+
     @property
     def DynamicApi(self) -> DynamicObjectApi:
         """"""
+
     @property
     def Hash(self) -> str:
         """
         
         :return: 
         """
+
     @Hash.setter
     def Hash(self, value: str) -> None: ...
+
     @property
     def IsFrozen(self) -> bool:
         """"""
+
     @property
     def IsManaged(self) -> bool:
         """"""
+
     @property
     def IsValid(self) -> bool:
         """"""
+
     @property
     def ObjectSchema(self) -> ObjectSchema:
         """"""
+
     @property
     def Realm(self) -> Realm:
         """"""
+
     @property
     def Usages(self) -> IQueryable[RealmNamedFileUsage]:
         """
         
         :return: 
         """
+
     def Equals(self, obj: object) -> bool:
         """"""
+
     def GetHashCode(self) -> int:
         """"""
+
     def GetType(self) -> Type:
         """"""
+
     def GetTypeInfo(self) -> TypeInfo:
         """"""
+
     def SetManagedAccessor(self, accessor: IRealmAccessor, helper: IRealmObjectHelper = ..., update: bool = ..., skipDefaults: bool = ...) -> None:
         """"""
+
     def ToString(self) -> str:
         """"""
+
     PropertyChanged: EventType[PropertyChangedEventHandler] = ...
     """"""
+
+
 class RealmNamedFileUsage(EmbeddedObject, IEmbeddedObject, IRealmObjectBase, ISettableManagedAccessor, INotifyPropertyChanged, IReflectableType, INamedFile, INamedFileUsage):
     """"""
+
     def __init__(self, file: RealmFile, filename: str):
         """
         
         :param file: 
         :param filename: 
         """
+
     @property
     def Accessor(self) -> IRealmAccessor:
         """"""
+
     @property
     def BacklinksCount(self) -> int:
         """"""
+
     @property
     def DynamicApi(self) -> DynamicObjectApi:
         """"""
+
     @property
     def File(self) -> RealmFile:
         """
         
         :return: 
         """
+
     @File.setter
     def File(self, value: RealmFile) -> None: ...
+
     @property
     def Filename(self) -> str:
         """
         
         :return: 
         """
+
     @Filename.setter
     def Filename(self, value: str) -> None: ...
+
     @property
     def IsFrozen(self) -> bool:
         """"""
+
     @property
     def IsManaged(self) -> bool:
         """"""
+
     @property
     def IsValid(self) -> bool:
         """"""
+
     @property
     def ObjectSchema(self) -> ObjectSchema:
         """"""
+
     @property
     def Parent(self) -> IRealmObjectBase:
         """"""
+
     @property
     def Realm(self) -> Realm:
         """"""
+
     def Equals(self, obj: object) -> bool:
         """"""
+
     def GetHashCode(self) -> int:
         """"""
+
     def GetType(self) -> Type:
         """"""
+
     def GetTypeInfo(self) -> TypeInfo:
         """"""
+
     def SetManagedAccessor(self, accessor: IRealmAccessor, helper: IRealmObjectHelper = ..., update: bool = ..., skipDefaults: bool = ...) -> None:
         """"""
+
     def ToString(self) -> str:
         """"""
+
     PropertyChanged: EventType[PropertyChangedEventHandler] = ...
     """"""
+
+
 class RealmUser(EmbeddedObject, IEmbeddedObject, IRealmObjectBase, ISettableManagedAccessor, INotifyPropertyChanged, IReflectableType, IEquatable[RealmUser], IEquatable[IUser], IHasOnlineID[Int32], IUser, IDeepCloneable[RealmUser]):
     """"""
+
     def __init__(self):
         """"""
+
     @property
     def Accessor(self) -> IRealmAccessor:
         """"""
+
     @property
     def BacklinksCount(self) -> int:
         """"""
+
     @property
     def CountryCode(self) -> CountryCode:
         """
         
         :return: 
         """
+
     @CountryCode.setter
     def CountryCode(self, value: CountryCode) -> None: ...
+
     @property
     def CountryString(self) -> str:
         """
         
         :return: 
         """
+
     @CountryString.setter
     def CountryString(self, value: str) -> None: ...
+
     @property
     def DynamicApi(self) -> DynamicObjectApi:
         """"""
+
     @property
     def IsBot(self) -> bool:
         """
         
         :return: 
         """
+
     @property
     def IsFrozen(self) -> bool:
         """"""
+
     @property
     def IsManaged(self) -> bool:
         """"""
+
     @property
     def IsValid(self) -> bool:
         """"""
+
     @property
     def ObjectSchema(self) -> ObjectSchema:
         """"""
+
     @property
     def OnlineID(self) -> int:
         """
         
         :return: 
         """
+
     @OnlineID.setter
     def OnlineID(self, value: int) -> None: ...
+
     @property
     def Parent(self) -> IRealmObjectBase:
         """"""
+
     @property
     def Realm(self) -> Realm:
         """"""
+
     @property
     def Username(self) -> str:
         """
         
         :return: 
         """
+
     @Username.setter
     def Username(self, value: str) -> None: ...
+
     def DeepClone(self) -> RealmUser:
         """
         
         :return: 
         """
+
     @overload
     def Equals(self, obj: object) -> bool:
         """"""
+
     @overload
     def Equals(self, other: RealmUser) -> bool:
         """"""
+
     @overload
     def Equals(self, other: IUser) -> bool:
         """"""
+
     def GetHashCode(self) -> int:
         """"""
+
     def GetType(self) -> Type:
         """"""
+
     def GetTypeInfo(self) -> TypeInfo:
         """"""
+
     def SetManagedAccessor(self, accessor: IRealmAccessor, helper: IRealmObjectHelper = ..., update: bool = ..., skipDefaults: bool = ...) -> None:
         """"""
+
     def ToString(self) -> str:
         """"""
+
     PropertyChanged: EventType[PropertyChangedEventHandler] = ...
     """"""

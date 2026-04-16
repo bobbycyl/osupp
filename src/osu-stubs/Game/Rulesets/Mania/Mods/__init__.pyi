@@ -1850,7 +1850,7 @@ class ManiaModDualStages(Mod, IEquatable[IMod], IEquatable[Mod], IPlayfieldTypeM
         """"""
     def ToString(self) -> str:
         """"""
-class ManiaModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IApplicableFailOverride, IApplicableMod, IApplicableToDifficulty, IApplicableToHealthProcessor, IApplicableToHitObject, IMod, IDeepCloneable[Mod]):
+class ManiaModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IApplicableFailOverride, IApplicableMod, IApplicableToDifficulty, IApplicableToHealthProcessor, IApplicableToHitObject, IApplicableToPlayer, IMod, IDeepCloneable[Mod]):
     """"""
     HIT_WINDOW_DIFFICULTY_MULTIPLIER: Final[ClassVar[float]] = ...
     """
@@ -1999,6 +1999,11 @@ class ManiaModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IAp
         """
         
         :param hitObject: 
+        """
+    def ApplyToPlayer(self, player: Player) -> None:
+        """
+        
+        :param player: 
         """
     def CopyCommonSettingsFrom(self, source: Mod) -> None:
         """

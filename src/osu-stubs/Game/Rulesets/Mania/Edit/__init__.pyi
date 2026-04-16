@@ -3943,11 +3943,6 @@ class ManiaSelectionHandler(EditorSelectionHandler, IDisposable, IDependencyInje
     
     :return: 
     """
-    SelectionAdditionBanksEnabled: Final[Bindable[bool]] = ...
-    """
-    
-    :return: 
-    """
     SelectionBankStates: Final[Dictionary[str, Bindable[TernaryState]]] = ...
     """
     

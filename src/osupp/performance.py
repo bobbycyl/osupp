@@ -1,42 +1,33 @@
 from collections.abc import Generator
 from functools import singledispatch
-from typing import NamedTuple, Optional, cast
+from typing import Any, Literal, NamedTuple, Optional, cast
 
-from .config import _CONFIG
-from .core import (
-    Aim,
-    Array,
-    BeatmapExtensions,
-    CatchRuleset,
-    Dictionary,
-    DifficultyHitObject,
-    Droplet,
-    Fruit,
-    HitObject,
-    HitResult,
+from System import Array, OperationCanceledException
+from System.Collections.Generic import Dictionary
+
+from PerformanceCalculator import LegacyHelper, ProcessorCommand, ProcessorWorkingBeatmap
+from PerformanceCalculatorGUI import ExtendedCatchDifficultyCalculator, ExtendedManiaDifficultyCalculator, ExtendedOsuDifficultyCalculator, ExtendedTaikoDifficultyCalculator
+from osu.Game.Beatmaps import BeatmapExtensions, IBeatmap
+from osu.Game.Rulesets.Catch import CatchRuleset
+from osu.Game.Rulesets.Catch.Objects import Droplet, Fruit, JuiceStream, TinyDroplet
+from osu.Game.Rulesets.Mania import ManiaRuleset
+from osu.Game.Rulesets.Mania.Objects import (
     HoldNote,
-    IBeatmap,
-    JuiceStream,
-    List,
-    ManiaRuleset,
+)
+from osu.Game.Rulesets.Mods import (
     Mod,
     ModClassic,
-    ModUtils,
-    OperationCanceledException,
-    OsuDifficultyHitObject,
-    OsuModClassic,
-    OsuRuleset,
-    ProcessorCommand,
-    ProcessorWorkingBeatmap,
-    ScoreInfo,
-    Slider,
-    SliderRepeat,
-    SliderTick,
-    Speed,
-    TaikoRuleset,
-    TinyDroplet,
-    ValueTuple,
 )
+from osu.Game.Rulesets.Objects import HitObject
+from osu.Game.Rulesets.Osu import OsuRuleset
+from osu.Game.Rulesets.Osu.Mods import (
+    OsuModClassic,
+)
+from osu.Game.Rulesets.Osu.Objects import Slider, SliderRepeat, SliderTick
+from osu.Game.Rulesets.Scoring import HitResult
+from osu.Game.Rulesets.Taiko import TaikoRuleset
+from osu.Game.Scoring import ScoreInfo
+from osu.Game.Utils import ModUtils
 from .util import Result, re_deserialize
 
 
@@ -448,70 +439,69 @@ def get_accuracy(
 
 
 def calculate_performance(
-    beatmap_path,
-    ruleset,
+    beatmap_path: str,
+    ruleset=None,
     mods=None,
     mod_options=None,
-    **kwargs,
-):
+) -> Generator[Result, Any, Result]:
     working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
     if mods is None:
         mods = []
     if mod_options is None:
         mod_options = []
+    if ruleset is None:
+        ruleset_id: Literal[0, 1, 2, 3] = cast(
+            Literal[0, 1, 2, 3],
+            working_beatmap.BeatmapInfo.Ruleset.OnlineID,
+        )
+        ruleset = LegacyHelper.GetRulesetFromLegacyID(ruleset_id)
     mod_array = ProcessorCommand.ParseMods(
         ruleset,
         Array[str](mods),
         Array[str](mod_options),
     )
 
-    difficulty_calculator = ruleset.CreateDifficultyCalculator(working_beatmap)
+    match ruleset:
+        case OsuRuleset():
+            difficulty_calculator = ExtendedOsuDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
+        case TaikoRuleset():
+            difficulty_calculator = ExtendedTaikoDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
+        case CatchRuleset():
+            difficulty_calculator = ExtendedCatchDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
+        case ManiaRuleset():
+            difficulty_calculator = ExtendedManiaDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
+        case _:
+            raise NotImplementedError
 
     # 如果难度计算失败，则直接返回，后面的步骤全部失效，避免进一步耗时（虽然这已经很耗时了的说）
     # 虽然从数据分析的角度，剔除异常值是最好的选择
     # 但是使用这个库的目的不一定是数据分析，因此还是把所有内容都呈现出来
     try:
         difficulty_attributes = difficulty_calculator.Calculate(mod_array)
-    except OperationCanceledException:
+    except OperationCanceledException:  # ty:ignore[invalid-exception-caught]
         pass
     else:
         beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
 
-        # 额外处理：主模式 strainTimeline patch
-        if kwargs.get("strain_timeline") and _CONFIG["strain_timeline"]:
-            clock_rate = ModUtils.CalculateRateWithMods(mod_array)
+        clock_rate = ModUtils.CalculateRateWithMods(mod_array)
+        _skills = difficulty_calculator.GetSkills()
+        _hit_objects = difficulty_calculator.GetDifficultyHitObjects()
 
-            # 对应 osu 项目 OsuDifficultyCalculator.cs 的 CreateDifficultyHitObjects
-            objects = List[DifficultyHitObject]()
-            for i in range(1, beatmap.HitObjects.Count):
-                objects.Add(
-                    OsuDifficultyHitObject(
-                        beatmap.HitObjects[i],
-                        beatmap.HitObjects[i - 1],
-                        clock_rate,
-                        objects,
-                        objects.Count,
-                    ),
-                )
+        timelines = {}
+        for _skill in _skills:
+            skill_type = _skill.GetType().Name
+            if skill_type == "Aim" and _skill.IncludeSliders:  # ty:ignore[unresolved-attribute]
+                skill_type += " (sliders included)"
 
-            aim = Aim(mod_array, True)
-            speed = Speed(mod_array)
+            strains = _skill.GetCurrentStrainPeaks()  # ty:ignore[unresolved-attribute]
 
-            objects = cast(list[DifficultyHitObject], objects)
-            for obj in objects:
-                aim.Process(obj)
-                speed.Process(obj)
+            timeline = [(hit.StartTime / clock_rate, float(strain)) for hit, strain in zip(list(_hit_objects)[1:], list(strains)[1:])]
 
-            aim_strain_timeline = [(x.Item1, x.Item2) for x in cast(list[ValueTuple], aim.StrainTimeline)]
-            speed_strain_timeline = [(x.Item1, x.Item2) for x in cast(list[ValueTuple], speed.StrainTimeline)]
-
-            sent = yield re_deserialize(
-                difficulty_attributes,
-                aim_strain_timeline=aim_strain_timeline,
-                speed_strain_timeline=speed_strain_timeline,
-            )
-        else:
-            sent = yield re_deserialize(difficulty_attributes)
+            timelines[skill_type] = timeline
+        sent = yield re_deserialize(
+            difficulty_attributes,
+            timelines=timelines,
+        )
 
         performance_calculator = ruleset.CreatePerformanceCalculator()
         while sent:
@@ -556,7 +546,7 @@ def calculate_osu_performance(
 
     生成器结束返回 ``beatmap_info``
     """
-    return calculate_performance(beatmap_path, OsuRuleset(), mods, mod_options, strain_timeline=True)
+    return calculate_performance(beatmap_path, OsuRuleset(), mods, mod_options)
 
 
 def calculate_taiko_performance(

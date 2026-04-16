@@ -1139,7 +1139,7 @@ class CatchModDoubleTime(ModDoubleTime, IEquatable[IMod], IEquatable[Mod], IAppl
         """"""
     def ToString(self) -> str:
         """"""
-class CatchModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IApplicableFailOverride, IApplicableMod, IApplicableToDifficulty, IApplicableToHealthProcessor, IMod, IDeepCloneable[Mod]):
+class CatchModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IApplicableFailOverride, IApplicableMod, IApplicableToDifficulty, IApplicableToHealthProcessor, IApplicableToPlayer, IMod, IDeepCloneable[Mod]):
     """"""
     def __init__(self):
         """"""
@@ -1278,6 +1278,11 @@ class CatchModEasy(ModEasyWithExtraLives, IEquatable[IMod], IEquatable[Mod], IAp
         """
         
         :param healthProcessor: 
+        """
+    def ApplyToPlayer(self, player: Player) -> None:
+        """
+        
+        :param player: 
         """
     def CopyCommonSettingsFrom(self, source: Mod) -> None:
         """

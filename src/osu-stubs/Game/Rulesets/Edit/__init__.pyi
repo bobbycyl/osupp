@@ -1453,6 +1453,14 @@ class EditorToolboxGroup(SettingsToolboxGroup, ICollection[Drawable], IEnumerabl
     @Size.setter
     def Size(self, value: Vector2) -> None: ...
     @property
+    def Spacing(self) -> Vector2:
+        """
+        
+        :return: 
+        """
+    @Spacing.setter
+    def Spacing(self, value: Vector2) -> None: ...
+    @property
     def Time(self) -> FrameTimeInfo:
         """"""
     @property
@@ -2345,6 +2353,9 @@ class ExpandableSpriteText(OsuSpriteText, IDisposable, IDependencyInjectionCandi
         """"""
     @property
     def IsProxy(self) -> bool:
+        """"""
+    @property
+    def IsTruncated(self) -> bool:
         """"""
     @property
     def LatestTransformEndTime(self) -> float:

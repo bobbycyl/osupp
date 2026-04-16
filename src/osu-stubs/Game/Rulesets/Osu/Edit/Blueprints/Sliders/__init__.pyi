@@ -538,8 +538,6 @@ class SliderEndDragMarker(SmoothPath, IDisposable, IDependencyInjectionCandidate
     @property
     def BackgroundColour(self) -> Color4:
         """"""
-    @BackgroundColour.setter
-    def BackgroundColour(self, value: Color4) -> None: ...
     @property
     def Blending(self) -> BlendingParameters:
         """"""

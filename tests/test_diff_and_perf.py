@@ -1,13 +1,7 @@
 import orjson
 
-from osupp.core import init_osu_tools
-
-init_osu_tools(
-    r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
-)
-from osupp import set_config  # noqa: E402
-from osupp.difficulty import calculate_difficulty  # noqa: E402
-from osupp.performance import (  # noqa: E402
+from osupp.difficulty import calculate_difficulty
+from osupp.performance import (
     CatchPerformance,
     ManiaPerformance,
     OsuPerformance,
@@ -17,7 +11,7 @@ from osupp.performance import (  # noqa: E402
     calculate_osu_performance,
     calculate_taiko_performance,
 )
-from osupp.util import Result  # noqa: E402
+from osupp.util import Result
 
 
 # 准备测试结果
@@ -44,7 +38,6 @@ MANIA_CL_SCORE_RESULT = load_res("MANIA_CL_SCORE_RESULT.json")
 
 
 def test():
-    set_config(strain_timeline=True)
     # 设置测试参数
     beatmap_path = r"./cache/3477131.osu"
     mods = ["HD", "DT"]
@@ -118,7 +111,6 @@ def test():
 
 
 def test_classic():
-    set_config(strain_timeline=False)
     beatmap_path = r"./cache/3477131.osu"
     mods = ["CL"]
     calculator = calculate_osu_performance(beatmap_path, mods)
@@ -130,7 +122,6 @@ def test_classic():
 
 
 def test_strange():
-    set_config(strain_timeline=False)
     # 4429119 很奇怪，osu-tools 会无法处理，只能在 Python 层面做一个错误拦截，这里测试拦截效果
     beatmap_path = r"./cache/4429119.osu"
     mods = ["EZ"]

@@ -507,7 +507,7 @@ class Ruleset(ABC, Object):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetHitResults(self) -> IEnumerable[ValueTuple, LocalisableString]:
+    def GetHitResultsForDisplay(self) -> IEnumerable[ValueTuple, LocalisableString]:
         """
         
         :return: 
@@ -525,6 +525,11 @@ class Ruleset(ABC, Object):
         """
     def GetType(self) -> Type:
         """"""
+    def GetValidHitResults(self) -> IEnumerable[HitResult]:
+        """
+        
+        :return: 
+        """
     def GetVariantName(self, variant: int) -> LocalisableString:
         """
         
@@ -1549,5 +1554,12 @@ class RulesetStore(ABC, Object, IDisposable, IRulesetStore):
         """
     def GetType(self) -> Type:
         """"""
+    @classmethod
+    def LogRulesetFailure(cls, ruleset: RulesetInfo, e: Exception) -> None:
+        """
+        
+        :param ruleset: 
+        :param e: 
+        """
     def ToString(self) -> str:
         """"""

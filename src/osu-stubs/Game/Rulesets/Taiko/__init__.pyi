@@ -972,7 +972,7 @@ class TaikoRuleset(Ruleset, ILegacyRuleset):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetHitResults(self) -> IEnumerable[ValueTuple, LocalisableString]:
+    def GetHitResultsForDisplay(self) -> IEnumerable[ValueTuple, LocalisableString]:
         """
         
         :return: 
@@ -997,6 +997,11 @@ class TaikoRuleset(Ruleset, ILegacyRuleset):
         """
     def GetType(self) -> Type:
         """"""
+    def GetValidHitResults(self) -> IEnumerable[HitResult]:
+        """
+        
+        :return: 
+        """
     def GetVariantName(self, variant: int) -> LocalisableString:
         """
         
@@ -1588,6 +1593,8 @@ class TaikoSkinComponents(Enum):
     CentreHit: TaikoSkinComponents = ...
     """"""
     RimHit: TaikoSkinComponents = ...
+    """"""
+    DrumRollHead: TaikoSkinComponents = ...
     """"""
     DrumRollBody: TaikoSkinComponents = ...
     """"""

@@ -1,15 +1,13 @@
 from typing import Any, Iterable, Literal, Optional, TypedDict, cast
 
-from .core import (
-    Array,
-    LegacyHelper,
-    OperationCanceledException,
-    ProcessorCommand,
-    ProcessorWorkingBeatmap,
-    Ruleset,
+import System
+from System import Array, OperationCanceledException
+
+from PerformanceCalculator import LegacyHelper, ProcessorCommand, ProcessorWorkingBeatmap
+from osu.Game.Configuration import (
     SettingSourceExtensions,
-    System,
 )
+from osu.Game.Rulesets import Ruleset
 from .util import MOD_SETTING_TYPES, Result, re_deserialize, to_snake_case
 
 
@@ -127,5 +125,5 @@ def calculate_difficulty(
 
     try:
         return re_deserialize(calculator.Calculate(mod_array))
-    except OperationCanceledException:
+    except OperationCanceledException:  # ty:ignore[invalid-exception-caught]
         return Result({})

@@ -2,18 +2,11 @@ from typing import Literal
 
 import orjson
 
-from osupp.core import init_osu_tools
-
-init_osu_tools(
-    r"C:\Users\bobbycyl\Projects\osu-tools\PerformanceCalculator\bin\Release\net8.0",
-)
-from osupp.difficulty import ModEntry, get_all_mods  # noqa: E402
-from osupp.core import (  # noqa: E402
-    OsuRuleset,
-    CatchRuleset,
-    ManiaRuleset,
-    TaikoRuleset,
-)
+from osu.Game.Rulesets.Catch import CatchRuleset
+from osu.Game.Rulesets.Mania import ManiaRuleset
+from osu.Game.Rulesets.Osu import OsuRuleset
+from osu.Game.Rulesets.Taiko import TaikoRuleset
+from osupp.difficulty import ModEntry, get_all_mods
 
 
 def mod_setting_type_mapping(mods_info: list[ModEntry]) -> dict[str, dict[str, Literal["boolean", "number", "string"]]]:

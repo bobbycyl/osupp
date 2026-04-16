@@ -21,6 +21,7 @@ from osu.Game.Beatmaps.Legacy import LegacyHitObjectType
 from osu.Game.Rulesets.Judgements import Judgement
 from osu.Game.Rulesets.Objects import HitObject
 from osu.Game.Rulesets.Objects import HitObjectParser
+from osu.Game.Rulesets.Objects.Legacy.ConvertHitObjectParser import FileHitSampleInfo
 from osu.Game.Rulesets.Objects.Legacy.ConvertHitObjectParser import LegacyHitSampleInfo
 from osu.Game.Rulesets.Objects import SliderPath
 from osu.Game.Rulesets.Objects.Types import IHasCombo
@@ -357,7 +358,7 @@ class ConvertHitObjectParser(HitObjectParser):
         """
     def ToString(self) -> str:
         """"""
-    class LegacyHitSampleInfo(HitSampleInfo, IEquatable[HitSampleInfo], IEquatable[ConvertHitObjectParser.LegacyHitSampleInfo], ISampleInfo):
+    class FileHitSampleInfo(ConvertHitObjectParser.LegacyHitSampleInfo, IEquatable[HitSampleInfo], IEquatable[ConvertHitObjectParser.FileHitSampleInfo], IEquatable[ConvertHitObjectParser.LegacyHitSampleInfo], ISampleInfo):
         """"""
         Bank: Final[str] = ...
         """
@@ -366,7 +367,90 @@ class ConvertHitObjectParser(HitObjectParser):
         """
         BankSpecified: Final[bool] = ...
         """"""
-        CustomSampleBank: Final[int] = ...
+        Filename: Final[str] = ...
+        """"""
+        IsLayered: Final[bool] = ...
+        """"""
+        Name: Final[str] = ...
+        """
+        
+        :return: 
+        """
+        Suffix: Final[str] = ...
+        """
+        
+        :return: 
+        """
+        def __init__(self, filename: str, volume: int):
+            """"""
+        @property
+        def CustomSampleBank(self) -> int:
+            """"""
+        @property
+        def EditorAutoBank(self) -> bool:
+            """
+            
+            :return: 
+            """
+        @property
+        def LookupNames(self) -> IEnumerable[str]:
+            """
+            
+            :return: 
+            """
+        @property
+        def UseBeatmapSamples(self) -> bool:
+            """
+            
+            :return: 
+            """
+        @property
+        def Volume(self) -> int:
+            """
+            
+            :return: 
+            """
+        @overload
+        def Equals(self, obj: object) -> bool:
+            """"""
+        @overload
+        def Equals(self, other: HitSampleInfo) -> bool:
+            """"""
+        @overload
+        def Equals(self, other: ConvertHitObjectParser.FileHitSampleInfo) -> bool:
+            """"""
+        @overload
+        def Equals(self, other: ConvertHitObjectParser.LegacyHitSampleInfo) -> bool:
+            """"""
+        def GetHashCode(self) -> int:
+            """"""
+        def GetType(self) -> Type:
+            """"""
+        def ToString(self) -> str:
+            """"""
+        @overload
+        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newCustomSampleBank: Optional[int] = ..., newIsLayered: Optional[bool] = ...) -> ConvertHitObjectParser.LegacyHitSampleInfo:
+            """"""
+        @overload
+        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newSuffix: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newUseBeatmapSamples: Optional[bool] = ...) -> HitSampleInfo:
+            """
+            
+            :param newName: 
+            :param newBank: 
+            :param newSuffix: 
+            :param newVolume: 
+            :param newEditorAutoBank: 
+            :param newUseBeatmapSamples: 
+            :return: 
+            """
+    class LegacyHitSampleInfo(HitSampleInfo, IEquatable[HitSampleInfo], IEquatable[ConvertHitObjectParser.LegacyHitSampleInfo], ISampleInfo):
+        """"""
+        Bank: Final[str] = ...
+        """
+        
+        :return: 
+        """
+        BankSpecified: Final[bool] = ...
         """"""
         IsLayered: Final[bool] = ...
         """"""
@@ -383,6 +467,9 @@ class ConvertHitObjectParser(HitObjectParser):
         def __init__(self, name: str, bank: str = ..., volume: int = ..., editorAutoBank: bool = ..., customSampleBank: int = ..., isLayered: bool = ...):
             """"""
         @property
+        def CustomSampleBank(self) -> int:
+            """"""
+        @property
         def EditorAutoBank(self) -> bool:
             """
             
@@ -390,6 +477,12 @@ class ConvertHitObjectParser(HitObjectParser):
             """
         @property
         def LookupNames(self) -> IEnumerable[str]:
+            """
+            
+            :return: 
+            """
+        @property
+        def UseBeatmapSamples(self) -> bool:
             """
             
             :return: 
@@ -416,7 +509,10 @@ class ConvertHitObjectParser(HitObjectParser):
         def ToString(self) -> str:
             """"""
         @overload
-        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newSuffix: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ...) -> HitSampleInfo:
+        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newCustomSampleBank: Optional[int] = ..., newIsLayered: Optional[bool] = ...) -> ConvertHitObjectParser.LegacyHitSampleInfo:
+            """"""
+        @overload
+        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newSuffix: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newUseBeatmapSamples: Optional[bool] = ...) -> HitSampleInfo:
             """
             
             :param newName: 
@@ -424,11 +520,9 @@ class ConvertHitObjectParser(HitObjectParser):
             :param newSuffix: 
             :param newVolume: 
             :param newEditorAutoBank: 
+            :param newUseBeatmapSamples: 
             :return: 
             """
-        @overload
-        def With(self, newName: Optional[str] = ..., newBank: Optional[str] = ..., newVolume: Optional[int] = ..., newEditorAutoBank: Optional[bool] = ..., newCustomSampleBank: Optional[int] = ..., newIsLayered: Optional[bool] = ...) -> ConvertHitObjectParser.LegacyHitSampleInfo:
-            """"""
 class ConvertHold(ConvertHitObject, IHasLegacyHitObjectType, IHasCombo, IHasDuration, IHasPosition, IHasXPosition, IHasYPosition):
     """"""
     SamplesBindable: Final[BindableList[HitSampleInfo]] = ...
