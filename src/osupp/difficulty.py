@@ -48,6 +48,12 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
             json_type_extended = get_json_type(net_type)
 
             _enum_values = [str(x) for x in System.Enum.GetValues(net_type)] if json_type_extended == "enum" else None
+            _underlying_value = SettingSourceExtensions.GetUnderlyingSettingValue(bindable)
+            _default = getattr(bindable, "Default", None)
+            if json_type_extended == "enum":
+                # 处理为字符串
+                _underlying_value = str(_underlying_value)
+                _default = str(_default) if _default is not None else None
 
             name = to_snake_case(property_info.Name)
             settings_data.append(
@@ -56,8 +62,8 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
                     Type=json_type_extended,
                     Label=str(settings_source.Label),
                     Description=str(settings_source.Description),
-                    UnderlyingValue=SettingSourceExtensions.GetUnderlyingSettingValue(bindable),
-                    Default=getattr(bindable, "Default", None),
+                    UnderlyingValue=_underlying_value,
+                    Default=_default,
                     EnumValues=_enum_values,
                 ),
             )
