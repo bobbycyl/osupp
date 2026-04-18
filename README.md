@@ -13,11 +13,11 @@
 
 ### 1. 安装 Python 3.12、.NET 8.0 和本仓库的 osupp 包
 
-### 2. 本地克隆 [osu](https://github.com/ppy/osu) 和 [osu-tools](https://github.com/ppy/osu-tools) 仓库
+### 2. 本地克隆 [osu-tools](https://github.com/ppy/osu-tools) 和 [osu](https://github.com/ppy/osu) （可选）仓库
 
 ```shell
-git clone https://github.com/ppy/osu.git
 git clone https://github.com/ppy/osu-tools.git
+git clone https://github.com/ppy/osu.git  # 可选
 ```
 
 ### 3. 添加环境变量
@@ -39,33 +39,10 @@ dotnet build -c Release
 
 ### 生成存根文件
 
-由于 PerformanceCalculator 是一个独立的 .NET 项目，因此需要魔改 `stubgen`。
+执行 `sync_stubs.py` 生成常用存根文件。
 
-具体而言，在 `stubgen/extract_stubs.py` 中，`import clr` 之前添加以下代码：
-
-```python
-import os
-import sys
-from clr_loader import get_coreclr
-from pythonnet import set_runtime
-
-build_dir = r"path/to/osu-tools/PerformanceCalculator/bin/Release/net8.0"
-runtime_config = os.path.join(
-    build_dir, "PerformanceCalculator.runtimeconfig.json",
-)
-rt = get_coreclr(runtime_config=runtime_config)
-set_runtime(rt)
-sys.path.append(build_dir)
-```
-
-然后执行 `stubgen`：
-
-```shell
-python -m stubgen -o output extract PerformanceCalculator osu.Game osu.Game.Rulesets.Osu osu.Game.Rulesets.Taiko osu.Game.Rulesets.Catch osu.Game.Rulesets.Mania
-python -m stubgen -o stubs build output/*_skeleton.json output/*_doc.json
-```
-
-最后执行 `sync_stubs.py` 复制常用存根文件。
+注：由于 `Newtonsoft.Json` 和 `PerformanceCalculatorGUI` 通常用不到，
+故本包仅针对使用到的类和函数做了最小化的存根文件，以供类型注解用。
 
 ### 生成测试结果
 
