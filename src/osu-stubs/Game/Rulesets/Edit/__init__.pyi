@@ -209,8 +209,6 @@ class BeatmapVerifierContext(Object):
             """"""
         @Working.setter
         def Working(self, value: IWorkingBeatmap) -> None: ...
-        def Clone$(self) -> BeatmapVerifierContext.VerifiedBeatmap:
-            """"""
         def Deconstruct(self, Working: IWorkingBeatmap, Playable: IBeatmap) -> Tuple[None, IWorkingBeatmap, IBeatmap]:
             """"""
         @overload

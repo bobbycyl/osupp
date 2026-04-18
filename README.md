@@ -41,7 +41,9 @@ dotnet build -c Release
 
 执行 `sync_stubs.py` 生成常用存根文件。
 
-注：由于 `Newtonsoft.Json` 和 `PerformanceCalculatorGUI` 通常用不到，
+注1：有些存根文件的生成会有问题，需要手动修复；
+
+注2：由于 `Newtonsoft.Json` 和 `PerformanceCalculatorGUI` 通常用不到，
 故本包仅针对使用到的类和函数做了最小化的存根文件，以供类型注解用。
 
 ### 生成测试结果

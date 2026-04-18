@@ -7680,11 +7680,6 @@ class PreciseRotationInfo(Object, IEquatable[PreciseRotationInfo]):
         """
     @Origin.setter
     def Origin(self, value: EditorOrigin) -> None: ...
-    def Clone$(self) -> PreciseRotationInfo:
-        """
-        
-        :return: 
-        """
     def Deconstruct(self, Degrees: float, Origin: EditorOrigin) -> Tuple[None, float, EditorOrigin]:
         """
         
@@ -8299,11 +8294,6 @@ class PreciseScaleInfo(Object, IEquatable[PreciseScaleInfo]):
         """
     @YAxis.setter
     def YAxis(self, value: bool) -> None: ...
-    def Clone$(self) -> PreciseScaleInfo:
-        """
-        
-        :return: 
-        """
     def Deconstruct(self, Scale: float, Origin: EditorOrigin, XAxis: bool, YAxis: bool) -> Tuple[None, float, EditorOrigin, bool, bool]:
         """
         

@@ -344,8 +344,6 @@ class RulesetBeatmapAttribute(Object):
             """"""
         @Value.setter
         def Value(self, value: LocalisableString) -> None: ...
-        def Clone$(self) -> RulesetBeatmapAttribute.AdditionalMetric:
-            """"""
         def Deconstruct(self, Name: LocalisableString, Value: LocalisableString, Colour: Optional[Colour4]) -> Tuple[None, LocalisableString, LocalisableString, Optional[Colour4]]:
             """"""
         @overload
