@@ -1,5 +1,5 @@
-/output/
-/stubs/
-/dist/
 /MarsCodeWorkspaceAppSettings.xml
+output/
+stubs/
+dist/
 uv.lock
