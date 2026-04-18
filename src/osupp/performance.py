@@ -11,18 +11,11 @@ from osu.Game.Beatmaps import BeatmapExtensions, IBeatmap
 from osu.Game.Rulesets.Catch import CatchRuleset
 from osu.Game.Rulesets.Catch.Objects import Droplet, Fruit, JuiceStream, TinyDroplet
 from osu.Game.Rulesets.Mania import ManiaRuleset
-from osu.Game.Rulesets.Mania.Objects import (
-    HoldNote,
-)
-from osu.Game.Rulesets.Mods import (
-    Mod,
-    ModClassic,
-)
+from osu.Game.Rulesets.Mania.Objects import HoldNote
+from osu.Game.Rulesets.Mods import Mod, ModClassic
 from osu.Game.Rulesets.Objects import HitObject
 from osu.Game.Rulesets.Osu import OsuRuleset
-from osu.Game.Rulesets.Osu.Mods import (
-    OsuModClassic,
-)
+from osu.Game.Rulesets.Osu.Mods import OsuModClassic
 from osu.Game.Rulesets.Osu.Objects import Slider, SliderRepeat, SliderTick
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Taiko import TaikoRuleset

@@ -4,9 +4,7 @@ import System
 from System import Array, OperationCanceledException
 
 from PerformanceCalculator import LegacyHelper, ProcessorCommand, ProcessorWorkingBeatmap
-from osu.Game.Configuration import (
-    SettingSourceExtensions,
-)
+from osu.Game.Configuration import SettingSourceExtensions
 from osu.Game.Rulesets import Ruleset
 from .util import MOD_SETTING_TYPES, Result, re_deserialize, to_snake_case
 
