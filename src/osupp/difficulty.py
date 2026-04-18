@@ -6,6 +6,7 @@ from System import Array, OperationCanceledException
 from PerformanceCalculator import LegacyHelper, ProcessorCommand, ProcessorWorkingBeatmap
 from osu.Game.Configuration import SettingSourceExtensions
 from osu.Game.Rulesets import Ruleset
+from osu.Game.Rulesets.Mods import Mod
 from .util import MOD_SETTING_TYPES, Result, re_deserialize, to_snake_case
 
 
@@ -21,13 +22,16 @@ class ModSetting(TypedDict):
 
 class ModEntry(TypedDict):
     Acronym: str
+    Name: str
+    Description: str
+    Type: Literal["DifficultyReduction", "DifficultyIncrease", "Automation", "Conversion", "Fun", "System"]
     Settings: list[ModSetting]
 
 
 def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
     all_mods_data: list[ModEntry] = []
     all_mods = ruleset.CreateAllMods()
-    all_mods_list = list(all_mods)
+    all_mods_list: list[Mod] = list(all_mods)
     for mod in all_mods_list:
         settings_data: list[ModSetting] = []
         source_properties = cast(
@@ -68,6 +72,9 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
         # 组装 acronym 和 settings
         mod_entry = ModEntry(
             Acronym=mod.Acronym,
+            Name=mod.Name,
+            Description=str(mod.Description),
+            Type=cast(Literal["DifficultyReduction", "DifficultyIncrease", "Automation", "Conversion", "Fun", "System"], str(mod.Type)),
             Settings=settings_data,
         )
         all_mods_data.append(mod_entry)
