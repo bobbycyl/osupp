@@ -9,6 +9,7 @@ from osupp.performance import (
     calculate_catch_performance,
     calculate_mania_performance,
     calculate_osu_performance,
+    calculate_performance,
     calculate_taiko_performance,
 )
 from osupp.util import Result
@@ -62,6 +63,18 @@ def test():
     assert calculate_difficulty(beatmap_path, mods, mod_options5) == DIFF_RESULT
     assert calculate_difficulty(beatmap_path, mods, mod_options6) == DIFF_RESULT
     assert calculate_difficulty(beatmap_path, mods, mod_options7) == DIFF_RESULT
+    calculator = calculate_performance(beatmap_path, None, mods, mod_options1)
+    diff_attr = next(calculator)
+    # 硬编码区开始
+    assert diff_attr["__ek_cs_orig"] == 4.0
+    assert diff_attr["__ek_ar_orig"] == 9.5
+    assert diff_attr["__ek_od_orig"] == 9.0
+    assert diff_attr["__ek_hp_orig"] == 5.0
+    assert round(diff_attr["__ek_ar_adj"], 2) == 10.31
+    assert round(diff_attr["__ek_od_adj"], 2) == 10.0
+    assert diff_attr["__ek_clock_rate"] == 1.3
+    assert int(diff_attr["__ek_most_common_bpm_orig"]) == 192
+    # 硬编码区结束
 
     # === 第二部分：测试 performance 计算 ===
     calculator = calculate_osu_performance(beatmap_path)
@@ -95,6 +108,11 @@ def test():
         assert perf1_attr == perf_result_attr
         assert perf2_attr == perf_result_attr
         assert perf_max_attr["pp"] == MAX_PP
+        # 硬编码区开始
+        assert diff_attr["__ek_strain_count"] == 643
+        assert int(diff_attr["__ek_hit_length_orig"]) == 262500
+        # 硬编码区结束
+
         assert diff_attr["key_not_exists"] == 0.0
         # 结束时拿到谱面信息
         calculator.send(None)

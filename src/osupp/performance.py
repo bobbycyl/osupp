@@ -10,12 +10,13 @@ from PerformanceCalculatorGUI import ExtendedCatchDifficultyCalculator, Extended
 from osu.Game.Beatmaps import BeatmapExtensions, IBeatmap
 from osu.Game.Rulesets.Catch import CatchRuleset
 from osu.Game.Rulesets.Catch.Objects import Droplet, Fruit, JuiceStream, TinyDroplet
+from osu.Game.Rulesets.Difficulty import RulesetBeatmapAttribute
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
 from osu.Game.Rulesets.Difficulty.Skills import Skill, StrainSkill
 from osu.Game.Rulesets.Mania import ManiaRuleset
 from osu.Game.Rulesets.Mania.Objects import HoldNote
 from osu.Game.Rulesets.Mods import Mod, ModClassic
-from osu.Game.Rulesets.Objects import HitObject
+from osu.Game.Rulesets.Objects import HitObject, HitObjectExtensions
 from osu.Game.Rulesets.Osu import OsuRuleset
 from osu.Game.Rulesets.Osu.Difficulty.Skills import Aim
 from osu.Game.Rulesets.Osu.Mods import OsuModClassic
@@ -23,7 +24,7 @@ from osu.Game.Rulesets.Osu.Objects import Slider, SliderRepeat, SliderTick
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Taiko import TaikoRuleset
 from osu.Game.Scoring import ScoreInfo
-from osu.Game.Utils import ModUtils
+from osu.Game.Utils import FormatUtils, ModUtils
 from .util import Result, re_deserialize
 
 
@@ -475,29 +476,90 @@ def calculate_performance(
     try:
         difficulty_attributes = difficulty_calculator.Calculate(mod_array)
     except OperationCanceledException:  # ty:ignore[invalid-exception-caught]
+        # todo: 是否有必要把其它参数继续返回出来，但是不知道其他 osu 官方函数是否会报错
         pass
     else:
-        beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
+        cs_adj = 0.0
+        ar_adj = 0.0
+        od_adj = 0.0
+        hp_adj = 0.0
+        cs_orig = 0.0
+        ar_orig = 0.0
+        od_orig = 0.0
+        hp_orig = 0.0
+        for attr in cast(Iterable[RulesetBeatmapAttribute], ruleset.GetBeatmapAttributesForDisplay(working_beatmap.BeatmapInfo, mod_array)):
+            match attr.Acronym:
+                case "CS":
+                    cs_adj = attr.AdjustedValue
+                    cs_orig = attr.OriginalValue
+                case "AR":
+                    ar_adj = attr.AdjustedValue
+                    ar_orig = attr.OriginalValue
+                case "OD":
+                    od_adj = attr.AdjustedValue
+                    od_orig = attr.OriginalValue
+                case "HP":
+                    hp_adj = attr.AdjustedValue
+                    hp_orig = attr.OriginalValue
 
         clock_rate = ModUtils.CalculateRateWithMods(mod_array)
+        min_bpm_orig = working_beatmap.Beatmap.ControlPointInfo.BPMMinimum
+        max_bpm_orig = working_beatmap.Beatmap.ControlPointInfo.BPMMaximum
+        most_common_bpm_orig = 60000 / working_beatmap.Beatmap.GetMostCommonBeatLength()
+        # 注：clock_rate 不会因为 WU、WD 这类模组而变化
+        # 在 osuawa 中的 magnitude 则是考虑了这一点进行计算
+        min_bpm_adj = FormatUtils.RoundBPM(min_bpm_orig, clock_rate)
+        max_bpm_adj = FormatUtils.RoundBPM(max_bpm_orig, clock_rate)
+        most_common_bpm_adj = FormatUtils.RoundBPM(most_common_bpm_orig, clock_rate)
+
         _skills: Iterable[Skill] = difficulty_calculator.GetSkills()
+        _hit_objects: list[HitObject] = list(working_beatmap.Beatmap.HitObjects)
         difficulty_hit_objects: list[DifficultyHitObject] = list(difficulty_calculator.GetDifficultyHitObjects())
 
         strains: dict[str, list[float]] = {}
+        max_strain_len = 0
         for _skill in _skills:
             skill_type = _skill.GetType().Name
             if skill_type == "Aim" and cast(Aim, _skill).IncludeSliders:
                 skill_type += " (sliders included)"
-            strains[skill_type] = list(cast(StrainSkill, _skill).GetCurrentStrainPeaks())
+            strain = list(cast(Iterable[float], cast(StrainSkill, _skill).GetCurrentStrainPeaks()))
+            strains[skill_type] = strain
+            if len(strain) > max_strain_len:
+                max_strain_len = len(strain)
 
         sent = yield re_deserialize(
             difficulty_attributes,
             strains=strains,
             difficulty_hit_objects=difficulty_hit_objects,
+            cs_adj=cs_adj,
+            ar_adj=ar_adj,
+            od_adj=od_adj,
+            hp_adj=hp_adj,
+            cs_orig=cs_orig,
+            ar_orig=ar_orig,
+            od_orig=od_orig,
+            hp_orig=hp_orig,
+            clock_rate=clock_rate,
+            min_bpm_orig=min_bpm_orig,
+            max_bpm_orig=max_bpm_orig,
+            most_common_bpm_orig=most_common_bpm_orig,
+            min_bpm_adj=min_bpm_adj,
+            max_bpm_adj=max_bpm_adj,
+            most_common_bpm_adj=most_common_bpm_adj,
+            time_until_first_strain_orig=_hit_objects[1].StartTime,  # 官方的 osu-tools 中用的好像是这个值，但是我认为下面一个更准确
+            time_until_first_strain_adj=difficulty_hit_objects[0].StartTime,
+            strain_count=max_strain_len,
+            ms_per_strain=400,
+            hit_start_orig=_hit_objects[0].StartTime,
+            hit_end_orig=max(HitObjectExtensions.GetEndTime(obj) for obj in _hit_objects),
+            hit_length_orig=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap),
+            drain_length_orig=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap),
         )
 
         performance_calculator = ruleset.CreatePerformanceCalculator()
         while sent:
+            beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
+
             hit_results = generate_hit_result(sent, beatmap, mod_array)
 
             score_info = ScoreInfo()
