@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from functools import singledispatch
- from typing import Any, Iterable, Literal, NamedTuple, Optional, cast
+from typing import Any, Iterable, Literal, NamedTuple, Optional, cast
 
 from System import Array, OperationCanceledException
 from System.Collections.Generic import Dictionary
