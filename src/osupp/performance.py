@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from functools import singledispatch
-from typing import Any, Literal, NamedTuple, Optional, cast
+ from typing import Any, Iterable, Literal, NamedTuple, Optional, cast
 
 from System import Array, OperationCanceledException
 from System.Collections.Generic import Dictionary
@@ -10,11 +10,14 @@ from PerformanceCalculatorGUI import ExtendedCatchDifficultyCalculator, Extended
 from osu.Game.Beatmaps import BeatmapExtensions, IBeatmap
 from osu.Game.Rulesets.Catch import CatchRuleset
 from osu.Game.Rulesets.Catch.Objects import Droplet, Fruit, JuiceStream, TinyDroplet
+from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
+from osu.Game.Rulesets.Difficulty.Skills import Skill, StrainSkill
 from osu.Game.Rulesets.Mania import ManiaRuleset
 from osu.Game.Rulesets.Mania.Objects import HoldNote
 from osu.Game.Rulesets.Mods import Mod, ModClassic
 from osu.Game.Rulesets.Objects import HitObject
 from osu.Game.Rulesets.Osu import OsuRuleset
+from osu.Game.Rulesets.Osu.Difficulty.Skills import Aim
 from osu.Game.Rulesets.Osu.Mods import OsuModClassic
 from osu.Game.Rulesets.Osu.Objects import Slider, SliderRepeat, SliderTick
 from osu.Game.Rulesets.Scoring import HitResult
@@ -477,23 +480,20 @@ def calculate_performance(
         beatmap = working_beatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mod_array)
 
         clock_rate = ModUtils.CalculateRateWithMods(mod_array)
-        _skills = difficulty_calculator.GetSkills()
-        _hit_objects = difficulty_calculator.GetDifficultyHitObjects()
+        _skills: Iterable[Skill] = difficulty_calculator.GetSkills()
+        difficulty_hit_objects: list[DifficultyHitObject] = list(difficulty_calculator.GetDifficultyHitObjects())
 
-        timelines = {}
+        strains: dict[str, list[float]] = {}
         for _skill in _skills:
             skill_type = _skill.GetType().Name
-            if skill_type == "Aim" and _skill.IncludeSliders:  # ty:ignore[unresolved-attribute]
+            if skill_type == "Aim" and cast(Aim, _skill).IncludeSliders:
                 skill_type += " (sliders included)"
+            strains[skill_type] = list(cast(StrainSkill, _skill).GetCurrentStrainPeaks())
 
-            strains = _skill.GetCurrentStrainPeaks()  # ty:ignore[unresolved-attribute]
-
-            timeline = [(hit.StartTime / clock_rate, float(strain)) for hit, strain in zip(list(_hit_objects)[1:], list(strains)[1:])]
-
-            timelines[skill_type] = timeline
         sent = yield re_deserialize(
             difficulty_attributes,
-            timelines=timelines,
+            strains=strains,
+            difficulty_hit_objects=difficulty_hit_objects,
         )
 
         performance_calculator = ruleset.CreatePerformanceCalculator()
