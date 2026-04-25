@@ -1,3 +1,5 @@
+import math
+
 import orjson
 
 from osupp.difficulty import calculate_difficulty
@@ -113,7 +115,7 @@ def test():
         assert int(diff_attr["__ek_hit_length_orig"]) == 262500
         # 硬编码区结束
 
-        assert diff_attr["key_not_exists"] == 0.0
+        assert math.isnan(diff_attr["key_not_exists"])
         # 结束时拿到谱面信息
         calculator.send(None)
     except StopIteration:
@@ -144,11 +146,11 @@ def test_strange():
     beatmap_path = r"./cache/4429119.osu"
     mods = ["EZ"]
     diff_attr = calculate_difficulty(beatmap_path, mods)
-    assert diff_attr["star_rating"] == 0.0
+    assert math.isnan(diff_attr["star_rating"])
     calculator = calculate_osu_performance(beatmap_path)
     try:
         diff_attr2 = next(calculator)
-        assert diff_attr2["star_rating"] == 0.0
+        assert math.isnan(diff_attr2["star_rating"])
         _ = calculator.send(OsuPerformance())
         _ = calculator.send(OsuPerformance())
         _ = calculator.send(OsuPerformance())
