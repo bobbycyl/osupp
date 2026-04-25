@@ -100,38 +100,6 @@ def generate_osu_hit_results(
     return result
 
 
-# 对应 OsuSimulateCommand.cs 的 GetAccuracy
-def get_osu_accuracy(
-    beatmap: IBeatmap,
-    statistics: dict[HitResult | str, int],
-    mods: Array[Mod],
-):
-    count_great: int = statistics[HitResult.Great]
-    count_ok: int = statistics[HitResult.Ok]
-    count_meh: int = statistics[HitResult.Meh]
-    count_miss: int = statistics[HitResult.Miss]
-    total = 6 * count_great + 2 * count_ok + count_meh
-    max_score = 6 * (count_great + count_ok + count_meh + count_miss)
-
-    if HitResult.SliderTailHit in statistics:
-        count_slider_tail_hit = statistics[HitResult.SliderTailHit]
-        count_sliders = sum(1 for obj in beatmap.HitObjects if isinstance(obj, Slider))
-        total += 3 * count_slider_tail_hit
-        max_score += 3 * count_sliders
-
-    if HitResult.LargeTickMiss in statistics or "large_tick_hits" in statistics:
-        count_large_tick_miss = statistics.get(HitResult.LargeTickMiss, 0)
-        count_large_ticks = sum(1 for obj in cast(list[HitObject], beatmap.HitObjects) for nested in obj.NestedHitObjects if isinstance(nested, (SliderTick, SliderRepeat)))
-        count_large_tick_hit = statistics.get("large_tick_hits", count_large_ticks - count_large_tick_miss)
-        total += 0.6 * count_large_tick_hit
-        max_score += 0.6 * count_large_ticks
-
-    if max_score == 0:
-        return 0.0
-
-    return total / max_score
-
-
 # 对应 TaikoSimulateCommand.cs 的 generateHitResults
 def generate_taiko_hit_results(
     beatmap: IBeatmap,
@@ -156,23 +124,6 @@ def generate_taiko_hit_results(
         HitResult.Meh: 0,
         HitResult.Miss: count_miss,
     }
-
-
-# 对应 TaikoSimulateCommand.cs 的 GetAccuracy
-def get_taiko_accuracy(
-    beatmap: IBeatmap,
-    statistics: dict[HitResult | str, int],
-    mods: Array[Mod],
-):
-    count_great = statistics[HitResult.Great]
-    count_ok = statistics[HitResult.Ok]
-    count_miss = statistics[HitResult.Miss]
-    total = count_great + count_ok + count_miss
-
-    if total == 0:
-        return 0.0
-
-    return ((2 * count_great) + count_ok) / (2 * total)
 
 
 # 对应 CatchSimulateCommand.cs 的 generateHitResults
@@ -205,21 +156,6 @@ def generate_catch_hit_results(
         HitResult.SmallTickMiss: count_small_tick_miss,
         HitResult.Miss: count_miss,
     }
-
-
-# 对应 CatchSimulateCommand.cs 的 GetAccuracy
-def get_catch_accuracy(
-    beatmap: IBeatmap,
-    statistics: dict[HitResult | str, int],
-    mods: Array[Mod],
-):
-    hits = statistics[HitResult.Great] + statistics[HitResult.LargeTickHit] + statistics[HitResult.SmallTickHit]
-    total = hits + statistics[HitResult.Miss] + statistics[HitResult.SmallTickMiss]
-
-    if total == 0:
-        return 0.0
-
-    return hits / total
 
 
 # 对应 ManiaSimulateCommand.cs 的 generateHitResults
@@ -281,31 +217,6 @@ def generate_mania_hit_results(
         HitResult.Meh: count_meh,
         HitResult.Miss: count_miss,
     }
-
-
-# 对应 ManiaSimulateCommand.cs 的 GetAccuracy
-def get_mania_accuracy(
-    beatmap: IBeatmap,
-    statistics: dict[HitResult | str, int],
-    mods: Array[Mod],
-):
-    count_perfect = statistics[HitResult.Perfect]
-    count_great = statistics[HitResult.Great]
-    count_good = statistics[HitResult.Good]
-    count_ok = statistics[HitResult.Ok]
-    count_meh = statistics[HitResult.Meh]
-    count_miss = statistics[HitResult.Miss]
-
-    is_classic = any(isinstance(m, ModClassic) for m in mods)
-    perfect_weight = 300 if is_classic else 305
-
-    total = (perfect_weight * count_perfect) + (300 * count_great) + (200 * count_good) + (100 * count_ok) + (50 * count_meh)
-    max_score = perfect_weight * (count_perfect + count_great + count_good + count_ok + count_meh + count_miss)
-
-    if max_score == 0:
-        return 0.0
-
-    return total / max_score
 
 
 class OsuPerformance(NamedTuple):
@@ -416,23 +327,111 @@ def _(perf: ManiaPerformance, beatmap: IBeatmap, mods: Array[Mod]):
     )
 
 
+@singledispatch
 def get_accuracy(
     perf,
     beatmap: IBeatmap,
     statistics: dict[HitResult | str, int],
     mods: Array[Mod],
-):
-    match perf:
-        case OsuPerformance():
-            return get_osu_accuracy(beatmap, statistics, mods)
-        case TaikoPerformance():
-            return get_taiko_accuracy(beatmap, statistics, mods)
-        case CatchPerformance():
-            return get_catch_accuracy(beatmap, statistics, mods)
-        case ManiaPerformance():
-            return get_mania_accuracy(beatmap, statistics, mods)
-        case _:
-            raise NotImplementedError
+) -> float:
+    raise NotImplementedError
+
+
+# 对应 OsuSimulateCommand.cs 的 GetAccuracy
+@get_accuracy.register(OsuPerformance)
+def _(
+    perf: OsuPerformance,
+    beatmap: IBeatmap,
+    statistics: dict[HitResult | str, int],
+    mods: Array[Mod],
+) -> float:
+    count_great: int = statistics[HitResult.Great]
+    count_ok: int = statistics[HitResult.Ok]
+    count_meh: int = statistics[HitResult.Meh]
+    count_miss: int = statistics[HitResult.Miss]
+    total = 6 * count_great + 2 * count_ok + count_meh
+    max_score = 6 * (count_great + count_ok + count_meh + count_miss)
+
+    if HitResult.SliderTailHit in statistics:
+        count_slider_tail_hit = statistics[HitResult.SliderTailHit]
+        count_sliders = sum(1 for obj in beatmap.HitObjects if isinstance(obj, Slider))
+        total += 3 * count_slider_tail_hit
+        max_score += 3 * count_sliders
+
+    if HitResult.LargeTickMiss in statistics or "large_tick_hits" in statistics:
+        count_large_tick_miss = statistics.get(HitResult.LargeTickMiss, 0)
+        count_large_ticks = sum(1 for obj in cast(list[HitObject], beatmap.HitObjects) for nested in obj.NestedHitObjects if isinstance(nested, (SliderTick, SliderRepeat)))
+        count_large_tick_hit = statistics.get("large_tick_hits", count_large_ticks - count_large_tick_miss)
+        total += 0.6 * count_large_tick_hit
+        max_score += 0.6 * count_large_ticks
+
+    if max_score == 0:
+        return 0.0
+
+    return total / max_score
+
+
+# 对应 TaikoSimulateCommand.cs 的 GetAccuracy
+@get_accuracy.register(TaikoPerformance)
+def _(
+    perf: TaikoPerformance,
+    beatmap: IBeatmap,
+    statistics: dict[HitResult | str, int],
+    mods: Array[Mod],
+) -> float:
+    count_great = statistics[HitResult.Great]
+    count_ok = statistics[HitResult.Ok]
+    count_miss = statistics[HitResult.Miss]
+    total = count_great + count_ok + count_miss
+
+    if total == 0:
+        return 0.0
+
+    return ((2 * count_great) + count_ok) / (2 * total)
+
+
+# 对应 CatchSimulateCommand.cs 的 GetAccuracy
+@get_accuracy.register(CatchPerformance)
+def _(
+    perf: CatchPerformance,
+    beatmap: IBeatmap,
+    statistics: dict[HitResult | str, int],
+    mods: Array[Mod],
+) -> float:
+    hits = statistics[HitResult.Great] + statistics[HitResult.LargeTickHit] + statistics[HitResult.SmallTickHit]
+    total = hits + statistics[HitResult.Miss] + statistics[HitResult.SmallTickMiss]
+
+    if total == 0:
+        return 0.0
+
+    return hits / total
+
+
+# 对应 ManiaSimulateCommand.cs 的 GetAccuracy
+@get_accuracy.register(ManiaPerformance)
+def _(
+    perf: ManiaPerformance,
+    beatmap: IBeatmap,
+    statistics: dict[HitResult | str, int],
+    mods: Array[Mod],
+) -> float:
+    count_perfect = statistics[HitResult.Perfect]
+    count_great = statistics[HitResult.Great]
+    count_good = statistics[HitResult.Good]
+    count_ok = statistics[HitResult.Ok]
+    count_meh = statistics[HitResult.Meh]
+    count_miss = statistics[HitResult.Miss]
+
+    is_classic = any(isinstance(m, ModClassic) for m in mods)
+    perfect_weight = 300 if is_classic else 305
+
+    total = (perfect_weight * count_perfect) + (300 * count_great) + (200 * count_good) + (100 * count_ok) + (50 * count_meh)
+    max_score = perfect_weight * (count_perfect + count_great + count_good + count_ok + count_meh + count_miss)
+
+    if max_score == 0:
+        return 0.0
+
+    return total / max_score
 
 
 def calculate_performance(
