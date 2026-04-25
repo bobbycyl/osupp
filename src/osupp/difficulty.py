@@ -135,6 +135,6 @@ def calculate_difficulty(
     )
 
     try:
-        return re_deserialize(calculator.Calculate(mod_array))
+        return re_deserialize(obj=calculator.Calculate(mod_array))
     except OperationCanceledException:  # ty:ignore[invalid-exception-caught]
         return Result({})

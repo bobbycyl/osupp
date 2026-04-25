@@ -1,7 +1,7 @@
-import math
-
 import orjson
 
+import osupp as _osupp
+from osu.Game.Rulesets.Osu import OsuRuleset
 from osupp.difficulty import calculate_difficulty
 from osupp.performance import (
     CatchPerformance,
@@ -16,6 +16,7 @@ from osupp.performance import (
 )
 from osupp.util import Result
 
+assert _osupp
 
 # 准备测试结果
 def load_res(filename):
@@ -115,7 +116,7 @@ def test():
         assert int(diff_attr["__ek_hit_length_orig"]) == 262500
         # 硬编码区结束
 
-        assert math.isnan(diff_attr["key_not_exists"])
+        assert diff_attr["key_not_exists"] is None
         # 结束时拿到谱面信息
         calculator.send(None)
     except StopIteration:
@@ -146,16 +147,21 @@ def test_strange():
     beatmap_path = r"./cache/4429119.osu"
     mods = ["EZ"]
     diff_attr = calculate_difficulty(beatmap_path, mods)
-    assert math.isnan(diff_attr["star_rating"])
-    calculator = calculate_osu_performance(beatmap_path)
+    assert diff_attr["star_rating"] is None
+    calculator = calculate_performance(beatmap_path, OsuRuleset(), [], [], False)
     try:
         diff_attr2 = next(calculator)
-        assert math.isnan(diff_attr2["star_rating"])
-        _ = calculator.send(OsuPerformance())
-        _ = calculator.send(OsuPerformance())
-        _ = calculator.send(OsuPerformance())
-        _ = calculator.send(OsuPerformance())
-        _ = calculator.send(OsuPerformance())
+        # 硬编码区开始
+        assert round(diff_attr2["star_rating"], 2) == 1647.66
+        assert diff_attr2["__ek_cs_orig"] == 10.0
+        assert diff_attr2["__ek_ar_orig"] == 0.0
+        assert diff_attr2["__ek_od_orig"] == 10.0
+        assert diff_attr2["__ek_most_common_bpm_orig"] == 10000.0
+        perf_attr2 = calculator.send(OsuPerformance())
+        assert round(perf_attr2["aim"], 2) == 3780396261.62
+        assert round(perf_attr2["speed"], 2) == 122.58
+        assert round(perf_attr2["pp"], 0)  == 4309651772
+        # 硬编码区结束
     except StopIteration as e:
         assert e.value["DifficultyName"] == "Beyond Obliteration"
 

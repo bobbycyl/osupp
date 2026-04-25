@@ -9,6 +9,8 @@
 
 如果 osu! 或 osu-tools 发生了重大更新，欢迎开 issue 或 pull request 交流。
 
+万分感谢 [Zh_Jk](https://github.com/fantasyzhjk) 在我理解 osu! 源码过程中提供的帮助。
+
 ## 使用方法
 
 ### 1. 安装 Python 3.12、.NET 8.0 和本仓库的 osupp 包

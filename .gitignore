@@ -3,3 +3,4 @@ output/
 stubs/
 dist/
 uv.lock
+tmp.py

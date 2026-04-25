@@ -14,13 +14,13 @@ class Result(dict):
         if key in self:
             return super().__getitem__(key)
         else:
-            return float("nan")
+            return None
 
     def _get_pure(self):
         return {k: v for k, v in self.items() if not k.startswith("__ek_")}
 
 
-def re_deserialize(obj, **kwargs):
+def re_deserialize(*, obj, **kwargs):
     return Result(
         loads(JsonConvert.SerializeObject(obj)),
         **{"__ek_%s" % k: v for k, v in kwargs.items()},
