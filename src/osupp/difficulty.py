@@ -17,6 +17,8 @@ class ModSetting(TypedDict):
     Description: str
     UnderlyingValue: Optional[Any]
     Default: Optional[Any]
+    IsInteger: Optional[bool]
+    DefaultPrecision: Optional[int | float]
     EnumValues: Optional[list[str]]
 
 
@@ -31,8 +33,8 @@ class ModEntry(TypedDict):
 def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
     all_mods_data: list[ModEntry] = []
     all_mods = ruleset.CreateAllMods()
-    all_mods_list: list[Mod] = list(all_mods)
-    for mod in all_mods_list:
+    for mod in all_mods:
+        mod = cast(Mod, mod)
         settings_data: list[ModSetting] = []
         source_properties = cast(
             Iterable,
@@ -52,10 +54,17 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
             _enum_values = [str(x) for x in System.Enum.GetValues(net_type)] if json_type_extended == "enum" else None
             _underlying_value = SettingSourceExtensions.GetUnderlyingSettingValue(bindable)
             _default = getattr(bindable, "Default", None)
+            _is_integer = None
+            _default_precision = None
             if json_type_extended == "enum":
                 # 处理为字符串
                 _underlying_value = str(_underlying_value)
                 _default = str(_default) if _default is not None else None
+            elif json_type_extended == "number":
+                _is_integer = getattr(bindable, "IsInteger", None)
+                _default_precision = getattr(bindable, "DefaultPrecision", None)
+                if _default_precision is not None:
+                    _default_precision = round(_default_precision, 2)  # type: ignore
 
             name = to_snake_case(property_info.Name)
             settings_data.append(
@@ -66,6 +75,8 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
                     Description=str(settings_source.Description),
                     UnderlyingValue=_underlying_value,
                     Default=_default,
+                    IsInteger=_is_integer,
+                    DefaultPrecision=_default_precision,
                     EnumValues=_enum_values,
                 ),
             )
@@ -92,8 +103,12 @@ def get_json_type(net_type) -> MOD_SETTING_TYPES:
         net_type = net_type.GetGenericArguments()[0]
     full_name = net_type.FullName
 
-    if full_name in (
-        "System.Int32",
+    if full_name in ("System.Byte",
+            "System.SByte",
+            "System.Int16", "System.UInt16",
+            "System.Int32", "System.UInt32",
+            "System.Int64", "System.UInt64",
+            "System.IntPtr", "System.UIntPtr",
         "System.Double",
         "System.Single",
         "System.Decimal",
