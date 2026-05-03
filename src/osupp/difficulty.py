@@ -54,8 +54,8 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
             _enum_values = [str(x) for x in System.Enum.GetValues(net_type)] if json_type_extended == "enum" else None
             _underlying_value = SettingSourceExtensions.GetUnderlyingSettingValue(bindable)
             _default = getattr(bindable, "Default", None)
-            _is_integer = None
-            _default_precision = None
+            _is_integer: Optional[bool] = None
+            _default_precision: Optional[int | float] = None
             if json_type_extended == "enum":
                 # 处理为字符串
                 _underlying_value = str(_underlying_value)
@@ -64,7 +64,7 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
                 _is_integer = getattr(bindable, "IsInteger", None)
                 _default_precision = getattr(bindable, "DefaultPrecision", None)
                 if _default_precision is not None:
-                    _default_precision = round(_default_precision, 2)  # type: ignore
+                    _default_precision = round(_default_precision, 2)
 
             name = to_snake_case(property_info.Name)
             settings_data.append(
@@ -85,7 +85,7 @@ def get_all_mods(ruleset: Ruleset) -> list[ModEntry]:
             Acronym=mod.Acronym,
             Name=mod.Name,
             Description=str(mod.Description),
-            Type=cast(Literal["DifficultyReduction", "DifficultyIncrease", "Automation", "Conversion", "Fun", "System"], str(mod.Type)),
+            Type=cast(Literal["DifficultyReduction", "DifficultyIncrease", "Automation", "Conversion", "Fun", "System"], mod.Type.ToString()),
             Settings=settings_data,
         )
         all_mods_data.append(mod_entry)
@@ -103,12 +103,17 @@ def get_json_type(net_type) -> MOD_SETTING_TYPES:
         net_type = net_type.GetGenericArguments()[0]
     full_name = net_type.FullName
 
-    if full_name in ("System.Byte",
-            "System.SByte",
-            "System.Int16", "System.UInt16",
-            "System.Int32", "System.UInt32",
-            "System.Int64", "System.UInt64",
-            "System.IntPtr", "System.UIntPtr",
+    if full_name in (
+        "System.Byte",
+        "System.SByte",
+        "System.Int16",
+        "System.UInt16",
+        "System.Int32",
+        "System.UInt32",
+        "System.Int64",
+        "System.UInt64",
+        "System.IntPtr",
+        "System.UIntPtr",
         "System.Double",
         "System.Single",
         "System.Decimal",

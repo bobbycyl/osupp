@@ -18,6 +18,7 @@ from osupp.util import Result
 
 assert _osupp
 
+
 # 准备测试结果
 def load_res(filename):
     with open(filename, "rb") as fi_b:
@@ -160,7 +161,7 @@ def test_strange():
         perf_attr2 = calculator.send(OsuPerformance())
         assert round(perf_attr2["aim"], 2) == 3780396261.62
         assert round(perf_attr2["speed"], 2) == 122.58
-        assert round(perf_attr2["pp"], 0)  == 4309651772
+        assert round(perf_attr2["pp"], 0) == 4309651772
         # 硬编码区结束
     except StopIteration as e:
         assert e.value["DifficultyName"] == "Beyond Obliteration"

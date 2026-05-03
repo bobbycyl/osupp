@@ -258,11 +258,7 @@ class ManiaPerformance(NamedTuple):
 
 # 对应 SimulateCommand.cs 的 GenerateHitResults
 @singledispatch
-def generate_hit_result(
-    perf,
-    beatmap: IBeatmap,
-    mods: Array[Mod],
-) -> dict[HitResult | str, int]:
+def generate_hit_result(perf, beatmap: IBeatmap, mods: Array[Mod]) -> dict[HitResult | str, int]:
     raise NotImplementedError
 
 
@@ -329,12 +325,7 @@ def _(perf: ManiaPerformance, beatmap: IBeatmap, mods: Array[Mod]):
 
 
 @singledispatch
-def get_accuracy(
-    perf,
-    beatmap: IBeatmap,
-    statistics: dict[HitResult | str, int],
-    mods: Array[Mod],
-) -> float:
+def get_accuracy(perf, beatmap: IBeatmap, statistics: dict[HitResult | str, int], mods: Array[Mod]) -> float:
     raise NotImplementedError
 
 
