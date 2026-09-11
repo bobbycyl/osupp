@@ -419,14 +419,6 @@ class Beatmap(Generic[T], Object, IBeatmap, IBeatmap[T]):
         :return: 
         """
     @property
-    def UnhandledEventLines(self) -> List[str]:
-        """
-        
-        :return: 
-        """
-    @UnhandledEventLines.setter
-    def UnhandledEventLines(self, value: List[str]) -> None: ...
-    @property
     def WidescreenStoryboard(self) -> bool:
         """
         
@@ -617,14 +609,6 @@ class Beatmap(Beatmap[HitObject], IBeatmap, IBeatmap[HitObject]):
         
         :return: 
         """
-    @property
-    def UnhandledEventLines(self) -> List[str]:
-        """
-        
-        :return: 
-        """
-    @UnhandledEventLines.setter
-    def UnhandledEventLines(self, value: List[str]) -> None: ...
     @property
     def WidescreenStoryboard(self) -> bool:
         """
@@ -2125,12 +2109,13 @@ class BeatmapManager(ModelManager[BeatmapSetInfo], IWorkingBeatmapCache, ICanAcc
         """
     def RestoreAll(self) -> None:
         """"""
-    def Save(self, beatmapInfo: BeatmapInfo, beatmapContent: IBeatmap, beatmapSkin: ISkin = ...) -> None:
+    def Save(self, beatmapInfo: BeatmapInfo, beatmapContent: IBeatmap, beatmapSkin: ISkin = ..., storyboard: Storyboard = ...) -> None:
         """
         
         :param beatmapInfo: 
         :param beatmapContent: 
         :param beatmapSkin: 
+        :param storyboard: 
         """
     def ToString(self) -> str:
         """"""
@@ -3038,7 +3023,35 @@ class BeatmapSetInfoExtensions(ABC, Object):
         """"""
     def ToString(self) -> str:
         """"""
-class BeatmapSetNominationRequiredMeta(Object):
+class BeatmapSetNominationStatus(Object):
+    """"""
+    def __init__(self):
+        """"""
+    @property
+    def Current(self) -> int:
+        """
+        
+        :return: 
+        """
+    @Current.setter
+    def Current(self, value: int) -> None: ...
+    @property
+    def RequiredMeta(self) -> BeatmapSetNominationStatusRequiredMeta:
+        """
+        
+        :return: 
+        """
+    @RequiredMeta.setter
+    def RequiredMeta(self, value: BeatmapSetNominationStatusRequiredMeta) -> None: ...
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class BeatmapSetNominationStatusRequiredMeta(Object):
     """"""
     def __init__(self):
         """"""
@@ -3058,34 +3071,6 @@ class BeatmapSetNominationRequiredMeta(Object):
         """
     @NonMainRuleset.setter
     def NonMainRuleset(self, value: int) -> None: ...
-    def Equals(self, obj: object) -> bool:
-        """"""
-    def GetHashCode(self) -> int:
-        """"""
-    def GetType(self) -> Type:
-        """"""
-    def ToString(self) -> str:
-        """"""
-class BeatmapSetNominationStatus(Object):
-    """"""
-    def __init__(self):
-        """"""
-    @property
-    def Current(self) -> int:
-        """
-        
-        :return: 
-        """
-    @Current.setter
-    def Current(self, value: int) -> None: ...
-    @property
-    def RequiredMeta(self) -> BeatmapSetNominationRequiredMeta:
-        """
-        
-        :return: 
-        """
-    @RequiredMeta.setter
-    def RequiredMeta(self, value: BeatmapSetNominationRequiredMeta) -> None: ...
     def Equals(self, obj: object) -> bool:
         """"""
     def GetHashCode(self) -> int:
@@ -4432,7 +4417,7 @@ class DummyWorkingBeatmap(WorkingBeatmap, IWorkingBeatmap):
         
         :return: 
         """
-    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: float = ...) -> None:
+    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: Optional[float] = ...) -> None:
         """
         
         :param looping: 
@@ -4573,7 +4558,7 @@ class FlatWorkingBeatmap(WorkingBeatmap, IWorkingBeatmap):
         
         :return: 
         """
-    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: float = ...) -> None:
+    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: Optional[float] = ...) -> None:
         """
         
         :param looping: 
@@ -4593,6 +4578,16 @@ class FramedBeatmapClock(Component, IDisposable, IDependencyInjectionCandidate, 
     """"""
     ProcessCustomClock: Final[bool] = ...
     """"""
+    WINDOWS_BASE_AUDIO_OFFSET: Final[ClassVar[float]] = ...
+    """
+    
+    :return: 
+    """
+    WINDOWS_EXPERIMENTAL_AUDIO_OFFSET: Final[ClassVar[float]] = ...
+    """
+    
+    :return: 
+    """
     def __init__(self, applyOffsets: bool, requireDecoupling: bool, source: IClock = ...):
         """
         
@@ -5143,12 +5138,6 @@ class IBeatmap:
         :return: 
         """
     @property
-    def UnhandledEventLines(self) -> List[str]:
-        """
-        
-        :return: 
-        """
-    @property
     def WidescreenStoryboard(self) -> bool:
         """
         
@@ -5295,12 +5284,6 @@ class IBeatmap(Generic[T], IBeatmap):
         """
     @property
     def TotalBreakTime(self) -> float:
-        """
-        
-        :return: 
-        """
-    @property
-    def UnhandledEventLines(self) -> List[str]:
         """
         
         :return: 
@@ -6039,7 +6022,7 @@ class IWorkingBeatmap:
         
         :return: 
         """
-    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: float = ...) -> None:
+    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: Optional[float] = ...) -> None:
         """
         
         :param looping: 
@@ -6248,7 +6231,7 @@ ProcessBeatmapDelegate: Callable[[BeatmapSetInfo, MetadataLookupScope], None] = 
 :param beatmapSet: 
 :param lookupScope: 
 """
-class StarDifficulty(ValueType):
+class StarDifficulty(ValueType, IEquatable[StarDifficulty]):
     """"""
     DifficultyAttributes: Final[DifficultyAttributes] = ...
     """
@@ -6290,7 +6273,11 @@ class StarDifficulty(ValueType):
         
         :return: 
         """
+    @overload
     def Equals(self, obj: object) -> bool:
+        """"""
+    @overload
+    def Equals(self, other: StarDifficulty) -> bool:
         """"""
     @classmethod
     def GetDifficultyRating(cls, starRating: float) -> DifficultyRating:
@@ -6305,6 +6292,34 @@ class StarDifficulty(ValueType):
         """"""
     def ToString(self) -> str:
         """"""
+    def __eq__(self, other: StarDifficulty) -> bool:
+        """
+        
+        :param other: 
+        :return: 
+        """
+    def __ne__(self, other: StarDifficulty) -> bool:
+        """
+        
+        :param other: 
+        :return: 
+        """
+    @classmethod
+    def op_Equality(cls, left: StarDifficulty, right: StarDifficulty) -> bool:
+        """
+        
+        :param left: 
+        :param right: 
+        :return: 
+        """
+    @classmethod
+    def op_Inequality(cls, left: StarDifficulty, right: StarDifficulty) -> bool:
+        """
+        
+        :param left: 
+        :param right: 
+        :return: 
+        """
 class WorkingBeatmap(ABC, Object, IWorkingBeatmap):
     """"""
     BeatmapInfo: Final[BeatmapInfo] = ...
@@ -6419,7 +6434,7 @@ class WorkingBeatmap(ABC, Object, IWorkingBeatmap):
         
         :return: 
         """
-    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: float = ...) -> None:
+    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: Optional[float] = ...) -> None:
         """
         
         :param looping: 

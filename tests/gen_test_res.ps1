@@ -1,4 +1,4 @@
-$calculator = $env:OSU_TOOLS_HOME + "\PerformanceCalculator\bin\Release\net8.0\PerformanceCalculator.dll"
+$calculator = $env:OSU_TOOLS_HOME + "\PerformanceCalculator\bin\Release\net10.0\PerformanceCalculator.dll"
 dotnet $calculator difficulty -m HD -m DT -o DT_speed_change=1.3 3477131 -j > DIFF_RESULT.json
 dotnet $calculator simulate osu --mehs 4 --goods 34 --combo 706 --large-tick-misses 0 --slider-tail-misses 7 --misses 2 3477131 -j > PERF_RESULT.json
 dotnet $calculator simulate osu 3477131 -j > MAX_PP.json

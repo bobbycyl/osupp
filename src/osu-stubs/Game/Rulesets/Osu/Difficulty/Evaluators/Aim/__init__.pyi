@@ -3,59 +3,7 @@ from System import Type
 from __future__ import annotations
 from abc import ABC
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
-from osu.Game.Rulesets.Taiko.Difficulty.Preprocessing import TaikoDifficultyHitObject
-class ColourEvaluator(ABC, Object):
-    """"""
-    def Equals(self, obj: object) -> bool:
-        """"""
-    @classmethod
-    def EvaluateDifficultyOf(cls, hitObject: DifficultyHitObject) -> float:
-        """
-        
-        :param hitObject: 
-        :return: 
-        """
-    def GetHashCode(self) -> int:
-        """"""
-    def GetType(self) -> Type:
-        """"""
-    def ToString(self) -> str:
-        """"""
-class ReadingEvaluator(ABC, Object):
-    """"""
-    def Equals(self, obj: object) -> bool:
-        """"""
-    @classmethod
-    def EvaluateDifficultyOf(cls, noteObject: TaikoDifficultyHitObject) -> float:
-        """
-        
-        :param noteObject: 
-        :return: 
-        """
-    def GetHashCode(self) -> int:
-        """"""
-    def GetType(self) -> Type:
-        """"""
-    def ToString(self) -> str:
-        """"""
-class RhythmEvaluator(ABC, Object):
-    """"""
-    def Equals(self, obj: object) -> bool:
-        """"""
-    @classmethod
-    def EvaluateDifficultyOf(cls, hitObject: DifficultyHitObject) -> float:
-        """
-        
-        :param hitObject: 
-        :return: 
-        """
-    def GetHashCode(self) -> int:
-        """"""
-    def GetType(self) -> Type:
-        """"""
-    def ToString(self) -> str:
-        """"""
-class StaminaEvaluator(ABC, Object):
+class AgilityEvaluator(ABC, Object):
     """"""
     def Equals(self, obj: object) -> bool:
         """"""
@@ -64,6 +12,49 @@ class StaminaEvaluator(ABC, Object):
         """
         
         :param current: 
+        :return: 
+        """
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class FlowAimEvaluator(ABC, Object):
+    """"""
+    def Equals(self, obj: object) -> bool:
+        """"""
+    @classmethod
+    def EvaluateDifficultyOf(cls, current: DifficultyHitObject, withSliderTravelDistance: bool) -> float:
+        """
+        
+        :param current: 
+        :param withSliderTravelDistance: 
+        :return: 
+        """
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class SnapAimEvaluator(ABC, Object):
+    """"""
+    @classmethod
+    def CalcAngleAcuteness(cls, angle: float) -> float:
+        """
+        
+        :param angle: 
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    @classmethod
+    def EvaluateDifficultyOf(cls, current: DifficultyHitObject, withSliderTravelDistance: bool) -> float:
+        """
+        
+        :param current: 
+        :param withSliderTravelDistance: 
         :return: 
         """
     def GetHashCode(self) -> int:

@@ -1,13 +1,16 @@
 from System import Array
 from System.Collections.Generic import IEnumerable
+from System.Collections.Generic import IReadOnlyList
 from System import Type
 from __future__ import annotations
-from abc import ABC
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
+from osu.Game.Rulesets.Difficulty.Skills import HarmonicSkill
 from osu.Game.Rulesets.Difficulty.Skills import StrainSkill
+from osu.Game.Rulesets.Difficulty.Skills import VariableLengthStrainSkill
+from osu.Game.Rulesets.Difficulty.Skills.VariableLengthStrainSkill import StrainPeak
 from osu.Game.Rulesets.Mods import Mod
 from typing import Final
-class Aim(OsuStrainSkill):
+class Aim(VariableLengthStrainSkill):
     """"""
     IncludeSliders: Final[bool] = ...
     """
@@ -20,14 +23,16 @@ class Aim(OsuStrainSkill):
         :param mods: 
         :param includeSliders: 
         """
-    def CountTopWeightedSliders(self) -> float:
+    def CountTopWeightedSliders(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -37,7 +42,7 @@ class Aim(OsuStrainSkill):
         """
     def Equals(self, obj: object) -> bool:
         """"""
-    def GetCurrentStrainPeaks(self) -> IEnumerable[float]:
+    def GetCurrentStrainPeaks(self) -> IEnumerable[VariableLengthStrainSkill.StrainPeak]:
         """
         
         :return: 
@@ -49,7 +54,7 @@ class Aim(OsuStrainSkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -65,14 +70,16 @@ class Aim(OsuStrainSkill):
         """"""
 class Flashlight(StrainSkill):
     """"""
-    def __init__(self, mods: Array[Mod]):
+    def __init__(self, mods: Array[Mod], totalObjects: int):
         """
         
         :param mods: 
+        :param totalObjects: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     @classmethod
@@ -96,7 +103,7 @@ class Flashlight(StrainSkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -110,63 +117,17 @@ class Flashlight(StrainSkill):
         """
     def ToString(self) -> str:
         """"""
-class OsuStrainSkill(ABC, StrainSkill):
-    """"""
-    def CountTopWeightedStrains(self) -> float:
-        """
-        
-        :return: 
-        """
-    @classmethod
-    def DifficultyToPerformance(cls, difficulty: float) -> float:
-        """
-        
-        :param difficulty: 
-        :return: 
-        """
-    def DifficultyValue(self) -> float:
-        """
-        
-        :return: 
-        """
-    def Equals(self, obj: object) -> bool:
-        """"""
-    def GetCurrentStrainPeaks(self) -> IEnumerable[float]:
-        """
-        
-        :return: 
-        """
-    def GetHashCode(self) -> int:
-        """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
-        """
-        
-        :return: 
-        """
-    def GetType(self) -> Type:
-        """"""
-    def Process(self, current: DifficultyHitObject) -> None:
-        """
-        
-        :param current: 
-        """
-    def ToString(self) -> str:
-        """"""
-class Speed(OsuStrainSkill):
+class Reading(HarmonicSkill):
     """"""
     def __init__(self, mods: Array[Mod]):
         """
         
         :param mods: 
         """
-    def CountTopWeightedSliders(self) -> float:
+    def CountTopWeightedObjectDifficulties(self, difficultyValue: float) -> float:
         """
         
-        :return: 
-        """
-    def CountTopWeightedStrains(self) -> float:
-        """
-        
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -176,14 +137,9 @@ class Speed(OsuStrainSkill):
         """
     def Equals(self, obj: object) -> bool:
         """"""
-    def GetCurrentStrainPeaks(self) -> IEnumerable[float]:
-        """
-        
-        :return: 
-        """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -195,7 +151,49 @@ class Speed(OsuStrainSkill):
         
         :param current: 
         """
-    def RelevantNoteCount(self) -> float:
+    def ToString(self) -> str:
+        """"""
+class Speed(HarmonicSkill):
+    """"""
+    def __init__(self, mods: Array[Mod]):
+        """
+        
+        :param mods: 
+        """
+    def CountTopWeightedObjectDifficulties(self, difficultyValue: float) -> float:
+        """
+        
+        :param difficultyValue: 
+        :return: 
+        """
+    def CountTopWeightedSliders(self, difficultyValue: float) -> float:
+        """
+        
+        :param difficultyValue: 
+        :return: 
+        """
+    def DifficultyValue(self) -> float:
+        """
+        
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
+        """
+        
+        :return: 
+        """
+    def GetType(self) -> Type:
+        """"""
+    def Process(self, current: DifficultyHitObject) -> None:
+        """
+        
+        :param current: 
+        """
+    def RelevantObjectCount(self) -> float:
         """
         
         :return: 

@@ -47,6 +47,7 @@ from osu.Framework.Layout import InvalidationSource
 from osu.Framework.Timing import FrameTimeInfo
 from osu.Framework.Timing import IFrameBasedClock
 from osu.Game.Beatmaps import IBeatmap
+from osu.Game.Beatmaps import IBeatmapDifficultyInfo
 from osu.Game.Rulesets.Judgements import JudgementResult
 from osu.Game.Rulesets.Mods import Mod
 from osu.Game.Rulesets.Objects import HitObject
@@ -2451,9 +2452,63 @@ class LegacyDrainingHealthProcessor(ABC, DrainingHealthProcessor, IDisposable, I
     """"""
     OnUpdate: EventType[Action[Drawable]] = ...
     """"""
+class ScoreMultiplierCalculator(Object):
+    """"""
+    def __init__(self, context: ScoreMultiplierContext):
+        """
+        
+        :param context: 
+        """
+    def CalculateFor(self, mods: IEnumerable[Mod]) -> float:
+        """
+        
+        :param mods: 
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class ScoreMultiplierContext(Object):
+    """"""
+    def __init__(self, beatmapDifficultyWithoutMods: IBeatmapDifficultyInfo, score: ScoreInfo = ...):
+        """
+        
+        :param beatmapDifficultyWithoutMods: 
+        :param score: 
+        """
+    @property
+    def BeatmapDifficultyWithoutMods(self) -> IBeatmapDifficultyInfo:
+        """
+        
+        :return: 
+        """
+    @property
+    def Score(self) -> ScoreInfo:
+        """
+        
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
 class ScoreProcessor(JudgementProcessor, IDisposable, IDependencyInjectionCandidate, ISourceGeneratedDependencyActivator, ISourceGeneratedLongRunningLoadCache, ITransformable, IDrawable, ISourceGeneratedHandleInputCache):
     """"""
     Accuracy: Final[BindableDouble] = ...
+    """
+    
+    :return: 
+    """
+    Beatmap: Final[Bindable[IBeatmap]] = ...
     """
     
     :return: 

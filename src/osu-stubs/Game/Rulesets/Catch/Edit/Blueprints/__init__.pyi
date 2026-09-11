@@ -557,6 +557,12 @@ class BananaShowerPlacementBlueprint(CatchPlacementBlueprint[BananaShower], ICol
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -1592,6 +1598,12 @@ class CatchPlacementBlueprint(ABC, Generic[THitObject], HitObjectPlacementBluepr
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -2624,6 +2636,12 @@ class FruitPlacementBlueprint(CatchPlacementBlueprint[Fruit], ICollection[Drawab
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -3661,6 +3679,12 @@ class JuiceStreamPlacementBlueprint(CatchPlacementBlueprint[JuiceStream], IColle
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload

@@ -1,5 +1,6 @@
 from System import Array
 from System.Collections.Generic import IEnumerable
+from System.Collections.Generic import IReadOnlyList
 from System import Type
 from __future__ import annotations
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
@@ -7,16 +8,15 @@ from osu.Game.Rulesets.Difficulty.Skills import StrainDecaySkill
 from osu.Game.Rulesets.Mods import Mod
 class Movement(StrainDecaySkill):
     """"""
-    def __init__(self, mods: Array[Mod], halfCatcherWidth: float, clockRate: float):
+    def __init__(self, mods: Array[Mod]):
         """
         
         :param mods: 
-        :param halfCatcherWidth: 
-        :param clockRate: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -33,7 +33,7 @@ class Movement(StrainDecaySkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 

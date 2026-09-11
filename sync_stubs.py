@@ -11,7 +11,7 @@ build_dir = os.path.join(
     "PerformanceCalculator",
     "bin",
     "Release",
-    "net8.0",
+    "net10.0",
 )
 runtime_config = os.path.join(
     build_dir,

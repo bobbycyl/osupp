@@ -65,14 +65,6 @@ class OsuDifficultyAttributes(DifficultyAttributes):
     @AimTopWeightedSliderFactor.setter
     def AimTopWeightedSliderFactor(self, value: float) -> None: ...
     @property
-    def DrainRate(self) -> float:
-        """
-        
-        :return: 
-        """
-    @DrainRate.setter
-    def DrainRate(self, value: float) -> None: ...
-    @property
     def FlashlightDifficulty(self) -> float:
         """
         
@@ -128,6 +120,22 @@ class OsuDifficultyAttributes(DifficultyAttributes):
         """
     @NestedScorePerObject.setter
     def NestedScorePerObject(self, value: float) -> None: ...
+    @property
+    def ReadingDifficultNoteCount(self) -> float:
+        """
+        
+        :return: 
+        """
+    @ReadingDifficultNoteCount.setter
+    def ReadingDifficultNoteCount(self, value: float) -> None: ...
+    @property
+    def ReadingDifficulty(self) -> float:
+        """
+        
+        :return: 
+        """
+    @ReadingDifficulty.setter
+    def ReadingDifficulty(self, value: float) -> None: ...
     @property
     def SliderCount(self) -> int:
         """
@@ -251,22 +259,6 @@ class OsuDifficultyCalculator(DifficultyCalculator):
         :param cancellationToken: 
         :return: 
         """
-    @classmethod
-    def CalculateRateAdjustedApproachRate(cls, approachRate: float, clockRate: float) -> float:
-        """
-        
-        :param approachRate: 
-        :param clockRate: 
-        :return: 
-        """
-    @classmethod
-    def CalculateRateAdjustedOverallDifficulty(cls, overallDifficulty: float, clockRate: float) -> float:
-        """
-        
-        :param overallDifficulty: 
-        :param clockRate: 
-        :return: 
-        """
     @overload
     def CalculateTimed(self, cancellationToken: CancellationToken = ...) -> List[TimedDifficultyAttributes]:
         """
@@ -293,6 +285,14 @@ class OsuDifficultyCalculator(DifficultyCalculator):
         """"""
     def GetType(self) -> Type:
         """"""
+    @classmethod
+    def SumCognitionDifficulty(cls, reading: float, flashlight: float) -> float:
+        """
+        
+        :param reading: 
+        :param flashlight: 
+        :return: 
+        """
     def ToString(self) -> str:
         """"""
 class OsuLegacyScoreMissCalculator(Object):
@@ -395,6 +395,14 @@ class OsuPerformanceAttributes(PerformanceAttributes):
     @Flashlight.setter
     def Flashlight(self, value: float) -> None: ...
     @property
+    def Reading(self) -> float:
+        """
+        
+        :return: 
+        """
+    @Reading.setter
+    def Reading(self, value: float) -> None: ...
+    @property
     def ScoreBasedEstimatedMissCount(self) -> Optional[float]:
         """
         
@@ -454,6 +462,11 @@ class OsuPerformanceCalculator(PerformanceCalculator):
     
     :return: 
     """
+    PERFORMANCE_NORM_EXPONENT: Final[ClassVar[float]] = ...
+    """
+    
+    :return: 
+    """
     def __init__(self):
         """"""
     @overload
@@ -480,59 +493,11 @@ class OsuPerformanceCalculator(PerformanceCalculator):
         :param cancellationToken: 
         :return: 
         """
-    def Equals(self, obj: object) -> bool:
-        """"""
-    def GetHashCode(self) -> int:
-        """"""
-    def GetType(self) -> Type:
-        """"""
-    def ToString(self) -> str:
-        """"""
-class OsuRatingCalculator(Object):
-    """"""
-    def __init__(self, mods: Array[Mod], totalHits: int, approachRate: float, overallDifficulty: float, mechanicalDifficultyRating: float, sliderFactor: float):
-        """
-        
-        :param mods: 
-        :param totalHits: 
-        :param approachRate: 
-        :param overallDifficulty: 
-        :param mechanicalDifficultyRating: 
-        :param sliderFactor: 
-        """
     @classmethod
-    def CalculateDifficultyRating(cls, difficultyValue: float) -> float:
+    def DifficultyToPerformance(cls, difficulty: float) -> float:
         """
         
-        :param difficultyValue: 
-        :return: 
-        """
-    @classmethod
-    def CalculateVisibilityBonus(cls, mods: Array[Mod], approachRate: float, visibilityFactor: float = ..., sliderFactor: float = ...) -> float:
-        """
-        
-        :param mods: 
-        :param approachRate: 
-        :param visibilityFactor: 
-        :param sliderFactor: 
-        :return: 
-        """
-    def ComputeAimRating(self, aimDifficultyValue: float) -> float:
-        """
-        
-        :param aimDifficultyValue: 
-        :return: 
-        """
-    def ComputeFlashlightRating(self, flashlightDifficultyValue: float) -> float:
-        """
-        
-        :param flashlightDifficultyValue: 
-        :return: 
-        """
-    def ComputeSpeedRating(self, speedDifficultyValue: float) -> float:
-        """
-        
-        :param speedDifficultyValue: 
+        :param difficulty: 
         :return: 
         """
     def Equals(self, obj: object) -> bool:

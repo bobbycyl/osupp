@@ -11,12 +11,22 @@ class DifficultyHitObject(Object):
     
     :return: 
     """
+    ClockRate: Final[float] = ...
+    """
+    
+    :return: 
+    """
     DeltaTime: Final[float] = ...
     """
     
     :return: 
     """
     EndTime: Final[float] = ...
+    """
+    
+    :return: 
+    """
+    HitWindowGreat: Final[float] = ...
     """
     
     :return: 
@@ -51,16 +61,16 @@ class DifficultyHitObject(Object):
         """"""
     def GetType(self) -> Type:
         """"""
-    def Next(self, forwardsIndex: int) -> DifficultyHitObject:
+    def Next(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param forwardsIndex: 
+        :param skipCount: 
         :return: 
         """
-    def Previous(self, backwardsIndex: int) -> DifficultyHitObject:
+    def Previous(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param backwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def ToString(self) -> str:

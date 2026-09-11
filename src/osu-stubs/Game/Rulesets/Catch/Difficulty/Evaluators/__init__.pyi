@@ -8,11 +8,10 @@ class MovementEvaluator(ABC, Object):
     def Equals(self, obj: object) -> bool:
         """"""
     @classmethod
-    def EvaluateDifficultyOf(cls, current: DifficultyHitObject, catcherSpeedMultiplier: float) -> float:
+    def EvaluateDifficultyOf(cls, current: DifficultyHitObject) -> float:
         """
         
         :param current: 
-        :param catcherSpeedMultiplier: 
         :return: 
         """
     def GetHashCode(self) -> int:

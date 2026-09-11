@@ -13,6 +13,11 @@ class ManiaDifficultyHitObject(DifficultyHitObject):
     
     :return: 
     """
+    ClockRate: Final[float] = ...
+    """
+    
+    :return: 
+    """
     Column: Final[int] = ...
     """
     
@@ -29,6 +34,11 @@ class ManiaDifficultyHitObject(DifficultyHitObject):
     :return: 
     """
     EndTime: Final[float] = ...
+    """
+    
+    :return: 
+    """
+    HitWindowGreat: Final[float] = ...
     """
     
     :return: 
@@ -75,10 +85,10 @@ class ManiaDifficultyHitObject(DifficultyHitObject):
         """"""
     def GetType(self) -> Type:
         """"""
-    def Next(self, forwardsIndex: int) -> DifficultyHitObject:
+    def Next(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param forwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def NextInColumn(self, forwardsIndex: int) -> ManiaDifficultyHitObject:
@@ -93,10 +103,10 @@ class ManiaDifficultyHitObject(DifficultyHitObject):
         :param backwardsIndex: 
         :return: 
         """
-    def Previous(self, backwardsIndex: int) -> DifficultyHitObject:
+    def Previous(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param backwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def ToString(self) -> str:

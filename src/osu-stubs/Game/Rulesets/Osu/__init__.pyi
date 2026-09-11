@@ -98,6 +98,8 @@ from osu.Game.Rulesets import RulesetInfo
 from osu.Game.Rulesets.Scoring import HealthProcessor
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Scoring.Legacy import ILegacyScoreSimulator
+from osu.Game.Rulesets.Scoring import ScoreMultiplierCalculator
+from osu.Game.Rulesets.Scoring import ScoreMultiplierContext
 from osu.Game.Rulesets.Scoring import ScoreProcessor
 from osu.Game.Rulesets.UI import DrawableRuleset
 from osu.Game.Rulesets.UI import ICanAttachHUDPieces
@@ -825,6 +827,12 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         
         :return: 
         """
+    @property
+    def VariantDescription(self) -> LocalisableString:
+        """
+        
+        :return: 
+        """
     def ConvertFromLegacyMods(self, mods: LegacyMods) -> IEnumerable[Mod]:
         """
         
@@ -935,6 +943,12 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         
         :return: 
         """
+    def CreateScoreMultiplierCalculator(self, context: ScoreMultiplierContext) -> ScoreMultiplierCalculator:
+        """
+        
+        :param context: 
+        :return: 
+        """
     def CreateScoreProcessor(self) -> ScoreProcessor:
         """
         
@@ -980,6 +994,13 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         :param mods: 
         :return: 
         """
+    def GetBeatmapAttributesForRankedPlayCard(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyCollection[Mod]) -> IEnumerable[RulesetBeatmapAttribute]:
+        """
+        
+        :param beatmapInfo: 
+        :param mods: 
+        :return: 
+        """
     def GetDefaultKeyBindings(self, variant: int = ...) -> IEnumerable[KeyBinding]:
         """
         
@@ -999,13 +1020,6 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
         
         :return: 
         """
-    def GetKeyCount(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyList[Mod] = ...) -> int:
-        """
-        
-        :param beatmapInfo: 
-        :param mods: 
-        :return: 
-        """
     def GetModsFor(self, type: ModType) -> IEnumerable[Mod]:
         """
         
@@ -1022,6 +1036,13 @@ class OsuRuleset(Ruleset, ILegacyRuleset):
     def GetValidHitResults(self) -> IEnumerable[HitResult]:
         """
         
+        :return: 
+        """
+    def GetVariantForBeatmap(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyList[Mod] = ...) -> int:
+        """
+        
+        :param beatmapInfo: 
+        :param mods: 
         :return: 
         """
     def GetVariantName(self, variant: int) -> LocalisableString:

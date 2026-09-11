@@ -1,5 +1,6 @@
 from System import Array
 from System.Collections.Generic import IEnumerable
+from System.Collections.Generic import IReadOnlyList
 from System import Type
 from __future__ import annotations
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
@@ -14,9 +15,10 @@ class Colour(StrainDecaySkill):
         
         :param mods: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -33,7 +35,7 @@ class Colour(StrainDecaySkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -54,9 +56,10 @@ class Reading(StrainDecaySkill):
         
         :param mods: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -73,7 +76,7 @@ class Reading(StrainDecaySkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -89,15 +92,15 @@ class Reading(StrainDecaySkill):
         """"""
 class Rhythm(StrainDecaySkill):
     """"""
-    def __init__(self, mods: Array[Mod], greatHitWindow: float):
+    def __init__(self, mods: Array[Mod]):
         """
         
         :param mods: 
-        :param greatHitWindow: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -114,7 +117,7 @@ class Rhythm(StrainDecaySkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 
@@ -142,9 +145,10 @@ class Stamina(StrainSkill):
         :param singleColourStamina: 
         :param isConvert: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -161,7 +165,7 @@ class Stamina(StrainSkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 

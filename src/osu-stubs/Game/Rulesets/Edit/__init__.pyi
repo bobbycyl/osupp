@@ -4581,6 +4581,12 @@ class HitObjectPlacementBlueprint(ABC, PlacementBlueprint, ICollection[Drawable]
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload

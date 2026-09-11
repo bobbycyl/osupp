@@ -19,12 +19,22 @@ class OsuDifficultyHitObject(DifficultyHitObject):
     
     :return: 
     """
+    ClockRate: Final[float] = ...
+    """
+    
+    :return: 
+    """
     DeltaTime: Final[float] = ...
     """
     
     :return: 
     """
     EndTime: Final[float] = ...
+    """
+    
+    :return: 
+    """
+    HitWindowGreat: Final[float] = ...
     """
     
     :return: 
@@ -75,7 +85,13 @@ class OsuDifficultyHitObject(DifficultyHitObject):
         :return: 
         """
     @property
-    def HitWindowGreat(self) -> float:
+    def JumpDistance(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
+    def LastObjectEndDeltaTime(self) -> float:
         """
         
         :return: 
@@ -117,6 +133,24 @@ class OsuDifficultyHitObject(DifficultyHitObject):
         :return: 
         """
     @property
+    def NormalisedVectorAngle(self) -> Optional[float]:
+        """
+        
+        :return: 
+        """
+    @property
+    def OverallDifficulty(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
+    def Preempt(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
     def SmallCircleBonus(self) -> float:
         """
         
@@ -134,22 +168,22 @@ class OsuDifficultyHitObject(DifficultyHitObject):
         
         :return: 
         """
-    def Equals(self, obj: object) -> bool:
-        """"""
-    def GetDoubletapness(self, osuNextObj: OsuDifficultyHitObject) -> float:
+    def CalculateDoubleTapFeasibility(self, nextObj: OsuDifficultyHitObject) -> float:
         """
         
-        :param osuNextObj: 
+        :param nextObj: 
         :return: 
         """
+    def Equals(self, obj: object) -> bool:
+        """"""
     def GetHashCode(self) -> int:
         """"""
     def GetType(self) -> Type:
         """"""
-    def Next(self, forwardsIndex: int) -> DifficultyHitObject:
+    def Next(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param forwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def OpacityAt(self, time: float, hidden: bool) -> float:
@@ -159,10 +193,10 @@ class OsuDifficultyHitObject(DifficultyHitObject):
         :param hidden: 
         :return: 
         """
-    def Previous(self, backwardsIndex: int) -> DifficultyHitObject:
+    def Previous(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param backwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def ToString(self) -> str:

@@ -472,7 +472,7 @@ class HoldNote(ManiaHitObject, IHasColumn, IHasDuration, IHasXPosition):
         """"""
     DefaultsApplied: EventType[Action[HitObject]] = ...
     """"""
-class HoldNoteBody(ManiaHitObject, IHasColumn, IHasXPosition):
+class HoldNoteBody(ManiaHitObject, IHasColumn, IHasDuration, IHasXPosition):
     """"""
     SamplesBindable: Final[BindableList[HitSampleInfo]] = ...
     """
@@ -502,6 +502,20 @@ class HoldNoteBody(ManiaHitObject, IHasColumn, IHasXPosition):
     def Column(self, value: int) -> None: ...
     @property
     def ColumnBindable(self) -> Bindable[int]:
+        """
+        
+        :return: 
+        """
+    @property
+    def Duration(self) -> float:
+        """
+        
+        :return: 
+        """
+    @Duration.setter
+    def Duration(self, value: float) -> None: ...
+    @property
+    def EndTime(self) -> float:
         """
         
         :return: 

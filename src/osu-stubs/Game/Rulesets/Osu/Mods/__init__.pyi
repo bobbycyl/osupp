@@ -101,6 +101,7 @@ from osu.Game.Rulesets.Mods import ModAccuracyChallenge
 from osu.Game.Rulesets.Mods.ModAccuracyChallenge import AccuracyMode
 from osu.Game.Rulesets.Mods import ModAutoplay
 from osu.Game.Rulesets.Mods import ModBarrelRoll
+from osu.Game.Rulesets.Mods import ModBlinds
 from osu.Game.Rulesets.Mods import ModCinema
 from osu.Game.Rulesets.Mods import ModClassic
 from osu.Game.Rulesets.Mods import ModDaycore
@@ -123,6 +124,7 @@ from osu.Game.Rulesets.Mods import ModReplayData
 from osu.Game.Rulesets.Mods import ModSuddenDeath
 from osu.Game.Rulesets.Mods import ModSynesthesia
 from osu.Game.Rulesets.Mods import ModTouchDevice
+from osu.Game.Rulesets.Mods import ModTraceable
 from osu.Game.Rulesets.Mods import ModType
 from osu.Game.Rulesets.Mods import ModWithVisibilityAdjustment
 from osu.Game.Rulesets.Objects.Drawables import DrawableHitObject
@@ -1950,7 +1952,7 @@ class OsuModBarrelRoll(ModBarrelRoll[OsuHitObject], IEquatable[IMod], IEquatable
         
         :param playfield: 
         """
-class OsuModBlinds(Mod, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IApplicableToDrawableRuleset[OsuHitObject], IApplicableToHealthProcessor, IMod, IDeepCloneable[Mod]):
+class OsuModBlinds(ModBlinds, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IApplicableToDrawableRuleset[OsuHitObject], IApplicableToHealthProcessor, IMod, IDeepCloneable[Mod]):
     """"""
     def __init__(self):
         """"""
@@ -9341,7 +9343,7 @@ class OsuModTouchDevice(ModTouchDevice, IEquatable[IMod], IEquatable[Mod], IAppl
         """"""
     def ToString(self) -> str:
         """"""
-class OsuModTraceable(ModWithVisibilityAdjustment, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IApplicableToBeatmap, IApplicableToDrawableHitObject, IMod, IReadFromConfig, IRequiresApproachCircles, IDeepCloneable[Mod]):
+class OsuModTraceable(ModTraceable, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IApplicableToBeatmap, IApplicableToDrawableHitObject, IMod, IReadFromConfig, IRequiresApproachCircles, IDeepCloneable[Mod]):
     """"""
     def __init__(self):
         """"""

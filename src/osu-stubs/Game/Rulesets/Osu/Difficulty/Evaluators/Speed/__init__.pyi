@@ -1,20 +1,17 @@
-from System.Collections.Generic import IReadOnlyList
 from System import Object
 from System import Type
 from __future__ import annotations
 from abc import ABC
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
-from osu.Game.Rulesets.Mods import Mod
-class FlashlightEvaluator(ABC, Object):
+class RhythmEvaluator(ABC, Object):
     """"""
     def Equals(self, obj: object) -> bool:
         """"""
     @classmethod
-    def EvaluateDifficultyOf(cls, current: DifficultyHitObject, mods: IReadOnlyList[Mod]) -> float:
+    def EvaluateDifficultyOf(cls, current: DifficultyHitObject) -> float:
         """
         
         :param current: 
-        :param mods: 
         :return: 
         """
     def GetHashCode(self) -> int:
@@ -23,16 +20,15 @@ class FlashlightEvaluator(ABC, Object):
         """"""
     def ToString(self) -> str:
         """"""
-class ReadingEvaluator(ABC, Object):
+class SpeedEvaluator(ABC, Object):
     """"""
     def Equals(self, obj: object) -> bool:
         """"""
     @classmethod
-    def EvaluateDifficultyOf(cls, current: DifficultyHitObject, hidden: bool) -> float:
+    def EvaluateDifficultyOf(cls, current: DifficultyHitObject) -> float:
         """
         
         :param current: 
-        :param hidden: 
         :return: 
         """
     def GetHashCode(self) -> int:

@@ -7,9 +7,10 @@ from osu.Game.Screens.Select.Filter import Operator
 from osu.Game.Screens.Select import FilterCriteria
 class IRulesetFilterCriteria:
     """"""
-    def FilterMayChangeFromMods(self, mods: ValueChangedEvent[IReadOnlyList[Mod]]) -> bool:
+    def FilterMayChangeFromMods(self, criteria: FilterCriteria, mods: ValueChangedEvent[IReadOnlyList[Mod]]) -> bool:
         """
         
+        :param criteria: 
         :param mods: 
         :return: 
         """

@@ -326,7 +326,7 @@ class ProcessorWorkingBeatmap(WorkingBeatmap, IWorkingBeatmap):
         
         :return: 
         """
-    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: float = ...) -> None:
+    def PrepareTrackForPreview(self, looping: bool, offsetFromPreviewPoint: Optional[float] = ...) -> None:
         """
         
         :param looping: 

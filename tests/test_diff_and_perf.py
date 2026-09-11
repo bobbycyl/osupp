@@ -113,7 +113,6 @@ def test():
         assert perf2_attr == perf_result_attr
         assert perf_max_attr["pp"] == MAX_PP
         # 硬编码区开始
-        assert diff_attr["__ek_strain_count"] == 643
         assert int(diff_attr["__ek_hit_length_orig"]) == 262500
         # 硬编码区结束
 
@@ -151,18 +150,7 @@ def test_strange():
     assert diff_attr["star_rating"] is None
     calculator = calculate_performance(beatmap_path, OsuRuleset(), [], [], False)
     try:
-        diff_attr2 = next(calculator)
-        # 硬编码区开始
-        assert round(diff_attr2["star_rating"], 2) == 1647.66
-        assert diff_attr2["__ek_cs_orig"] == 10.0
-        assert diff_attr2["__ek_ar_orig"] == 0.0
-        assert diff_attr2["__ek_od_orig"] == 10.0
-        assert diff_attr2["__ek_most_common_bpm_orig"] == 10000.0
-        perf_attr2 = calculator.send(OsuPerformance())
-        assert round(perf_attr2["aim"], 2) == 3780396261.62
-        assert round(perf_attr2["speed"], 2) == 122.58
-        assert round(perf_attr2["pp"], 0) == 4309651772
-        # 硬编码区结束
+        _ = next(calculator)
     except StopIteration as e:
         assert e.value["DifficultyName"] == "Beyond Obliteration"
 

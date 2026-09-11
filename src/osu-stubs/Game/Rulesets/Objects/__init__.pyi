@@ -2,6 +2,7 @@ from System import Action
 from System import Array
 from System.Collections.Generic import IEnumerable
 from System.Collections.Generic import IList
+from System.Collections.Generic import IReadOnlyList
 from System.Collections.Generic import List
 from System import Enum
 from System import IEquatable
@@ -492,6 +493,12 @@ class SliderPath(Object):
         """
     @property
     def CalculatedDistance(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
+    def CalculatedPath(self) -> IReadOnlyList[Vector2]:
         """
         
         :return: 

@@ -2,6 +2,7 @@ from System import Action
 from System.Collections.Generic import ICollection
 from System.Collections.Generic import IEnumerable
 from System import DateTimeOffset
+from System import Decimal
 from System import Func
 from System import Object
 from System.Threading import CancellationToken
@@ -213,6 +214,14 @@ class NumberFormattingExtensions(ABC, Object):
         """"""
     def GetType(self) -> Type:
         """"""
+    @classmethod
+    def Normalise(cls, d: Decimal, sd: int) -> Decimal:
+        """
+        
+        :param d: 
+        :param sd: 
+        :return: 
+        """
     @classmethod
     def ToStandardFormattedString(cls, value: T, maxDecimalDigits: int, asPercentage: bool = ...) -> str:
         """

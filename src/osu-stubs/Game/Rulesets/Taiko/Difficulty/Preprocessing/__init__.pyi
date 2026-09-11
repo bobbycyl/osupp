@@ -15,6 +15,11 @@ class TaikoDifficultyHitObject(DifficultyHitObject, IHasInterval):
     
     :return: 
     """
+    ClockRate: Final[float] = ...
+    """
+    
+    :return: 
+    """
     ColourData: Final[TaikoColourData] = ...
     """
     
@@ -31,6 +36,11 @@ class TaikoDifficultyHitObject(DifficultyHitObject, IHasInterval):
     :return: 
     """
     EndTime: Final[float] = ...
+    """
+    
+    :return: 
+    """
+    HitWindowGreat: Final[float] = ...
     """
     
     :return: 
@@ -91,10 +101,10 @@ class TaikoDifficultyHitObject(DifficultyHitObject, IHasInterval):
         """"""
     def GetType(self) -> Type:
         """"""
-    def Next(self, forwardsIndex: int) -> DifficultyHitObject:
+    def Next(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param forwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def NextMono(self, forwardsIndex: int) -> TaikoDifficultyHitObject:
@@ -109,10 +119,10 @@ class TaikoDifficultyHitObject(DifficultyHitObject, IHasInterval):
         :param forwardsIndex: 
         :return: 
         """
-    def Previous(self, backwardsIndex: int) -> DifficultyHitObject:
+    def Previous(self, skipCount: int = ...) -> DifficultyHitObject:
         """
         
-        :param backwardsIndex: 
+        :param skipCount: 
         :return: 
         """
     def PreviousMono(self, backwardsIndex: int) -> TaikoDifficultyHitObject:

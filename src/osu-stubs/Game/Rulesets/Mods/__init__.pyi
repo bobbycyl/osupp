@@ -3810,6 +3810,159 @@ class ModBarrelRoll(ABC, Generic[TObject], Mod, IEquatable[IMod], IEquatable[Mod
         
         :param playfield: 
         """
+class ModBlinds(ABC, Mod, IEquatable[IMod], IEquatable[Mod], IMod, IDeepCloneable[Mod]):
+    """"""
+    @property
+    def Acronym(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def AlwaysValidForSubmission(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def Description(self) -> LocalisableString:
+        """
+        
+        :return: 
+        """
+    @property
+    def ExtendedIconInformation(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def HasImplementation(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def HasNonDefaultSettings(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def Icon(self) -> Optional[IconUsage]:
+        """
+        
+        :return: 
+        """
+    @property
+    def IncompatibleMods(self) -> Array[Type]:
+        """
+        
+        :return: 
+        """
+    @property
+    def Name(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def Ranked(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def RequiresConfiguration(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ScoreMultiplier(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
+    def SettingDescription(self) -> IEnumerable[ValueTuple, LocalisableString]:
+        """
+        
+        :return: 
+        """
+    @property
+    def Type(self) -> ModType:
+        """
+        
+        :return: 
+        """
+    @property
+    def UserPlayable(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def UsesDefaultConfiguration(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForFreestyleAsRequiredMod(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForMultiplayer(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForMultiplayerAsFreeMod(self) -> bool:
+        """
+        
+        :return: 
+        """
+    def CopyCommonSettingsFrom(self, source: Mod) -> None:
+        """
+        
+        :param source: 
+        """
+    def CopyFrom(self, source: Mod) -> None:
+        """
+        
+        :param source: 
+        """
+    def CreateInstance(self) -> Mod:
+        """
+        
+        :return: 
+        """
+    def DeepClone(self) -> Mod:
+        """
+        
+        :return: 
+        """
+    @overload
+    def Equals(self, obj: object) -> bool:
+        """"""
+    @overload
+    def Equals(self, other: IMod) -> bool:
+        """"""
+    @overload
+    def Equals(self, other: Mod) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ResetSettingsToDefaults(self) -> None:
+        """"""
+    def ToString(self) -> str:
+        """"""
 class ModCinema(ABC, Generic[T], ModCinema, IEquatable[IMod], IEquatable[Mod], IApplicableFailOverride, IApplicableMod, IApplicableToDrawableRuleset[T], IApplicableToHUD, IApplicableToPlayer, ICreateReplayData, IMod, IDeepCloneable[Mod]):
     """"""
     @property
@@ -10234,6 +10387,174 @@ class ModTouchDevice(Mod, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IMo
         """"""
     def ToString(self) -> str:
         """"""
+class ModTraceable(ABC, ModWithVisibilityAdjustment, IEquatable[IMod], IEquatable[Mod], IApplicableMod, IApplicableToBeatmap, IApplicableToDrawableHitObject, IMod, IReadFromConfig, IDeepCloneable[Mod]):
+    """"""
+    @property
+    def Acronym(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def AlwaysValidForSubmission(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def Description(self) -> LocalisableString:
+        """
+        
+        :return: 
+        """
+    @property
+    def ExtendedIconInformation(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def HasImplementation(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def HasNonDefaultSettings(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def Icon(self) -> Optional[IconUsage]:
+        """
+        
+        :return: 
+        """
+    @property
+    def IncompatibleMods(self) -> Array[Type]:
+        """
+        
+        :return: 
+        """
+    @property
+    def Name(self) -> str:
+        """
+        
+        :return: 
+        """
+    @property
+    def Ranked(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def RequiresConfiguration(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ScoreMultiplier(self) -> float:
+        """
+        
+        :return: 
+        """
+    @property
+    def SettingDescription(self) -> IEnumerable[ValueTuple, LocalisableString]:
+        """
+        
+        :return: 
+        """
+    @property
+    def Type(self) -> ModType:
+        """
+        
+        :return: 
+        """
+    @property
+    def UserPlayable(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def UsesDefaultConfiguration(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForFreestyleAsRequiredMod(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForMultiplayer(self) -> bool:
+        """
+        
+        :return: 
+        """
+    @property
+    def ValidForMultiplayerAsFreeMod(self) -> bool:
+        """
+        
+        :return: 
+        """
+    def ApplyToBeatmap(self, beatmap: IBeatmap) -> None:
+        """
+        
+        :param beatmap: 
+        """
+    def ApplyToDrawableHitObject(self, dho: DrawableHitObject) -> None:
+        """
+        
+        :param drawable: 
+        """
+    def CopyCommonSettingsFrom(self, source: Mod) -> None:
+        """
+        
+        :param source: 
+        """
+    def CopyFrom(self, source: Mod) -> None:
+        """
+        
+        :param source: 
+        """
+    def CreateInstance(self) -> Mod:
+        """
+        
+        :return: 
+        """
+    def DeepClone(self) -> Mod:
+        """
+        
+        :return: 
+        """
+    @overload
+    def Equals(self, obj: object) -> bool:
+        """"""
+    @overload
+    def Equals(self, other: IMod) -> bool:
+        """"""
+    @overload
+    def Equals(self, other: Mod) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ReadFromConfig(self, config: OsuConfigManager) -> None:
+        """
+        
+        :param config: 
+        """
+    def ResetSettingsToDefaults(self) -> None:
+        """"""
+    def ToString(self) -> str:
+        """"""
 class ModType(Enum):
     """"""
     DifficultyReduction: ModType = ...
@@ -11571,12 +11892,6 @@ class RateAdjustModHelper(Object, IApplicableMod, IApplicableToTrack):
         """
         
         :param speedChange: 
-        """
-    @property
-    def ScoreMultiplier(self) -> float:
-        """
-        
-        :return: 
         """
     def ApplyToTrack(self, track: IAdjustableAudioComponent) -> None:
         """

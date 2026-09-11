@@ -553,6 +553,12 @@ class DrumRollPlacementBlueprint(TaikoSpanPlacementBlueprint, ICollection[Drawab
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -1518,6 +1524,12 @@ class HitPlacementBlueprint(HitObjectPlacementBlueprint, ICollection[Drawable], 
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -2477,6 +2489,12 @@ class SwellPlacementBlueprint(TaikoSpanPlacementBlueprint, ICollection[Drawable]
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload
@@ -3511,6 +3529,12 @@ class TaikoSpanPlacementBlueprint(HitObjectPlacementBlueprint, ICollection[Drawa
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload

@@ -559,6 +559,12 @@ class SpinnerPlacementBlueprint(HitObjectPlacementBlueprint, ICollection[Drawabl
         """"""
     def RemoveTransform(self, toRemove: Transform) -> None:
         """"""
+    def ReplacesExistingObject(self, existing: HitObject) -> bool:
+        """
+        
+        :param existing: 
+        :return: 
+        """
     def Show(self) -> None:
         """"""
     @overload

@@ -82,6 +82,7 @@ from osu.Framework.Timing import FrameTimeInfo
 from osu.Framework.Timing import IFrameBasedClock
 from osu.Game.Beatmaps import BeatmapInfo
 from osu.Game.Beatmaps import BeatmapSetInfo
+from osu.Game.Beatmaps import IBeatmapDifficultyInfo
 from osu.Game.Beatmaps import WorkingBeatmap
 from osu.Game.IO.Archives import ArchiveReader
 from osu.Game.IO import FileInfo
@@ -2187,6 +2188,8 @@ class ImportProgressNotification(ProgressNotification, ICollection[Drawable], IE
         
         :param runFlingAnimation: 
         """
+    def CompleteSilently(self) -> None:
+        """"""
     def ComputeMaskingBounds(self) -> RectangleF:
         """"""
     @overload
@@ -5650,20 +5653,6 @@ class StandardisedScoreMigrationTools(ABC, Object):
         """"""
     def GetHashCode(self) -> int:
         """"""
-    @classmethod
-    def GetNewStandardised(cls, score: ScoreInfo) -> int:
-        """
-        
-        :param score: 
-        :return: 
-        """
-    @classmethod
-    def GetOldStandardised(cls, score: ScoreInfo) -> int:
-        """
-        
-        :param score: 
-        :return: 
-        """
     def GetType(self) -> Type:
         """"""
     @classmethod
@@ -5673,13 +5662,6 @@ class StandardisedScoreMigrationTools(ABC, Object):
         :param score: 
         :param files: 
         :param populationFunc: 
-        """
-    @classmethod
-    def ShouldMigrateToNewStandardised(cls, score: ScoreInfo) -> bool:
-        """
-        
-        :param score: 
-        :return: 
         """
     def ToString(self) -> str:
         """"""
@@ -5700,6 +5682,20 @@ class StandardisedScoreMigrationTools(ABC, Object):
         :param ruleset: 
         :param difficulty: 
         :param attributes: 
+        """
+    @classmethod
+    def UpdateToLatestScoreMultipliers(cls, scoreInfo: ScoreInfo, beatmapDifficultyWithoutMods: IBeatmapDifficultyInfo) -> None:
+        """
+        
+        :param scoreInfo: 
+        :param beatmapDifficultyWithoutMods: 
+        """
+    @classmethod
+    def UpdateToLatestScoring(cls, score: ScoreInfo, beatmap: WorkingBeatmap) -> None:
+        """
+        
+        :param score: 
+        :param beatmap: 
         """
 class TooManyDownloadsNotification(SimpleNotification, ICollection[Drawable], IEnumerable[Drawable], IReadOnlyCollection[Drawable], IReadOnlyList[Drawable], IEnumerable, IDisposable, IDependencyInjectionCandidate, ISourceGeneratedDependencyActivator, ISourceGeneratedLongRunningLoadCache, IContainer, IContainerCollection[Drawable], IContainerEnumerable[Drawable], ITransformable, IDrawable, ISourceGeneratedHandleInputCache):
     """"""

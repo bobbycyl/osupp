@@ -1258,10 +1258,8 @@ class CheckDrainLength(Object, ICheck):
             """"""
         def ToString(self) -> str:
             """"""
-class CheckFewHitsounds(Object, ICheck):
+class CheckFewHitsounds(ABC, Object, ICheck):
     """"""
-    def __init__(self):
-        """"""
     @property
     def Metadata(self) -> CheckMetadata:
         """

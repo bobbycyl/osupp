@@ -9,13 +9,20 @@ from System import Type
 from System import ValueType
 from __future__ import annotations
 from abc import ABC
+from typing import ClassVar
+from typing import Final
 from typing import Generic
 from typing import Iterator
 from typing import TypeVar
 from typing import overload
 T = TypeVar("T")
-class DifficultyCalculationUtils(ABC, Object):
+class DiffUtils(ABC, Object):
     """"""
+    SQRT2: Final[ClassVar[float]] = ...
+    """
+    
+    :return: 
+    """
     @classmethod
     def BPMToMilliseconds(cls, bpm: float, delimiter: int = ...) -> float:
         """
@@ -105,6 +112,24 @@ class DifficultyCalculationUtils(ABC, Object):
         :return: 
         """
     @classmethod
+    @overload
+    def Pow(cls, x: float, exponent: float) -> float:
+        """
+        
+        :param x: 
+        :param exponent: 
+        :return: 
+        """
+    @classmethod
+    @overload
+    def Pow(cls, x: float, exponent: int) -> float:
+        """
+        
+        :param x: 
+        :param exponent: 
+        :return: 
+        """
+    @classmethod
     def ReverseLerp(cls, x: float, start: float, end: float) -> float:
         """
         
@@ -132,7 +157,16 @@ class DifficultyCalculationUtils(ABC, Object):
         :return: 
         """
     @classmethod
-    def SmoothstepBellCurve(cls, x: float, mean: float = ..., width: float = ...) -> float:
+    @overload
+    def SmoothstepBellCurve(cls, x: float) -> float:
+        """
+        
+        :param x: 
+        :return: 
+        """
+    @classmethod
+    @overload
+    def SmoothstepBellCurve(cls, x: float, mean: float, width: float) -> float:
         """
         
         :param x: 

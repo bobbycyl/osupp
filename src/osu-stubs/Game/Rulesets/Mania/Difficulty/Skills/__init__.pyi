@@ -1,5 +1,6 @@
 from System import Array
 from System.Collections.Generic import IEnumerable
+from System.Collections.Generic import IReadOnlyList
 from System import Type
 from __future__ import annotations
 from osu.Game.Rulesets.Difficulty.Preprocessing import DifficultyHitObject
@@ -13,9 +14,10 @@ class Strain(StrainDecaySkill):
         :param mods: 
         :param totalColumns: 
         """
-    def CountTopWeightedStrains(self) -> float:
+    def CountTopWeightedStrains(self, difficultyValue: float) -> float:
         """
         
+        :param difficultyValue: 
         :return: 
         """
     def DifficultyValue(self) -> float:
@@ -32,7 +34,7 @@ class Strain(StrainDecaySkill):
         """
     def GetHashCode(self) -> int:
         """"""
-    def GetObjectStrains(self) -> IEnumerable[float]:
+    def GetObjectDifficulties(self) -> IReadOnlyList[float]:
         """
         
         :return: 

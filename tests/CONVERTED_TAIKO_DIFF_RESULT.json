@@ -1,18 +1,1 @@
-{
-  "errors": [],
-  "results": [
-    {
-      "ruleset_id": 1,
-      "beatmap_id": 3477131,
-      "beatmap": "TRUE - Storyteller (IOException) [Expert]",
-      "mods": [],
-      "attributes": {
-        "star_rating": 4.109442845494353,
-        "max_combo": 1701,
-        "rhythm_difficulty": 0.6425571223517397,
-        "mono_stamina_factor": 0.05261358376107376,
-        "consistency_factor": 0.7278190105371712
-      }
-    }
-  ]
-}
+{"errors":[],"results":[{"ruleset_id":1,"beatmap_id":3477131,"beatmap":"TRUE - Storyteller (IOException) [Expert]","mods":[],"attributes":{"star_rating":4.093735569430214,"max_combo":1701,"rhythm_difficulty":0.4645547719373232,"mono_stamina_factor":0.052613583761073765,"consistency_factor":0.7200902243104035}}]}

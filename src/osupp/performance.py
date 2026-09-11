@@ -28,6 +28,8 @@ from osu.Game.Scoring import ScoreInfo
 from osu.Game.Utils import FormatUtils, ModUtils
 from .util import Result, re_deserialize
 
+MS_PER_STRAIN = 400
+
 
 # 对应 OsuSimulateCommand.cs 的 generateHitResults
 def generate_osu_hit_results(
@@ -107,7 +109,7 @@ def generate_taiko_hit_results(
     accuracy: float,
     count_miss: int,
     count_ok: Optional[int] = None,
-) -> dict[HitResult, int]:
+) -> dict[HitResult | str, int]:
     total_result_count = BeatmapExtensions.GetMaxCombo(beatmap)
 
     count_great: int
@@ -117,7 +119,7 @@ def generate_taiko_hit_results(
     else:
         target_total = int(round(accuracy * total_result_count * 2))
         count_great = target_total - (total_result_count - count_miss)
-        count_ok: int = total_result_count - count_great - count_miss
+        count_ok = total_result_count - count_great - count_miss
 
     return {
         HitResult.Great: count_great,
@@ -134,19 +136,19 @@ def generate_catch_hit_results(
     count_miss: int,
     count_small_tick_hit: Optional[int] = None,
     count_large_tick_hit: Optional[int] = None,
-) -> dict[HitResult, int]:
+) -> dict[HitResult | str, int]:
     max_combo = BeatmapExtensions.GetMaxCombo(beatmap)
     max_small_tick_hit = sum(1 for obj in beatmap.HitObjects if isinstance(obj, JuiceStream) for nested in obj.NestedHitObjects if isinstance(nested, TinyDroplet))
     max_large_tick_hit = sum(1 for obj in beatmap.HitObjects if isinstance(obj, JuiceStream) for nested in obj.NestedHitObjects if isinstance(nested, Droplet)) - max_small_tick_hit
     max_great = sum(1 if isinstance(obj, Fruit) else sum(1 for nested in obj.NestedHitObjects if isinstance(nested, Fruit)) if isinstance(obj, JuiceStream) else 0 for obj in beatmap.HitObjects)
 
     if count_large_tick_hit is None:
-        count_large_tick_hit: int = max(0, max_large_tick_hit - count_miss)
+        count_large_tick_hit = max(0, max_large_tick_hit - count_miss)
 
     count_great = max_great - (count_miss - (max_large_tick_hit - count_large_tick_hit))
 
     if count_small_tick_hit is None:
-        count_small_tick_hit: int = int(round(accuracy * (max_combo + max_small_tick_hit))) - count_great - count_large_tick_hit
+        count_small_tick_hit = int(round(accuracy * (max_combo + max_small_tick_hit))) - count_great - count_large_tick_hit
 
     count_small_tick_miss = max_small_tick_hit - count_small_tick_hit
 
@@ -169,7 +171,7 @@ def generate_mania_hit_results(
     count_ok: Optional[int] = None,
     count_good: Optional[int] = None,
     count_great: Optional[int] = None,
-) -> dict[HitResult, int]:
+) -> dict[HitResult | str, int]:
     is_classic = any(isinstance(m, ModClassic) for m in mods)
     total_hits = beatmap.HitObjects.Count
     if not is_classic:
@@ -197,18 +199,18 @@ def generate_mania_hit_results(
     delta -= count_perfect * (perfect_value - 10)
     remaining_hits -= count_perfect
 
-    count_great: int = min(delta // 50, remaining_hits)
+    count_great = min(delta // 50, remaining_hits)
     delta -= count_great * 50
     remaining_hits -= count_great
 
-    count_good: int = min(delta // 30, remaining_hits)
+    count_good = min(delta // 30, remaining_hits)
     delta -= count_good * 30
     remaining_hits -= count_good
 
-    count_ok: int = min(delta // 10, remaining_hits)
+    count_ok = min(delta // 10, remaining_hits)
     remaining_hits -= count_ok
 
-    count_meh: int = remaining_hits
+    count_meh = remaining_hits
 
     return {
         HitResult.Perfect: count_perfect,
@@ -502,6 +504,7 @@ def calculate_performance(
     except ZeroDivisionError:
         most_common_bpm_orig = float("inf")
         most_common_bpm_adj = float("inf")
+    # todo: 后续更新中以下两个注释内容是否仍然正确？
     # 注：clock_rate 不会因为 WU、WD 这类模组而变化
     # 在 osuawa 中的 magnitude 则是考虑了这一点进行计算
     min_bpm_adj = FormatUtils.RoundBPM(min_bpm_orig, clock_rate)
@@ -511,20 +514,51 @@ def calculate_performance(
     _hit_objects: list[HitObject] = list(working_beatmap.Beatmap.HitObjects)
     difficulty_hit_objects: list[DifficultyHitObject] = list(difficulty_calculator.GetDifficultyHitObjects())
 
-    strains: dict[str, list[float]] = {}
-    max_strain_len = 0
+    strains_of_skills: dict[str, list[float]] = {}
+    timeline_of_skills: dict[str, list[float]] = {}  # StartTime only
     for _skill in _skills:
         skill_type = _skill.GetType().Name
         if skill_type == "Aim" and cast(Aim, _skill).IncludeSliders:
             skill_type += " (sliders included)"
-        strain = list(cast(Iterable[float], cast(StrainSkill, _skill).GetCurrentStrainPeaks()))
-        strains[skill_type] = strain
-        if len(strain) > max_strain_len:
-            max_strain_len = len(strain)
+        if isinstance(_skill, StrainSkill):
+            strains = list(cast(Iterable[float], _skill.GetCurrentStrainPeaks()))
+            timeline = [
+                difficulty_hit_objects[0].StartTime + MS_PER_STRAIN * i
+                for i in range(len(strains))
+            ]
+        else:
+            difficulties = _skill.GetObjectDifficulties()
+            strains = []
+            timeline = []
+            for i in range(difficulties.Count - 1):
+                strain = difficulties[i]
+                difficulty_object = difficulty_hit_objects[i]
+                next_difficulty_object = difficulty_hit_objects[i+1] if i < difficulties.Count else None
+
+                start_time = difficulty_object.StartTime
+                end_time = difficulty_object.EndTime
+
+                if next_difficulty_object is not None:
+                    end_time = min(end_time + MS_PER_STRAIN, next_difficulty_object.StartTime)
+
+                strains.append(strain)
+                timeline.append(start_time)
+
+                if next_difficulty_object is not None and next_difficulty_object.StartTime - end_time > 0:
+                    strains.append(0.0)
+                    timeline.append(end_time)
+
+                if next_difficulty_object is None:
+                    strains.append(0.0)
+                    timeline.append(end_time)
+
+        strains_of_skills[skill_type] = strains
+        timeline_of_skills[skill_type] = timeline
 
     sent = yield re_deserialize(
         obj=difficulty_attributes,
-        strains=strains,
+        strains_of_skills=strains_of_skills,
+        timeline_of_skills=timeline_of_skills,
         difficulty_hit_objects=difficulty_hit_objects,
         cs_adj=cs_adj,
         ar_adj=ar_adj,
@@ -543,8 +577,7 @@ def calculate_performance(
         most_common_bpm_adj=most_common_bpm_adj,
         time_until_first_strain_orig=_hit_objects[1].StartTime,  # 官方的 osu-tools 中用的好像是这个值，但是我认为下面一个更准确
         time_until_first_strain_adj=difficulty_hit_objects[0].StartTime if len(difficulty_hit_objects) > 0 else _hit_objects[1].StartTime / clock_rate,
-        strain_count=max_strain_len,
-        ms_per_strain=400,
+        ms_per_strain=MS_PER_STRAIN,
         hit_start_orig=_hit_objects[0].StartTime,
         hit_end_orig=max(HitObjectExtensions.GetEndTime(obj) for obj in _hit_objects),
         hit_length_orig=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap),

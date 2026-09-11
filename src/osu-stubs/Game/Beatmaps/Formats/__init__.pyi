@@ -157,11 +157,12 @@ class LegacyBeatmapEncoder(Object):
     
     :return: 
     """
-    def __init__(self, beatmap: IBeatmap, skin: ISkin):
+    def __init__(self, beatmap: IBeatmap, skin: ISkin, storyboard: Storyboard):
         """
         
         :param beatmap: 
         :param skin: 
+        :param storyboard: 
         """
     def Encode(self, writer: TextWriter) -> None:
         """
@@ -281,6 +282,36 @@ class LegacyStoryboardDecoder(LegacyDecoder[Storyboard]):
         """"""
     @classmethod
     def Register(cls) -> None:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class LegacyStoryboardEncoder(Object):
+    """"""
+    def __init__(self, storyboard: Storyboard):
+        """
+        
+        :param storyboard: 
+        """
+    def EncodeEventsToBeatmap(self, writer: TextWriter) -> None:
+        """
+        
+        :param writer: 
+        """
+    def EncodeGeneralToBeatmap(self, writer: TextWriter) -> None:
+        """
+        
+        :param writer: 
+        """
+    def EncodeStandaloneStoryboard(self, writer: TextWriter) -> None:
+        """
+        
+        :param writer: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
         """"""
     def ToString(self) -> str:
         """"""

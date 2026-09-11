@@ -12,14 +12,14 @@ cli_build_dir = os.path.join(
     "PerformanceCalculator",
     "bin",
     "Release",
-    "net8.0",
+    "net10.0",
 )
 gui_build_dir = os.path.join(
     home_dir,
     "PerformanceCalculatorGUI",
     "bin",
     "Release",
-    "net8.0",
+    "net10.0",
 )
 runtime_config = os.path.join(
     cli_build_dir,

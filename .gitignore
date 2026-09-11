@@ -2,5 +2,6 @@
 output/
 stubs/
 dist/
+__pycache__/
 uv.lock
 tmp.py

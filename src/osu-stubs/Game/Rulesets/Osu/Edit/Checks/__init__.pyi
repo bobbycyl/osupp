@@ -7,6 +7,7 @@ from abc import ABC
 from osu.Framework.Graphics import Colour4
 from osu.Game.Rulesets.Edit import BeatmapVerifierContext
 from osu.Game.Rulesets.Edit.Checks import CheckAbnormalDifficultySettings
+from osu.Game.Rulesets.Edit.Checks import CheckFewHitsounds
 from osu.Game.Rulesets.Edit.Checks import CheckLowestDiffDrainTime
 from osu.Game.Rulesets.Edit.Checks.Components import CheckMetadata
 from osu.Game.Rulesets.Edit.Checks.Components import ICheck
@@ -325,6 +326,36 @@ class CheckOffscreenObjects(Object, ICheck):
         def ToString(self) -> str:
             """"""
 class CheckOsuAbnormalDifficultySettings(CheckAbnormalDifficultySettings, ICheck):
+    """"""
+    def __init__(self):
+        """"""
+    @property
+    def Metadata(self) -> CheckMetadata:
+        """
+        
+        :return: 
+        """
+    @property
+    def PossibleTemplates(self) -> IEnumerable[IssueTemplate]:
+        """
+        
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def Run(self, context: BeatmapVerifierContext) -> IEnumerable[Issue]:
+        """
+        
+        :param context: 
+        :return: 
+        """
+    def ToString(self) -> str:
+        """"""
+class CheckOsuFewHitsounds(CheckFewHitsounds, ICheck):
     """"""
     def __init__(self):
         """"""

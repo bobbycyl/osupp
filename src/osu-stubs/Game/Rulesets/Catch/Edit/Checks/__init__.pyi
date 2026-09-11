@@ -8,6 +8,7 @@ from osu.Framework.Graphics import Colour4
 from osu.Game.Rulesets.Catch.Edit.Checks.CheckBananaShowerGap import IssueTemplateBananaShowerGap
 from osu.Game.Rulesets.Edit import BeatmapVerifierContext
 from osu.Game.Rulesets.Edit.Checks import CheckAbnormalDifficultySettings
+from osu.Game.Rulesets.Edit.Checks import CheckFewHitsounds
 from osu.Game.Rulesets.Edit.Checks import CheckLowestDiffDrainTime
 from osu.Game.Rulesets.Edit.Checks.Components import CheckMetadata
 from osu.Game.Rulesets.Edit.Checks.Components import ICheck
@@ -168,6 +169,36 @@ class CheckBananaShowerGap(Object, ICheck):
         def ToString(self) -> str:
             """"""
 class CheckCatchAbnormalDifficultySettings(CheckAbnormalDifficultySettings, ICheck):
+    """"""
+    def __init__(self):
+        """"""
+    @property
+    def Metadata(self) -> CheckMetadata:
+        """
+        
+        :return: 
+        """
+    @property
+    def PossibleTemplates(self) -> IEnumerable[IssueTemplate]:
+        """
+        
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def Run(self, context: BeatmapVerifierContext) -> IEnumerable[Issue]:
+        """
+        
+        :param context: 
+        :return: 
+        """
+    def ToString(self) -> str:
+        """"""
+class CheckCatchFewHitsounds(CheckFewHitsounds, ICheck):
     """"""
     def __init__(self):
         """"""

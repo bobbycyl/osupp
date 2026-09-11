@@ -16,16 +16,16 @@
     }
   },
   "performance_attributes": {
-    "difficulty": 137.27124726685588,
-    "accuracy": 72.13943966159503,
-    "estimated_unstable_rate": 173.65148639719936,
-    "pp": 209.4106869284509
+    "difficulty": 123.50968898206487,
+    "accuracy": 72.11829214376839,
+    "estimated_unstable_rate": 173.6514863971994,
+    "pp": 195.62798112583326
   },
   "difficulty_attributes": {
-    "star_rating": 4.69127575774839,
+    "star_rating": 4.513434763967543,
     "max_combo": 578,
-    "rhythm_difficulty": 1.207647054231082,
-    "mono_stamina_factor": 3.5053680191451437E-09,
-    "consistency_factor": 0.743943628941786
+    "rhythm_difficulty": 0.7458137479635852,
+    "mono_stamina_factor": 3.505368019145144E-09,
+    "consistency_factor": 0.7664477052593974
   }
 }

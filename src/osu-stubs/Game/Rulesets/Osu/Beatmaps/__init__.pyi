@@ -191,14 +191,6 @@ class OsuBeatmap(Beatmap[OsuHitObject], IBeatmap, IBeatmap[OsuHitObject]):
         :return: 
         """
     @property
-    def UnhandledEventLines(self) -> List[str]:
-        """
-        
-        :return: 
-        """
-    @UnhandledEventLines.setter
-    def UnhandledEventLines(self, value: List[str]) -> None: ...
-    @property
     def WidescreenStoryboard(self) -> bool:
         """
         

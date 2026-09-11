@@ -106,6 +106,8 @@ from osu.Game.Rulesets import RulesetInfo
 from osu.Game.Rulesets.Scoring import HealthProcessor
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Scoring.Legacy import ILegacyScoreSimulator
+from osu.Game.Rulesets.Scoring import ScoreMultiplierCalculator
+from osu.Game.Rulesets.Scoring import ScoreMultiplierContext
 from osu.Game.Rulesets.Scoring import ScoreProcessor
 from osu.Game.Rulesets.UI import DrawableRuleset
 from osu.Game.Rulesets.UI import ICanAttachHUDPieces
@@ -204,9 +206,10 @@ class ManiaFilterCriteria(Object, IRulesetFilterCriteria):
         """"""
     def Equals(self, obj: object) -> bool:
         """"""
-    def FilterMayChangeFromMods(self, mods: ValueChangedEvent[IReadOnlyList[Mod]]) -> bool:
+    def FilterMayChangeFromMods(self, criteria: FilterCriteria, mods: ValueChangedEvent[IReadOnlyList[Mod]]) -> bool:
         """
         
+        :param criteria: 
         :param mods: 
         :return: 
         """
@@ -910,6 +913,12 @@ class ManiaRuleset(Ruleset, ILegacyRuleset):
         
         :return: 
         """
+    @property
+    def VariantDescription(self) -> LocalisableString:
+        """
+        
+        :return: 
+        """
     def ConvertFromLegacyMods(self, mods: LegacyMods) -> IEnumerable[Mod]:
         """
         
@@ -1020,6 +1029,12 @@ class ManiaRuleset(Ruleset, ILegacyRuleset):
         
         :return: 
         """
+    def CreateScoreMultiplierCalculator(self, context: ScoreMultiplierContext) -> ScoreMultiplierCalculator:
+        """
+        
+        :param context: 
+        :return: 
+        """
     def CreateScoreProcessor(self) -> ScoreProcessor:
         """
         
@@ -1059,6 +1074,13 @@ class ManiaRuleset(Ruleset, ILegacyRuleset):
         :return: 
         """
     def GetBeatmapAttributesForDisplay(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyCollection[Mod]) -> IEnumerable[RulesetBeatmapAttribute]:
+        """
+        
+        :param beatmapInfo: 
+        :param mods: 
+        :return: 
+        """
+    def GetBeatmapAttributesForRankedPlayCard(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyCollection[Mod]) -> IEnumerable[RulesetBeatmapAttribute]:
         """
         
         :param beatmapInfo: 
@@ -1107,6 +1129,13 @@ class ManiaRuleset(Ruleset, ILegacyRuleset):
     def GetValidHitResults(self) -> IEnumerable[HitResult]:
         """
         
+        :return: 
+        """
+    def GetVariantForBeatmap(self, beatmapInfo: IBeatmapInfo, mods: IReadOnlyList[Mod] = ...) -> int:
+        """
+        
+        :param beatmapInfo: 
+        :param mods: 
         :return: 
         """
     def GetVariantName(self, variant: int) -> LocalisableString:

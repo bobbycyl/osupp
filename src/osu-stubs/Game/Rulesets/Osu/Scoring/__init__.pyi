@@ -52,6 +52,8 @@ from osu.Game.Rulesets.Scoring import HitEvent
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Scoring import HitWindows
 from osu.Game.Rulesets.Scoring import LegacyDrainingHealthProcessor
+from osu.Game.Rulesets.Scoring import ScoreMultiplierCalculator
+from osu.Game.Rulesets.Scoring import ScoreMultiplierContext
 from osu.Game.Rulesets.Scoring import ScoreProcessor
 from osu.Game.Rulesets.Scoring import ScoreProcessorStatistics
 from osu.Game.Scoring import ScoreInfo
@@ -966,9 +968,56 @@ class OsuLegacyHealthProcessor(LegacyDrainingHealthProcessor, IDisposable, IDepe
     """"""
     OnUpdate: EventType[Action[Drawable]] = ...
     """"""
+class OsuScoreMultiplierCalculatorV1(ScoreMultiplierCalculator):
+    """"""
+    def __init__(self, context: ScoreMultiplierContext):
+        """
+        
+        :param context: 
+        """
+    def CalculateFor(self, mods: IEnumerable[Mod]) -> float:
+        """
+        
+        :param mods: 
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
+class OsuScoreMultiplierCalculatorV2(ScoreMultiplierCalculator):
+    """"""
+    def __init__(self, context: ScoreMultiplierContext):
+        """
+        
+        :param context: 
+        """
+    def CalculateFor(self, mods: IEnumerable[Mod]) -> float:
+        """
+        
+        :param mods: 
+        :return: 
+        """
+    def Equals(self, obj: object) -> bool:
+        """"""
+    def GetHashCode(self) -> int:
+        """"""
+    def GetType(self) -> Type:
+        """"""
+    def ToString(self) -> str:
+        """"""
 class OsuScoreProcessor(ScoreProcessor, IDisposable, IDependencyInjectionCandidate, ISourceGeneratedDependencyActivator, ISourceGeneratedLongRunningLoadCache, ITransformable, IDrawable, ISourceGeneratedHandleInputCache):
     """"""
     Accuracy: Final[BindableDouble] = ...
+    """
+    
+    :return: 
+    """
+    Beatmap: Final[Bindable[IBeatmap]] = ...
     """
     
     :return: 

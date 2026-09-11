@@ -317,6 +317,14 @@ class RulesetBeatmapAttribute(Object):
         
         :return: 
         """
+    @property
+    def ValueFormat(self) -> str:
+        """
+        
+        :return: 
+        """
+    @ValueFormat.setter
+    def ValueFormat(self, value: str) -> None: ...
     def Equals(self, obj: object) -> bool:
         """"""
     def GetHashCode(self) -> int:

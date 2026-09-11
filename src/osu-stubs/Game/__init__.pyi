@@ -94,6 +94,7 @@ from osu.Game.Overlays.Toolbar import Toolbar
 from osu.Game.Rulesets.Mods import Mod
 from osu.Game.Scoring import IScoreInfo
 from osu.Game.Screens import IPerformFromScreenRunner
+from osu.Game.Screens import OsuScreenStack
 from osu.Game.Screens.Play import ILocalUserPlayInfo
 from osu.Game.Screens.Play import LocalUserPlayingState
 from osu.Game.Screens import ScorePresentType
@@ -534,6 +535,14 @@ class OsuGame(OsuGameBase, ICollection[Drawable], IEnumerable[Drawable], IReadOn
     def Resources(self) -> ResourceStore[Array[int]]:
         """"""
     @property
+    def RestartOnExitAction(self) -> Action:
+        """
+        
+        :return: 
+        """
+    @RestartOnExitAction.setter
+    def RestartOnExitAction(self, value: Action) -> None: ...
+    @property
     def Rotation(self) -> float:
         """"""
     @Rotation.setter
@@ -552,6 +561,12 @@ class OsuGame(OsuGameBase, ICollection[Drawable], IEnumerable[Drawable], IReadOn
     @property
     def ScreenSpaceDrawQuad(self) -> Quad:
         """"""
+    @property
+    def ScreenStack(self) -> OsuScreenStack:
+        """
+        
+        :return: 
+        """
     @property
     def Shaders(self) -> ShaderManager:
         """"""
@@ -634,6 +649,8 @@ class OsuGame(OsuGameBase, ICollection[Drawable], IEnumerable[Drawable], IReadOn
     def BeginAbsoluteSequence(self, newTransformStartTime: float, recursive: bool = ...) -> IDisposable:
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
+        """"""
+    def CancelRestartOnExit(self) -> None:
         """"""
     def ChangeChildDepth(self, child: Drawable, newDepth: float) -> None:
         """"""
@@ -759,7 +776,7 @@ class OsuGame(OsuGameBase, ICollection[Drawable], IEnumerable[Drawable], IReadOn
         
         :param id: 
         """
-    def Migrate(self, path: str) -> bool:
+    def MigrateUserData(self, path: str) -> bool:
         """
         
         :param path: 
@@ -1379,6 +1396,14 @@ class OsuGameBase(Game, ICollection[Drawable], IEnumerable[Drawable], IReadOnlyC
     def Resources(self) -> ResourceStore[Array[int]]:
         """"""
     @property
+    def RestartOnExitAction(self) -> Action:
+        """
+        
+        :return: 
+        """
+    @RestartOnExitAction.setter
+    def RestartOnExitAction(self, value: Action) -> None: ...
+    @property
     def Rotation(self) -> float:
         """"""
     @Rotation.setter
@@ -1468,6 +1493,8 @@ class OsuGameBase(Game, ICollection[Drawable], IEnumerable[Drawable], IReadOnlyC
         """"""
     def BeginDelayedSequence(self, delay: float, recursive: bool = ...) -> IDisposable:
         """"""
+    def CancelRestartOnExit(self) -> None:
+        """"""
     def ChangeChildDepth(self, child: Drawable, newDepth: float) -> None:
         """"""
     @overload
@@ -1540,7 +1567,7 @@ class OsuGameBase(Game, ICollection[Drawable], IEnumerable[Drawable], IReadOnlyC
         """"""
     def Invalidate(self, invalidation: Invalidation = ..., source: InvalidationSource = ...) -> bool:
         """"""
-    def Migrate(self, path: str) -> bool:
+    def MigrateUserData(self, path: str) -> bool:
         """
         
         :param path: 
