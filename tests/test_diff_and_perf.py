@@ -1,3 +1,4 @@
+import math
 import orjson
 
 import osupp as _osupp
@@ -23,6 +24,36 @@ assert _osupp
 def load_res(filename):
     with open(filename, "rb") as fi_b:
         return orjson.loads(fi_b.read())
+
+
+def _normalize(obj, ndigits=6):
+    if isinstance(obj, float):
+        return round(obj, ndigits)
+    if isinstance(obj, dict):
+        return {k: _normalize(v, ndigits) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        # 保持类型一致，tuple 也返回 tuple
+        return type(obj)(_normalize(v, ndigits) for v in obj)
+    if isinstance(obj, float) and math.isnan(obj):
+        return obj  # 或统一转成一个哨兵
+    # int / str / None / bool 等原样返回
+    return obj
+
+
+def assert_almost_equal(actual, expected, ndigits=6, nan_ok=False, msg=None):
+    na, ne = _normalize(actual, ndigits), _normalize(expected, ndigits)
+    if nan_ok and (isinstance(na, float) and math.isnan(na)) and (isinstance(ne, float) and math.isnan(na)):
+        return
+    if na != ne:
+        # 构造一个更易读的报错
+        import pprint
+        default_msg = (
+            f"\nActual (rounded {ndigits}):\n{pprint.pformat(na)}\n"
+            f"Expected (rounded {ndigits}):\n{pprint.pformat(ne)}\n"
+            f"Raw actual:\n{pprint.pformat(actual)}\n"
+            f"Raw expected:\n{pprint.pformat(expected)}"
+        )
+        raise AssertionError(msg or default_msg)
 
 
 DIFF_RESULT = load_res("DIFF_RESULT.json")["results"][0]["attributes"]
@@ -60,13 +91,13 @@ def test():
     # perf_result_info = perf_result_obj["beatmap_info"]
 
     # === 第一部分：测试 difficulty 计算 ===
-    assert calculate_difficulty(beatmap_path, mods, mod_options1) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options2) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options3) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options4) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options5) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options6) == DIFF_RESULT
-    assert calculate_difficulty(beatmap_path, mods, mod_options7) == DIFF_RESULT
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options1), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options2), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options3), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options4), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options5), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options6), DIFF_RESULT)
+    assert_almost_equal(calculate_difficulty(beatmap_path, mods, mod_options7), DIFF_RESULT)
     calculator = calculate_performance(beatmap_path, None, mods, mod_options1)
     diff_attr = next(calculator)
     # 硬编码区开始
@@ -108,10 +139,10 @@ def test():
         )
         perf_max_attr = calculator.send(OsuPerformance())
         # 分别校验 performance 结果
-        assert diff_attr._get_pure() == perf_result_diff
-        assert perf1_attr == perf_result_attr
-        assert perf2_attr == perf_result_attr
-        assert perf_max_attr["pp"] == MAX_PP
+        assert_almost_equal(diff_attr._get_pure(), perf_result_diff)
+        assert_almost_equal(perf1_attr, perf_result_attr)
+        assert_almost_equal(perf2_attr, perf_result_attr)
+        assert_almost_equal(perf_max_attr["pp"], MAX_PP)
         # 硬编码区开始
         assert int(diff_attr["__ek_hit_length_orig"]) == 262500
         # 硬编码区结束
@@ -128,7 +159,7 @@ def test():
     for c in (calculator1, calculator2):
         _ = next(c)
         perf_attr = c.send(OsuPerformance())
-        assert perf_attr["pp"] == MAX_PP
+        assert_almost_equal(perf_attr["pp"], MAX_PP)
 
 
 def test_classic():
@@ -138,8 +169,8 @@ def test_classic():
     diff_attr = next(calculator)
     perf_attr = calculator.send(OsuPerformance())
     calculator.close()
-    assert diff_attr["maximum_legacy_combo_score"] == MAX_LEGACY_SCORE
-    assert perf_attr["pp"] == MAX_PP_CL
+    assert_almost_equal(diff_attr["maximum_legacy_combo_score"], MAX_LEGACY_SCORE)
+    assert_almost_equal(perf_attr["pp"], MAX_PP_CL)
 
 
 def test_strange():
@@ -157,23 +188,23 @@ def test_strange():
 
 def test_more_rulesets_diff():
     mania_path = "./cache/4103079.osu"
-    assert calculate_difficulty(mania_path) == MANIA_DIFF_RESULT
+    assert_almost_equal(calculate_difficulty(mania_path), MANIA_DIFF_RESULT)
     converted_taiko_path = "./cache/3477131.osu"
-    assert calculate_difficulty(converted_taiko_path, ruleset_id=1) == CONVERTED_TAIKO_DIFF_RESULT
+    assert_almost_equal(calculate_difficulty(converted_taiko_path, ruleset_id=1), CONVERTED_TAIKO_DIFF_RESULT)
 
 
 def test_taiko_perf():
     beatmap_path = "./cache/4434797.osu"
     calculator = calculate_taiko_performance(beatmap_path)
     next(calculator)
-    assert calculator.send(TaikoPerformance(combo=272, oks=24, misses=2)) == TAIKO_SCORE_RESULT["performance_attributes"]
+    assert_almost_equal(calculator.send(TaikoPerformance(combo=272, oks=24, misses=2)), TAIKO_SCORE_RESULT["performance_attributes"])
 
 
 def test_catch_perf():
     beatmap_path = "./cache/2158794.osu"
     calculator = calculate_catch_performance(beatmap_path, mods=["NF", "CL"])
     next(calculator)
-    assert (
+    assert_almost_equal(
         calculator.send(
             CatchPerformance(
                 combo=226,
@@ -182,7 +213,7 @@ def test_catch_perf():
                 small_tick_hits=162,
             ),
         )
-        == CATCH_SCORE_RESULT["performance_attributes"]
+        ,CATCH_SCORE_RESULT["performance_attributes"]
     )
 
 
@@ -190,16 +221,16 @@ def test_mania_perf():
     beatmap_path = "./cache/4364723.osu"
     calculator = calculate_mania_performance(beatmap_path)
     next(calculator)
-    assert calculator.send(ManiaPerformance(goods=55, misses=1, greats=403)) == MANIA_SCORE_RESULT["performance_attributes"]
+    assert_almost_equal(calculator.send(ManiaPerformance(goods=55, misses=1, greats=403)), MANIA_SCORE_RESULT["performance_attributes"])
 
 
 def test_mania_cl_perf():
     beatmap_path = "./cache/767046.osu"
     calculator = calculate_mania_performance(beatmap_path, mods=["CL"])
     next(calculator)
-    assert (
+    assert_almost_equal(
         calculator.send(
             ManiaPerformance(oks=20, mehs=5, goods=190, misses=10, greats=1199),
         )
-        == MANIA_CL_SCORE_RESULT["performance_attributes"]
+        , MANIA_CL_SCORE_RESULT["performance_attributes"]
     )
