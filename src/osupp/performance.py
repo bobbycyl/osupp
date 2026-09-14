@@ -522,10 +522,7 @@ def calculate_performance(
             skill_type += " (sliders included)"
         if isinstance(_skill, StrainSkill):
             strains = list(cast(Iterable[float], _skill.GetCurrentStrainPeaks()))
-            timeline = [
-                difficulty_hit_objects[0].StartTime + MS_PER_STRAIN * i
-                for i in range(len(strains))
-            ]
+            timeline = [difficulty_hit_objects[0].StartTime + MS_PER_STRAIN * i for i in range(len(strains))]
         else:
             difficulties = _skill.GetObjectDifficulties()
             strains = []
@@ -533,7 +530,7 @@ def calculate_performance(
             for i in range(difficulties.Count - 1):
                 strain = difficulties[i]
                 difficulty_object = difficulty_hit_objects[i]
-                next_difficulty_object = difficulty_hit_objects[i+1] if i < difficulties.Count else None
+                next_difficulty_object = difficulty_hit_objects[i + 1] if i < difficulties.Count else None
 
                 start_time = difficulty_object.StartTime
                 end_time = difficulty_object.EndTime

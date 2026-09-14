@@ -1,1 +1,39 @@
-{"errors":[],"results":[{"ruleset_id":0,"beatmap_id":3477131,"beatmap":"TRUE - Storyteller (IOException) [Expert]","mods":[{"acronym":"HD"},{"acronym":"DT","settings":{"speed_change":1.3}}],"attributes":{"star_rating":8.45136830478455,"max_combo":1782,"aim_difficulty":4.556403800703308,"aim_difficult_slider_count":278.5188288201775,"speed_difficulty":3.2628869712665645,"speed_note_count":278.85199287976076,"reading_difficulty":2.5299117842087124,"slider_factor":0.972183281704263,"aim_top_weighted_slider_factor":0.4766302792560135,"speed_top_weighted_slider_factor":0.5594521681876626,"aim_difficult_strain_count":196.112098501884,"speed_difficult_strain_count":121.91157461855241,"reading_difficult_note_count":236.35589066177042,"nested_score_per_object":27.145174371451745,"legacy_score_base_multiplier":4.0,"maximum_legacy_combo_score":52235232.0}}]}
+{
+  "errors": [],
+  "results": [
+    {
+      "ruleset_id": 0,
+      "beatmap_id": 3477131,
+      "beatmap": "TRUE - Storyteller (IOException) [Expert]",
+      "mods": [
+        {
+          "acronym": "HD"
+        },
+        {
+          "acronym": "DT",
+          "settings": {
+            "speed_change": 1.3
+          }
+        }
+      ],
+      "attributes": {
+        "star_rating": 8.45136830478455,
+        "max_combo": 1782,
+        "aim_difficulty": 4.556403800703308,
+        "aim_difficult_slider_count": 278.5188288201775,
+        "speed_difficulty": 3.2628869712665645,
+        "speed_note_count": 278.85199287976076,
+        "reading_difficulty": 2.5299117842087124,
+        "slider_factor": 0.972183281704263,
+        "aim_top_weighted_slider_factor": 0.4766302792560135,
+        "speed_top_weighted_slider_factor": 0.5594521681876626,
+        "aim_difficult_strain_count": 196.112098501884,
+        "speed_difficult_strain_count": 121.91157461855241,
+        "reading_difficult_note_count": 236.35589066177042,
+        "nested_score_per_object": 27.145174371451745,
+        "legacy_score_base_multiplier": 4.0,
+        "maximum_legacy_combo_score": 52235232.0
+      }
+    }
+  ]
+}
