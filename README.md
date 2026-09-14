@@ -13,13 +13,12 @@
 
 ## 使用方法
 
-### 1. 安装 Python 3.12、.NET 8.0 和本仓库的 osupp 包
+### 1. 安装 Python 3.12、.NET 10.0 和本仓库的 osupp 包
 
-### 2. 本地克隆 [osu-tools](https://github.com/ppy/osu-tools) 和 [osu](https://github.com/ppy/osu) （可选）仓库
+### 2. 本地克隆 [osu-tools](https://github.com/ppy/osu-tools) 仓库
 
 ```shell
 git clone https://github.com/ppy/osu-tools.git
-git clone https://github.com/ppy/osu.git  # 可选
 ```
 
 ### 3. 添加环境变量
@@ -27,9 +26,6 @@ git clone https://github.com/ppy/osu.git  # 可选
 设置环境变量 `OSU_TOOLS_HOME`，指向 osu-tools 目录。
 
 ### 4. 编译 PerformanceCalculator 和 PerformanceCalculatorGUI
-
-可选：在 Windows 上执行 `UseLocalOsu.ps1`，在其它系统上执行 `UseLocalOsu.sh` 以使用本地 osu! 源码编译
-PerformanceCalculator
 
 分别在 `PerformanceCalculator` 和 `PerformanceCalculatorGUI` 目录下执行：
 
@@ -54,6 +50,6 @@ dotnet build -c Release
 
 ## 注意事项
 
-1. 当前测试 osu! 版本号：`2026.317.0.0`
+1. 当前测试 osu! 版本号：`2026.702.1.0`
 2. 目前须通过环境变量来指定 osu-tools 的路径。
 3. [osu_mods](./tests/osu_mods.json) 文件为 osu-tools 导出的所有模组信息
