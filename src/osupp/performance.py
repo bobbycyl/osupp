@@ -25,7 +25,7 @@ from osu.Game.Rulesets.Osu.Objects import Slider, SliderRepeat, SliderTick
 from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Taiko import TaikoRuleset
 from osu.Game.Scoring import ScoreInfo
-from osu.Game.Utils import FormatUtils, ModUtils
+from osu.Game.Utils import ModUtils
 from .util import Result, re_deserialize
 
 MS_PER_STRAIN = 400
@@ -499,16 +499,17 @@ def calculate_performance(
     min_bpm_orig = working_beatmap.Beatmap.ControlPointInfo.BPMMinimum
     max_bpm_orig = working_beatmap.Beatmap.ControlPointInfo.BPMMaximum
     try:
-        most_common_bpm_orig = 60000 / working_beatmap.Beatmap.GetMostCommonBeatLength()
-        most_common_bpm_adj = FormatUtils.RoundBPM(most_common_bpm_orig, clock_rate)
+        _most_common_bpm = 60000 / working_beatmap.Beatmap.GetMostCommonBeatLength()
+        most_common_bpm_orig = round(_most_common_bpm)
+        most_common_bpm_adj = round(_most_common_bpm * clock_rate)
     except ZeroDivisionError:
         most_common_bpm_orig = float("inf")
         most_common_bpm_adj = float("inf")
     # todo: 后续更新中以下两个注释内容是否仍然正确？
     # 注：clock_rate 不会因为 WU、WD 这类模组而变化
     # 在 osuawa 中的 magnitude 则是考虑了这一点进行计算
-    min_bpm_adj = FormatUtils.RoundBPM(min_bpm_orig, clock_rate)
-    max_bpm_adj = FormatUtils.RoundBPM(max_bpm_orig, clock_rate)
+    min_bpm_adj = round(min_bpm_orig * clock_rate)
+    max_bpm_adj = round(max_bpm_orig * clock_rate)
 
     _skills: Iterable[Skill] = difficulty_calculator.GetSkills()
     _hit_objects: list[HitObject] = list(working_beatmap.Beatmap.HitObjects)
@@ -579,6 +580,8 @@ def calculate_performance(
         hit_end_orig=max(HitObjectExtensions.GetEndTime(obj) for obj in _hit_objects),
         hit_length_orig=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap),
         drain_length_orig=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap),
+        hit_length_adj=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap) / clock_rate,
+        drain_length_adj=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap) / clock_rate,
     )
 
     performance_calculator = ruleset.CreatePerformanceCalculator()
@@ -610,11 +613,7 @@ def calculate_performance(
             difficulty_attributes,
         )
 
-        sent = yield re_deserialize(
-            obj=performance_attributes,
-            hit_length_adj=BeatmapExtensions.CalculatePlayableLength(beatmap),
-            drain_length_adj=BeatmapExtensions.CalculateDrainLength(beatmap),
-        )
+        sent = yield re_deserialize(obj=performance_attributes)
 
     return re_deserialize(obj=working_beatmap.BeatmapInfo)
 
