@@ -42,5 +42,20 @@ packages = [
 [tool.ruff]
 extend-exclude = ["src/*-stubs"]
 
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+]
+ignore = [
+    "E501"
+]
+
 [tool.ty.src]
 include = ["src/osupp", "tests"]

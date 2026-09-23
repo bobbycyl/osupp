@@ -190,7 +190,7 @@ def generate_mania_hit_results(
 
     perfect_value = 60 if is_classic else 61
 
-    target_total = int(round(accuracy * total_hits * perfect_value))
+    target_total = round(accuracy * total_hits * perfect_value)
 
     remaining_hits = total_hits - count_miss
     delta = max(target_total - (10 * remaining_hits), 0)
@@ -610,7 +610,11 @@ def calculate_performance(
             difficulty_attributes,
         )
 
-        sent = yield re_deserialize(obj=performance_attributes)
+        sent = yield re_deserialize(
+            obj=performance_attributes,
+            hit_length_adj=BeatmapExtensions.CalculatePlayableLength(beatmap),
+            drain_length_adj=BeatmapExtensions.CalculateDrainLength(beatmap),
+        )
 
     return re_deserialize(obj=working_beatmap.BeatmapInfo)
 
