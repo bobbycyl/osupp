@@ -468,7 +468,7 @@ def calculate_performance(
             # api_mods = Array[APIMod](len(mod_array))
             # for i, mod in enumerate(mod_array):
             #     api_mods[i] = APIMod(mod)
-            rosu_diff = rosu.Difficulty(mods=make_unstandardized_mods_from_lines(mods=mods, mod_options=mod_options))  # type: ignore
+            rosu_diff = rosu.Difficulty(mods=make_unstandardized_mods_from_lines(mods=mods + mod_options))  # type: ignore
             ppplus_skills = rosu_diff.skills(rosu_map)
             ppplus_attr = {
                 "jump": ppplus_skills.jump.stars,

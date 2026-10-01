@@ -72,13 +72,12 @@ def _is_int_str(v: str) -> bool:
     return v.isdecimal() or v[:1] == "-" and v[1:].isdecimal()
 
 
-def make_unstandardized_mods_from_lines(*, slot: str | None = None, lines: str | None = None, mods: list[str] | None = None, mod_options: list[str] | None = None) -> list[dict[str, str | dict[str, str | float | bool]]]:
+def make_unstandardized_mods_from_lines(*, slot: str | None = None, lines: str | None = None, mods: list[str] | None = None) -> list[dict[str, str | dict[str, str | float | bool]]]:
     """一个 Ruleset 不敏感、宽松的、自带 slot 的 mods 解析函数
 
     :param slot: slot 名，如 NM1
     :param lines: 多行文本，每一行的格式是 <acronym>_<mod_setting>=<value> 或 <acronym>
-    :param mods: mod 列表，如 ["HD", "DT"]
-    :param mod_options: mod_setting 列表，如 ["DT_speed_change=1.1"]
+    :param mods: mod 列表，如 ["HD", "DT", "DT_speed_change=1.1"]，即已分好的 lines
     :return: 一个未经类型验证和标准化的 mods 列表
     """
     if slot is not None:
@@ -92,12 +91,10 @@ def make_unstandardized_mods_from_lines(*, slot: str | None = None, lines: str |
 
     if mods is None:
         mods = []
-    if mod_options is None:
-        mod_options = []
     if lines is None:
         lines = ""
 
-    for line in lines.splitlines() + mods + mod_options:
+    for line in lines.splitlines() + mods:
         if line.strip():
             line_split = line.split("=", 1)
             if len(line_split) == 1:  # mod only
