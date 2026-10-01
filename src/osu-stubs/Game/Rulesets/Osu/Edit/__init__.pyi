@@ -8210,14 +8210,8 @@ class PreciseRotationInfo(Object, IEquatable[PreciseRotationInfo]):
     def Deconstruct(self, Degrees: float, Origin: EditorOrigin) -> Tuple[None, float, EditorOrigin]:
         """
         
-
-        解构函数，用于将对象分解为基本组成部分
-        :param Degrees:  角度值，表示旋转或方向的角度，单位为度
-        :param Origin:  编辑器原点对象，包含空间参考系的原点信息
-        :return: 返回一个包含三个元素的元组：
-                - 第一个元素为None
-                - 第二个元素为浮点数类型的角度值
-                - 第三个元素为EditorOrigin类型的原点对象
+        :param Degrees: 
+        :param Origin: 
         """
     @overload
     def Equals(self, obj: object) -> bool:

@@ -2,6 +2,7 @@ from collections.abc import Generator
 from functools import singledispatch
 from typing import Any, Iterable, Literal, NamedTuple, Optional, cast
 
+import rosu_ppplus as rosu
 from System import Array, OperationCanceledException, TimeoutException
 from System.Collections.Generic import Dictionary
 from System.Threading import CancellationTokenSource
@@ -26,7 +27,7 @@ from osu.Game.Rulesets.Scoring import HitResult
 from osu.Game.Rulesets.Taiko import TaikoRuleset
 from osu.Game.Scoring import ScoreInfo
 from osu.Game.Utils import ModUtils
-from .util import Result, re_deserialize
+from .util import Result, make_unstandardized_mods_from_lines, processor_working_beatmap, re_deserialize
 
 MS_PER_STRAIN = 400
 
@@ -429,14 +430,17 @@ def _(
 
 
 def calculate_performance(
-    beatmap_path: str,
+    beatmap_path: str | bytes,
     ruleset=None,
     mods=None,
     mod_options=None,
     allow_cancel=True,
 ) -> Generator[Result, Any, Result]:
     cancellation_token_source = CancellationTokenSource(10_000) if allow_cancel else CancellationTokenSource()
-    working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
+    if isinstance(beatmap_path, str):
+        working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
+    else:
+        working_beatmap = processor_working_beatmap(beatmap_path)
     if mods is None:
         mods = []
     if mod_options is None:
@@ -453,8 +457,26 @@ def calculate_performance(
         Array[str](mod_options),
     )
 
+    ppplus_attr = {}
     match ruleset:
         case OsuRuleset():
+            if isinstance(beatmap_path, str):
+                rosu_map = rosu.Beatmap(path=beatmap_path)
+            else:
+                rosu_map = rosu.Beatmap(bytes=beatmap_path)
+            # 这里不能用 osu 的 APIMod，它会把 Enum 转换为数字，但 rosu 需要字符串
+            # api_mods = Array[APIMod](len(mod_array))
+            # for i, mod in enumerate(mod_array):
+            #     api_mods[i] = APIMod(mod)
+            rosu_diff = rosu.Difficulty(mods=make_unstandardized_mods_from_lines(mods=mods, mod_options=mod_options))  # type: ignore
+            ppplus_skills = rosu_diff.skills(rosu_map)
+            ppplus_attr = {
+                "jump": ppplus_skills.jump.stars,
+                "flow": ppplus_skills.flow.stars,
+                "precision": ppplus_skills.precision.stars,
+                "stamina": ppplus_skills.stamina.stars,
+                "rhythm_complexity": ppplus_skills.rhythm_complexity.stars,
+            }
             difficulty_calculator = ExtendedOsuDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
         case TaikoRuleset():
             difficulty_calculator = ExtendedTaikoDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
@@ -582,6 +604,7 @@ def calculate_performance(
         drain_length_orig=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap),
         hit_length_adj=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap) / clock_rate,
         drain_length_adj=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap) / clock_rate,
+        **ppplus_attr,
     )
 
     performance_calculator = ruleset.CreatePerformanceCalculator()

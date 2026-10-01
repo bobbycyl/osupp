@@ -4,6 +4,8 @@
 
 简单地包装了 [PerformanceCalculator](https://github.com/ppy/osu-tools/blob/master/PerformanceCalculator) 的常用功能。
 
+对于 osu!standard，附加计算经过 CSR 的 pp+ 指标。
+
 目前已完成所有 4 个模式，借助 [stubgen](https://github.com/Mimer29or40/pythonnet-stubs) 对 PerformanceCalculator 和 osu
 生成常用存根文件以实现代码提示。
 
@@ -13,7 +15,7 @@
 
 ## 使用方法
 
-### 1. 安装 Python 3.12、.NET 10.0 和本仓库的 osupp 包
+### 1. 安装 Python >= 3.12、.NET 10.0、Rust >= 1.85 和本仓库的 osupp 包
 
 ### 2. 本地克隆 [osu-tools](https://github.com/ppy/osu-tools) 仓库
 

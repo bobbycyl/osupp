@@ -1,6 +1,8 @@
 import math
 
 import orjson
+import pytest
+from rosu_ppplus import ParseError
 
 import osupp as _osupp
 from osu.Game.Rulesets.Osu import OsuRuleset
@@ -18,7 +20,7 @@ from osupp.performance import (
 )
 from osupp.util import Result
 
-assert _osupp
+assert _osupp  # ty: ignore[redundant-condition]
 
 
 # 准备测试结果
@@ -142,6 +144,11 @@ def test():
         assert_almost_equal(perf_max_attr["pp"], MAX_PP)
         # 硬编码区开始
         assert int(diff_attr["__ek_hit_length_orig"]) == 262500
+        assert_almost_equal(diff_attr["__ek_jump"], 3.312784843841349)
+        assert_almost_equal(diff_attr["__ek_flow"], 2.698448861920569)
+        assert_almost_equal(diff_attr["__ek_precision"], 0.9722620384089102)
+        assert_almost_equal(diff_attr["__ek_stamina"], 2.304441638409939)
+        assert_almost_equal(diff_attr["__ek_rhythm_complexity"], 1.0547218997256593)
         # 硬编码区结束
 
         assert diff_attr["key_not_exists"] is None
@@ -153,10 +160,18 @@ def test():
 
     calculator1 = calculate_osu_performance(beatmap_path, mods=["AD"], mod_options=["AD_style=Linear"])
     calculator2 = calculate_osu_performance(beatmap_path, mods=["AD"], mod_options=["AD_style=0"])
-    for c in (calculator1, calculator2):
+    with open(beatmap_path, "rb") as fi_b:
+        calculator3 = calculate_performance(fi_b.read(), mods=["AD"], mod_options=["AD_style=Linear"])
+    calculator4 = calculate_performance(beatmap_path, ruleset=OsuRuleset(), mods=["AD"], mod_options=["AD_style=0"])
+    calculator5 = calculate_performance(beatmap_path, ruleset=OsuRuleset(), mods=["AD"], mod_options=["AD_style=Linear"])
+    for c in (calculator1, calculator3, calculator5):
         _ = next(c)
         perf_attr = c.send(OsuPerformance())
         assert_almost_equal(perf_attr["pp"], MAX_PP)
+    for c in (calculator2, calculator4):
+        with pytest.raises(ParseError):
+            _ = next(c)
+            _ = c.send(OsuPerformance())
 
 
 def test_classic():

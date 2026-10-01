@@ -10,6 +10,7 @@ dependencies = [
     "pytest",
     "pythonnet",
     "stubgen @ https://github.com/Mimer29or40/pythonnet-stubs/releases/download/v2.1.0/stubgen-2.1.0-py3-none-any.whl",
+    "rosu-ppplus-py @ https://github.com/bobbycyl/rosu-ppplus-csr.git#subdirectory=python",
 ]
 requires-python = ">=3.12"
 authors = [
@@ -56,6 +57,9 @@ select = [
 ignore = [
     "E501"
 ]
+
+[tool.ty.rules]
+invalid-type-form = "ignore"
 
 [tool.ty.src]
 include = ["src/osupp", "tests"]
