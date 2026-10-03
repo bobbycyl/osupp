@@ -168,6 +168,11 @@ def test():
         _ = next(c)
         perf_attr = c.send(OsuPerformance())
         assert_almost_equal(perf_attr["pp"], MAX_PP)
+        assert perf_attr["__ek_jump"] is not None
+        assert perf_attr["__ek_flow"] is not None
+        assert perf_attr["__ek_precision"] is not None
+        assert perf_attr["__ek_stamina"] is not None
+        assert perf_attr["__ek_rhythm_complexity"] is not None
     for c in (calculator2, calculator4):
         with pytest.raises(ParseError):
             _ = next(c)

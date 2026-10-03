@@ -436,6 +436,7 @@ def calculate_performance(
     mod_options=None,
     allow_cancel=True,
 ) -> Generator[Result, Any, Result]:
+    is_osu_ruleset = False
     cancellation_token_source = CancellationTokenSource(10_000) if allow_cancel else CancellationTokenSource()
     if isinstance(beatmap_path, str):
         working_beatmap = ProcessorWorkingBeatmap(beatmap_path)
@@ -460,6 +461,7 @@ def calculate_performance(
     ppplus_attr = {}
     match ruleset:
         case OsuRuleset():
+            is_osu_ruleset = True
             if isinstance(beatmap_path, str):
                 rosu_map = rosu.Beatmap(path=beatmap_path)
             else:
@@ -469,13 +471,14 @@ def calculate_performance(
             # for i, mod in enumerate(mod_array):
             #     api_mods[i] = APIMod(mod)
             rosu_diff = rosu.Difficulty(mods=make_unstandardized_mods_from_lines(mods=mods + mod_options))  # type: ignore
-            ppplus_skills = rosu_diff.skills(rosu_map)
+            rosu_attr = rosu_diff.calculate(rosu_map)
+            # ppplus_skills = rosu_diff.skills(rosu_map)
             ppplus_attr = {
-                "jump": ppplus_skills.jump.stars,
-                "flow": ppplus_skills.flow.stars,
-                "precision": ppplus_skills.precision.stars,
-                "stamina": ppplus_skills.stamina.stars,
-                "rhythm_complexity": ppplus_skills.rhythm_complexity.stars,
+                "jump": rosu_attr.jump,
+                "flow": rosu_attr.flow,
+                "precision": rosu_attr.precision,
+                "stamina": rosu_attr.stamina,
+                "rhythm_complexity": rosu_attr.accuracy,
             }
             difficulty_calculator = ExtendedOsuDifficultyCalculator(ruleset.RulesetInfo, working_beatmap)
         case TaikoRuleset():
@@ -635,8 +638,25 @@ def calculate_performance(
             score_info,
             difficulty_attributes,
         )
+        ppplus_perf = {}
+        if is_osu_ruleset:
+            sent = cast(OsuPerformance, sent)
+            # noinspection unbound-local-variable
+            rosu_perf_kwargs = {k:v for k,v in {
+                'accuracy': sent.accuracy_percent, 'combo': sent.combo, 'n100': sent.oks, 'n50': sent.mehs, 'misses': sent.misses, 'large_tick_hits': rosu_attr.n_large_ticks - sent.large_tick_misses,
+                'slider_end_hits': rosu_attr.n_sliders - sent.slider_tail_misses
+            }.items() if v is not None}
+            # noinspection unbound-local-variable
+            rosu_perf = rosu_diff.performance(rosu_attr, **rosu_perf_kwargs) # type: ignore
+            ppplus_perf = {
+                "jump": rosu_perf.pp_jump_aim,
+                "flow": rosu_perf.pp_flow_aim,
+                "precision": rosu_perf.pp_precision,
+                "stamina": rosu_perf.pp_stamina,
+                "rhythm_complexity": rosu_perf.pp_acc,
+            }
 
-        sent = yield re_deserialize(obj=performance_attributes)
+        sent = yield re_deserialize(obj=performance_attributes, **ppplus_perf)
 
     return re_deserialize(obj=working_beatmap.BeatmapInfo)
 
