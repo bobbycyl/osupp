@@ -642,12 +642,13 @@ def calculate_performance(
         if is_osu_ruleset:
             sent = cast(OsuPerformance, sent)
             # noinspection unbound-local-variable
-            rosu_perf_kwargs = {k:v for k,v in {
-                'accuracy': sent.accuracy_percent, 'combo': sent.combo, 'n100': sent.oks, 'n50': sent.mehs, 'misses': sent.misses, 'large_tick_hits': rosu_attr.n_large_ticks - sent.large_tick_misses,
-                'slider_end_hits': rosu_attr.n_sliders - sent.slider_tail_misses
-            }.items() if v is not None}
+            rosu_perf_kwargs = {
+                k: v
+                for k, v in {"combo": sent.combo, "n100": sent.oks, "n50": sent.mehs, "misses": sent.misses, "large_tick_hits": rosu_attr.n_large_ticks - sent.large_tick_misses, "slider_end_hits": rosu_attr.n_sliders - sent.slider_tail_misses}.items()
+                if v is not None
+            }
             # noinspection unbound-local-variable
-            rosu_perf = rosu_diff.performance(rosu_attr, **rosu_perf_kwargs) # type: ignore
+            rosu_perf = rosu_diff.performance(rosu_attr, **rosu_perf_kwargs)  # type: ignore
             ppplus_perf = {
                 "jump": rosu_perf.pp_jump_aim,
                 "flow": rosu_perf.pp_flow_aim,
