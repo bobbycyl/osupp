@@ -1,5 +1,7 @@
 from collections.abc import Generator
 from functools import singledispatch
+from itertools import pairwise
+from statistics import median
 from typing import Any, Iterable, Literal, NamedTuple, Optional, cast
 
 import rosu_ppplus as rosu
@@ -538,6 +540,9 @@ def calculate_performance(
 
     _skills: Iterable[Skill] = difficulty_calculator.GetSkills()
     _hit_objects: list[HitObject] = list(working_beatmap.Beatmap.HitObjects)
+    _times = [ho.StartTime for ho in _hit_objects]
+    _time_diffs = [b - a for a, b in pairwise(_times)]
+    time_delta_median = median(_time_diffs)
     difficulty_hit_objects: list[DifficultyHitObject] = list(difficulty_calculator.GetDifficultyHitObjects())
 
     strains_of_skills: dict[str, list[float]] = {}
@@ -607,6 +612,7 @@ def calculate_performance(
         drain_length_orig=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap),
         hit_length_adj=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap) / clock_rate,
         drain_length_adj=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap) / clock_rate,
+        time_delta_median=time_delta_median,
         **ppplus_attr,
     )
 
