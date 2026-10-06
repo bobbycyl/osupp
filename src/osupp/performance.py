@@ -542,7 +542,7 @@ def calculate_performance(
     _hit_objects: list[HitObject] = list(working_beatmap.Beatmap.HitObjects)
     _times = [ho.StartTime for ho in _hit_objects]
     _time_diffs = [b - a for a, b in pairwise(_times)]
-    time_delta_median = median(_time_diffs)
+    delta_time_median = median(_time_diffs)
     difficulty_hit_objects: list[DifficultyHitObject] = list(difficulty_calculator.GetDifficultyHitObjects())
 
     strains_of_skills: dict[str, list[float]] = {}
@@ -612,7 +612,7 @@ def calculate_performance(
         drain_length_orig=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap),
         hit_length_adj=BeatmapExtensions.CalculatePlayableLength(working_beatmap.Beatmap) / clock_rate,
         drain_length_adj=BeatmapExtensions.CalculateDrainLength(working_beatmap.Beatmap) / clock_rate,
-        time_delta_median=time_delta_median,
+        delta_time_median=delta_time_median,
         **ppplus_attr,
     )
 
